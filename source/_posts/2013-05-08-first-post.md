@@ -18,7 +18,7 @@ Githubでブログを書くことにしました。
 
 良い感じの記事になるにはもうちょい時間かかると思う。
 
-{% render_partial _includes/post/sharing.html %}
+{% render_partial _includes/post/post_footer.html %}
 
 {% render_partial _includes/post/adsense.html %}
 
