@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-08T21:07:33+09:00</updated>
+  <updated>2013-05-08T21:37:41+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -23,17 +23,15 @@ Githubでブログを書くことにしました。</p>
 
 <p>試しにgistのコードも載せてみます。</p>
 
-<script src="https://gist.github.com/mike-neck/5524789.js"></script>
+<div><script src='https://gist.github.com/5524789.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
 
 
 <p>あまりマークダウン使いこなせてないんで、</p>
 
 <p>良い感じの記事になるにはもうちょい時間かかると思う。</p>
 
-<p><a href="https://twitter.com/share" class="twitter-share-button" data-via="mike_neck" data-lang="ja">ツイート</a></p>
-
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-
+<p>File /Users/mike/blog/octopress/_includes/post/sharing.html could not be found</p>
 ]]></content>
   </entry>
   
