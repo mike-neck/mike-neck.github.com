@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: sample | My Octopress Blog]]></title>
+  <link href="http://mike-neck.github.io/blog/categories/sample/atom.xml" rel="self"/>
+  <link href="http://mike-neck.github.io/"/>
+  <updated>2013-05-08T20:41:53+09:00</updated>
+  <id>http://mike-neck.github.io/</id>
+  <author>
+    <name><![CDATA[Your Name]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[mike、mikeなるままに…Githubに移動しました。]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/05/08/first-post/"/>
+    <updated>2013-05-08T20:31:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/05/08/first-post</id>
+    <content type="html"><![CDATA[<p>どーも、みけです。
+Githubでブログを書くことにしました。</p>
+
+<p>試しにgistのコードも載せてみます。</p>
+
+<p>%gist 5524789%</p>
+
+<p>あまりマークダウン使いこなせてないんで、</p>
+
+<p>良い感じの記事になるにはもうちょい時間かかると思う。</p>
+
+<p><a href="https://twitter.com/share" class="twitter-share-button" data-via="mike_neck" data-lang="ja">ツイート</a></p>
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+]]></content>
+  </entry>
+  
+</feed>
