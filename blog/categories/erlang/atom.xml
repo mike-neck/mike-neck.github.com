@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Erlang | mike、mikeなるままに…]]></title>
+  <link href="http://mike-neck.github.io/blog/categories/erlang/atom.xml" rel="self"/>
+  <link href="http://mike-neck.github.io/"/>
+  <updated>2013-05-11T08:22:27+09:00</updated>
+  <id>http://mike-neck.github.io/</id>
+  <author>
+    <name><![CDATA[mike-neck]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Erlangのリスト系モジュールを試してみる - 第0回]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/05/11/erlangfalserisutoguan-shu-woshi-sitemiru/"/>
+    <updated>2013-05-11T01:50:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/05/11/erlangfalserisutoguan-shu-woshi-sitemiru</id>
+    <content type="html"><![CDATA[<p>こんにちわ、みけです。</p>
+
+<p>Erlangの初心者・初級・初歩レベルの僕にとって、</p>
+
+<p>まず色々とBIFだとか、基本的なモジュールを使いこなせるのが、</p>
+
+<p>上達への近道かと思ったので、</p>
+
+<p><code>lists</code>モジュールについて、</p>
+
+<p>すべての関数を試してみようと思います。</p>
+
+<h3>モジュール情報を表示する</h3>
+
+<p>まず、モジュールの情報を表示するモジュールcのコマンドは</p>
+
+<p><code>m(Module)</code>関数です。</p>
+
+<p>早速<code>lists</code>モジュールに試して見る。</p>
+
+<p>```
+1> m(lists).
+Module lists compiled: Date: February 25 2013, Time: 19.27
+Compiler options:  [{outdir,&ldquo;/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../ebin&rdquo;},</p>
+
+<pre><code>                {i,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../include"},
+                {i,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../../kernel/include"},
+                warnings_as_errors,debug_info]
+</code></pre>
+
+<p>Object file: /opt/local/lib/erlang/lib/stdlib-1.19.1/ebin/lists.beam
+Exports:
+all/2                         nthtail/2
+any/2                         partition/2
+append/2                      prefix/2
+append/1                      reverse/1
+concat/1                      reverse/2
+delete/2                      rkeymerge/3
+dropwhile/2                   rmerge/2
+duplicate/2                   rmerge/3
+filter/2                      rmerge3/3
+flatlength/1                  rukeymerge/3
+flatmap/2                     rumerge/3
+flatten/2                     rumerge/2
+flatten/1                     rumerge3/3
+foldl/3                       seq/2
+foldr/3                       seq/3
+foreach/2                     sort/2
+keydelete/3                   sort/1
+keyfind/3                     split/2
+keymap/3                      splitwith/2
+keymember/3                   sublist/3
+keymerge/3                    sublist/2
+keyreplace/4                  subtract/2
+keysearch/3                   suffix/2
+keysort/2                     sum/1
+keystore/4                    takewhile/2
+keytake/3                     ukeymerge/3
+last/1                        ukeysort/2
+map/2                         umerge/3
+mapfoldl/3                    umerge/1
+mapfoldr/3                    umerge/2
+max/1                         umerge3/3
+member/2                      unzip/1
+merge/1                       unzip3/1
+merge/2                       usort/2
+merge/3                       usort/1
+merge3/3                      zf/2
+min/1                         zip/2
+module_info/0                 zip3/3
+module_info/1                 zipwith/3
+nth/2                         zipwith3/4
+ok</p>
+
+<p>```</p>
+
+<p>関数がたくさんあって、数えるの面倒いな…</p>
+
+<h3>詳細なモジュール情報を表示する</h3>
+
+<p><code>lists:module_info/0</code>関数でも同じようなものを調べられる。</p>
+
+<p>```
+2> lists:module_info().
+[{exports,[{append,2},</p>
+
+<pre><code>       {append,1},
+       {subtract,2},
+       {nth,2},
+       {nthtail,2},
+       {prefix,2},
+       {suffix,2},
+       {last,1},
+       {seq,2},
+       {seq,3},
+       {sum,1},
+       {duplicate,2},
+       {min,1},
+       {max,1},
+       {sublist,3},
+       {sublist,2},
+       {zip,2},
+       {unzip,1},
+       {zip3,3},
+       {unzip3,1},
+       {zipwith,3},
+       {zipwith3,4},
+       {merge,1},
+       {merge3,3},
+       {rmerge3,...},
+       {...}|...]},
+</code></pre>
+
+<p> {imports,[]},
+ {attributes,[{vsn,[257948301539042745638557295194154171573]}]},
+ {compile,[{options,[{outdir,&ldquo;/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../ebin&rdquo;},</p>
+
+<pre><code>                 {i,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../include"},
+                 {i,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../../kernel/include"},
+                 warnings_as_errors,debug_info]},
+       {version,"4.9"},
+       {time,{2013,2,25,19,27,47}},
+       {source,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/lists.erl"}]}]
+</code></pre>
+
+<p>```</p>
+
+<p><code>exports</code>されている関数、</p>
+
+<p>途中で表示が切れてまんがな…</p>
+
+<h3>BIFとかリスト内包表記で頑張ってみる</h3>
+
+<p>今はエントリーの長さに影響をする関数の数を知りたいので、</p>
+
+<p>リストの内包表記で<code>lists:module_info/0</code>の</p>
+
+<p>結果を絞って、BIFの</p>
+
+<ul>
+<li><code>length/1</code> &ndash; リストの長さを取得する</li>
+<li><code>hd/1</code> &ndash; リストの先頭要素を取得する</li>
+</ul>
+
+
+<p>を用いて<code>lists</code>モジュールの関数の数を数えてみる。</p>
+
+<p><code>
+3&gt; length(hd([Items || {Atom, Items} &lt;- lists:module_info(), Atom =:= exports])).
+80
+</code></p>
+
+<p>というわけで、80もあるので、</p>
+
+<p>16個ずつ調べていこうと思う。</p>
+
+<h3>まとめ</h3>
+
+<p>まとめもクソもないのですが、</p>
+
+<p>次回から約5回にわたって、</p>
+
+<p><code>lists</code>モジュールの関数を試していきます。</p>
+
+<p><div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.ioblog/categories/erlang/atom.xml" data-via="mike_neck" data-counturl="http://mike-neck.github.ioblog/categories/erlang/atom.xml" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+  <br/>
+</div>
+
+
+
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4508687151223458";
+/* octopress */
+google_ad_slot = "1134799005";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+
+</p>
+]]></content>
+  </entry>
+  
+</feed>
