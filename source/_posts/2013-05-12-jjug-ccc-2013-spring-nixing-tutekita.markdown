@@ -357,3 +357,5 @@ Java自体は活性化して貰いたいので、
 
 なんか継続できる勉強会でもやりたいなと思います。
 
+{% render_partial _includes/post/post_footer.html %}
+
