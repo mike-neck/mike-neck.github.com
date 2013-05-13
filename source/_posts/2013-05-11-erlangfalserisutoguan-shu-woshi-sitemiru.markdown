@@ -151,6 +151,41 @@ ok
 
 16個ずつ調べていこうと思う。
 
+> 追記 (2013/05/13 9:16)
+> 
+> 2013/05/12 21:19 頃に
+> 
+> [voluntasさん](https://github.com/voluntas)([@voluntas](http://twitter.com/voluntas))から
+> メッセージをいただきました。
+> 
+> `length(lists:module_info(exports))`
+> 
+> で同じ事が取得できるとのこと。
+> 
+> 実際にやってみたら
+> 
+> ```
+> 1> length(lists:module_info(exports)).
+> 80
+> ```
+> 
+> あ、できた、ありがとうございます！
+> 
+> ちなみにドキュメントにもありました。
+> 
+> [The module_info/0 and module_info/1 functions](http://erlang.org/doc/reference_manual/modules.html#id74571)
+> 
+> ドキュメント読まんとイケませんね
+> 
+
+
+
+
+
+
+
+
+
 ### まとめ
 
 まとめもクソもないのですが、
