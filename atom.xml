@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-12T19:55:22+09:00</updated>
+  <updated>2013-05-13T09:25:59+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -742,6 +742,32 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <p>というわけで、80もあるので、</p>
 
 <p>16個ずつ調べていこうと思う。</p>
+
+<blockquote><p>追記 (2013/05/13 9:16)</p>
+
+<p>2013/05/12 21:19 頃に</p>
+
+<p><a href="https://github.com/voluntas">voluntasさん</a>(<a href="http://twitter.com/voluntas">@voluntas</a>)から
+メッセージをいただきました。</p>
+
+<p><code>length(lists:module_info(exports))</code></p>
+
+<p>で同じ事が取得できるとのこと。</p>
+
+<p>実際にやってみたら</p>
+
+<p><code>
+1&gt; length(lists:module_info(exports)).
+80
+</code></p>
+
+<p>あ、できた、ありがとうございます！</p>
+
+<p>ちなみにドキュメントにもありました。</p>
+
+<p><a href="http://erlang.org/doc/reference_manual/modules.html#id74571">The module_info/0 and module_info/1 functions</a></p>
+
+<p>ドキュメント読まんとイケませんね</p></blockquote>
 
 <h3>まとめ</h3>
 
