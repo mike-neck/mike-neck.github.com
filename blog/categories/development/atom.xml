@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Development | mike、mikeなるままに…]]></title>
+  <link href="http://mike-neck.github.io/blog/categories/development/atom.xml" rel="self"/>
+  <link href="http://mike-neck.github.io/"/>
+  <updated>2013-05-13T10:56:07+09:00</updated>
+  <id>http://mike-neck.github.io/</id>
+  <author>
+    <name><![CDATA[mike-neck]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[プログラマーのための会計知識・用語 - (1)]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/05/13/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-1/"/>
+    <updated>2013-05-13T10:17:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/05/13/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-1</id>
+    <content type="html"><![CDATA[<p>こんにちわみけです。</p>
+
+<p>一般的にエンタープライズ系プログラマーは</p>
+
+<p>会計用語の英単語は丸暗記していると聞きました。</p>
+
+<p>僕は戦えないエンタープライズ系プログラマーなので、</p>
+
+<p>今、猛勉強しています。</p>
+
+<h2>超基本用語</h2>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left"> 英単語 </th>
+<th align="center"> 日本語 </th>
+<th align="left"> 意味 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td align="left"> Assets </td>
+<td align="center"> 資産 </td>
+<td align="left"> 今持っている価値のある物 |</td>
+</tr>
+<tr>
+<td></td>
+<td align="left"> Liabilities </td>
+<td align="center"> 負債 </td>
+<td align="left"> 外部に起因する価値 |</td>
+</tr>
+<tr>
+<td></td>
+<td align="left"> Capital </td>
+<td align="center"> 資本 </td>
+<td align="left"> 権利者が持っている価値 |</td>
+</tr>
+</tbody>
+</table>
+
+
+<h2>基本重要式</h2>
+
+<ul>
+<li><strong>Assets = Liabilities + Capital</strong></li>
+<li><strong>資産 = 負債 + 資本</strong></li>
+</ul>
+
+
+<h2>まとめ</h2>
+
+<blockquote><p>The accounting equation of</p>
+
+<p><strong>Assets = Liablities + Capital</strong></p>
+
+<p>shouled balance after every transaction.</p>
+
+<p>  from (<strong>Schaum&rsquo;s Easy Outlines</strong> <em>Bookkeeping and Accounting</em> p.2)</p></blockquote>
+
+<p>会計式「資産 = 負債 + 資本」はすべての取引において成立しなければならない。</p>
+
+<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=0071779752" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p><div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.ioblog/categories/development/atom.xml" data-via="mike_neck" data-counturl="http://mike-neck.github.ioblog/categories/development/atom.xml" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+  <br/>
+</div>
+
+
+
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4508687151223458";
+/* octopress */
+google_ad_slot = "1134799005";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+</p>
+]]></content>
+  </entry>
+  
+</feed>
