@@ -1,0 +1,1175 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Erlangのlistsモジュールを試してみる - 第2回 - mike、mikeなるままに…</title>
+  <meta name="author" content="mike-neck">
+
+  
+  <meta name="description" content="Erlangのlistsモジュールを試してみるの第二回は次のコマンドの結果について試していきます。 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+lists:sublist( lists:sort( lists:map( fun({F, A}) -&gt; atom_to_list(F &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/05/14/erlangfalselistsmoziyuruwoshi-sitemiru-di-2hui">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="mike、mikeなるままに…" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">mike、mikeなるままに…</a></h1>
+  
+    <h2>プログラムに関してぬるま湯のような記事を書きます</h2>
+  
+  <valuecommerce   ptnOid="3060695" url="http://mike-neck.github.io/" />
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:mike-neck.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Erlangのlistsモジュールを試してみる - 第2回</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-14T14:01:00+09:00" pubdate data-updated="true">May 14<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Erlangのlistsモジュールを試してみるの第二回は次のコマンドの結果について試していきます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="nn">lists</span><span class="p">:</span><span class="nf">sublist</span><span class="p">(</span>
+</span><span class='line'>    <span class="nn">lists</span><span class="p">:</span><span class="nf">sort</span><span class="p">(</span>
+</span><span class='line'>        <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span>
+</span><span class='line'>            <span class="k">fun</span><span class="p">({</span><span class="nv">F</span><span class="p">,</span> <span class="nv">A</span><span class="p">})</span> <span class="o">-&gt;</span>
+</span><span class='line'>                <span class="nb">atom_to_list</span><span class="p">(</span><span class="nv">F</span><span class="p">)</span> <span class="o">++</span>
+</span><span class='line'>                <span class="s">&quot;/&quot;</span> <span class="o">++</span>
+</span><span class='line'>                <span class="nb">integer_to_list</span><span class="p">(</span><span class="nv">A</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">end</span><span class="p">,</span>
+</span><span class='line'>            <span class="nn">lists</span><span class="p">:</span><span class="nf">module_info</span><span class="p">(</span><span class="n">exports</span><span class="p">))),</span>
+</span><span class='line'>    <span class="mi">17</span><span class="p">,</span>
+</span><span class='line'>    <span class="mi">16</span><span class="p">).</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>結果</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="p">[</span>
+</span><span class='line'>  <span class="s">&quot;keydelete/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keyfind/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keymap/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keymember/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keymerge/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keyreplace/4&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keysearch/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keysort/2&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keystore/4&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keytake/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;last/1&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;map/2&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;mapfoldl/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;mapfoldr/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;max/1&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;member/2&quot;</span>
+</span><span class='line'><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>です。</p>
+
+<h3>keydelete/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>keydelete(Key, N, TupleList1) &ndash;> TupleList2</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Key = term()</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList1 = TupleList2 = [Tuple]</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Returns a copy of TupleList1 where the first occurrence of a tuple whose Nth element compares equal to Key is deleted, if there is such a tuple.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keydelete-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>引数に与えられたタプルのリストのコピーを返します。ただし、リスト中のタプルで、タプルのN番目の要素が引数Keyと同じ値のもので最も先頭に近いものは取り除かれます。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keydelete</span><span class="p">(</span><span class="n">jim</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">simon</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">typist</span><span class="p">},</span> <span class="p">{</span><span class="n">dag</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="n">student</span><span class="p">},</span> <span class="p">{</span><span class="n">jack</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">]).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">mike</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">tim</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">officer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">lod</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">dentist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">simon</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">typist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">dag</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="n">student</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jack</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">john</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">officer</span><span class="p">}]</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keydelete</span><span class="p">(</span><span class="n">madscientist</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">simon</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">typist</span><span class="p">},</span> <span class="p">{</span><span class="n">dag</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="n">student</span><span class="p">},</span> <span class="p">{</span><span class="n">jack</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">]).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">mike</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">tim</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">officer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">lod</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">dentist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">simon</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">typist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">dag</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="n">student</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jack</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">john</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">officer</span><span class="p">}]</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keydelete</span><span class="p">(</span><span class="n">madscientist</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="p">]).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">mike</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">tim</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">officer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">lod</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">dentist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">john</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">officer</span><span class="p">}]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>まず最初の例では、リストの中で一番最初に出てくるキーの位置<code>1</code>番目の値が<code>jim</code>であるタプルを削除したリストが返されます。元のリストで9番目のタプルも同様の条件ですが、こちらは削除されません。</p>
+
+<p>次の例ではリストで一致しない条件で実行しています。返されるリストは何も削除されていません。</p>
+
+<p>最後の例ではリストのタプルの要素数より多い番号を指定して削除を実施します。もちろん、返されるリストは何も削除されていません。</p>
+
+<h3>keyfind/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#keyfind-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">```</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">###</span> <span class="n">keymap</span><span class="o">/</span><span class="mi">3</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#keymap</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">keymember</span><span class="o">/</span><span class="mi">3</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#keymember</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">keymerge</span><span class="o">/</span><span class="mi">3</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#keymerge</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">keyreplace</span><span class="o">/</span><span class="mi">4</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#keyreplace</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">keysearch</span><span class="o">/</span><span class="mi">3</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#keysearch</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">keysort</span><span class="o">/</span><span class="mi">2</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#keysort</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">keystore</span><span class="o">/</span><span class="mi">4</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#keystore</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">keytake</span><span class="o">/</span><span class="mi">3</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#keytake</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">last</span><span class="o">/</span><span class="mi">1</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#last</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">map</span><span class="o">/</span><span class="mi">2</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#map</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">mapfoldl</span><span class="o">/</span><span class="mi">3</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#mapfoldl</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">mapfoldr</span><span class="o">/</span><span class="mi">3</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#mapfoldr</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">max</span><span class="o">/</span><span class="mi">1</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#max</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">member</span><span class="o">/</span><span class="mi">2</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#member</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">次回</span>
+</span><span class='line'><span class="p">-</span><span class="err">---</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">次回は次の式の結果をやっていきます。</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>erlang
+lists:sublist(</p>
+
+<pre><code>lists:sort(
+    lists:map(
+        fun({F, A}) -&gt;
+            atom_to_list(F) ++
+            "/" ++
+            integer_to_list(A)
+        end,
+        lists:module_info(exports))),
+17,
+16).
+</code></pre>
+
+<p>&#8220;`</p>
+
+<div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/05/14/erlangfalselistsmoziyuruwoshi-sitemiru-di-2hui/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/05/14/erlangfalselistsmoziyuruwoshi-sitemiru-di-2hui/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+  <br/>
+</div>
+
+
+
+
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4508687151223458";
+/* octopress */
+google_ad_slot = "1134799005";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+
+
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">mike-neck</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-14T14:01:00+09:00" pubdate data-updated="true">May 14<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/erlang/'>erlang</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/05/14/erlangfalselistsmoziyuruwoshi-sitemiru-di-2hui/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/05/14/erlangfalselistsmoziyuruwoshi-sitemiru-di-2hui/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+  <br/>
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/05/14/erlangfalselistsmoziyuruwoshi-sitemiru-di-1hui/" title="Previous Post: Erlangのlistsモジュールを試してみる - 第1回">&laquo; Erlangのlistsモジュールを試してみる - 第1回</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/14/erlangfalselistsmoziyuruwoshi-sitemiru-di-2hui/">Erlangのlistsモジュールを試してみる - 第2回</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/14/erlangfalselistsmoziyuruwoshi-sitemiru-di-1hui/">Erlangのlistsモジュールを試してみる - 第1回</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/13/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-1/">プログラマーのための会計知識・用語 - (1)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/12/jjug-ccc-2013-spring-nixing-tutekita/">JJUG CCC 2013 Spring に行ってきた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/11/erlangfalserisutoguan-shu-woshi-sitemiru/">Erlangのリスト系モジュールを試してみる - 第0回</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/mike-neck">@mike-neck</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'mike-neck',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+<a href="https://twitter.com/mike_neck" class="twitter-follow-button" data-show-count="false" data-lang="ja">@mike_neckさんをフォロー</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/110183156583475779298?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<script type="text/javascript"><!--
+amazon_ad_tag = "kkkjkrt-22"; amazon_ad_width = "160"; amazon_ad_height = "600"; amazon_ad_logo = "hide"; amazon_ad_link_target = "new"; amazon_ad_price = "retail"; amazon_ad_border = "hide"; amazon_color_border = "303030"; amazon_color_background = "E0E0E0"; amazon_color_text = "4B4B4B"; amazon_color_link = "4B4B4B"; amazon_color_price = "4B4B4B"; amazon_color_logo = "E0E0E0";//--></script>
+<script type="text/javascript" src="http://www.assoc-amazon.jp/s/ads.js"></script>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - mike-neck -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

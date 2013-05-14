@@ -4,7 +4,7 @@
   <title><![CDATA[Category: erlang | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/erlang/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-14T04:47:50+09:00</updated>
+  <updated>2013-05-14T23:46:29+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -12,6 +12,550 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Erlangのlistsモジュールを試してみる - 第2回]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/05/14/erlangfalselistsmoziyuruwoshi-sitemiru-di-2hui/"/>
+    <updated>2013-05-14T14:01:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/05/14/erlangfalselistsmoziyuruwoshi-sitemiru-di-2hui</id>
+    <content type="html"><![CDATA[<p>Erlangのlistsモジュールを試してみるの第二回は次のコマンドの結果について試していきます。</p>
+
+<p>```erlang
+lists:sublist(</p>
+
+<pre><code>lists:sort(
+    lists:map(
+        fun({F, A}) -&gt;
+            atom_to_list(F) ++
+            "/" ++
+            integer_to_list(A)
+        end,
+        lists:module_info(exports))),
+17,
+16).
+</code></pre>
+
+<p>```</p>
+
+<p>結果</p>
+
+<p><code>
+[
+  "keydelete/3",
+  "keyfind/3",
+  "keymap/3",
+  "keymember/3",
+  "keymerge/3",
+  "keyreplace/4",
+  "keysearch/3",
+  "keysort/2",
+  "keystore/4",
+  "keytake/3",
+  "last/1",
+  "map/2",
+  "mapfoldl/3",
+  "mapfoldr/3",
+  "max/1",
+  "member/2"
+]
+</code></p>
+
+<p>です。</p>
+
+<h3>keydelete/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>keydelete(Key, N, TupleList1) &ndash;> TupleList2</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Key = term()</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList1 = TupleList2 = [Tuple]</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Returns a copy of TupleList1 where the first occurrence of a tuple whose Nth element compares equal to Key is deleted, if there is such a tuple.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keydelete-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>引数に与えられたタプルのリストのコピーを返します。ただし、リスト中のタプルで、タプルのN番目の要素が引数Keyと同じ値のもので最も先頭に近いものは取り除かれます。</p>
+
+<h4>Example</h4>
+
+<p><code>
+1&gt; lists:keydelete(jim, 1,
+1&gt; [
+1&gt;     {mike, 32, programmer}, {jim, 22, engineer}, {tim, 40, scientist},
+1&gt;     {bob, 36, officer}, {lod, 22, dentist}, {iwan, 27, evangelist},
+1&gt;     {simon, 36, typist}, {dag, 34, student}, {jack, 21, programmer},
+1&gt;     {john, 21, engineer}, {mike, 27, scientist}, {jim, 24, officer}
+1&gt; ]).
+[{mike,32,programmer},
+ {tim,40,scientist},
+ {bob,36,officer},
+ {lod,22,dentist},
+ {iwan,27,evangelist},
+ {simon,36,typist},
+ {dag,34,student},
+ {jack,21,programmer},
+ {john,21,engineer},
+ {mike,27,scientist},
+ {jim,24,officer}]
+2&gt; lists:keydelete(madscientist, 3,
+2&gt; [
+2&gt;     {mike, 32, programmer}, {jim, 22, engineer}, {tim, 40, scientist},
+2&gt;     {bob, 36, officer}, {lod, 22, dentist}, {iwan, 27, evangelist},
+2&gt;     {simon, 36, typist}, {dag, 34, student}, {jack, 21, programmer},
+2&gt;     {john, 21, engineer}, {mike, 27, scientist}, {jim, 24, officer}
+2&gt; ]).
+[{mike,32,programmer},
+ {jim,22,engineer},
+ {tim,40,scientist},
+ {bob,36,officer},
+ {lod,22,dentist},
+ {iwan,27,evangelist},
+ {simon,36,typist},
+ {dag,34,student},
+ {jack,21,programmer},
+ {john,21,engineer},
+ {mike,27,scientist},
+ {jim,24,officer}]
+3&gt; lists:keydelete(madscientist, 4,                                      
+3&gt; [                                                                     
+3&gt;     {mike, 32, programmer}, {jim, 22, engineer}, {tim, 40, scientist},
+3&gt;     {bob, 36, officer}, {lod, 22, dentist}, {iwan, 27, evangelist},   
+3&gt;     {john, 21, engineer}, {mike, 27, scientist}, {jim, 24, officer}   
+3&gt; ]).
+[{mike,32,programmer},
+ {jim,22,engineer},
+ {tim,40,scientist},
+ {bob,36,officer},
+ {lod,22,dentist},
+ {iwan,27,evangelist},
+ {john,21,engineer},
+ {mike,27,scientist},
+ {jim,24,officer}]
+</code></p>
+
+<p>まず最初の例では、リストの中で一番最初に出てくるキーの位置<code>1</code>番目の値が<code>jim</code>であるタプルを削除したリストが返されます。元のリストで9番目のタプルも同様の条件ですが、こちらは削除されません。</p>
+
+<p>次の例ではリストで一致しない条件で実行しています。返されるリストは何も削除されていません。</p>
+
+<p>最後の例ではリストのタプルの要素数より多い番号を指定して削除を実施します。もちろん、返されるリストは何も削除されていません。</p>
+
+<h3>keyfind/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#keyfind-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>
+</code></p>
+
+<h3>keymap/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#keymap-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>
+</code></p>
+
+<h3>keymember/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#keymember-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>
+</code></p>
+
+<h3>keymerge/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#keymerge-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>
+</code></p>
+
+<h3>keyreplace/4</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#keyreplace-4">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>
+</code></p>
+
+<h3>keysearch/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#keysearch-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>
+</code></p>
+
+<h3>keysort/2</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#keysort-2">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>
+</code></p>
+
+<h3>keystore/4</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#keystore-4">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>
+</code></p>
+
+<h3>keytake/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#keytake-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>
+</code></p>
+
+<h3>last/1</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#last-1">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>
+</code></p>
+
+<h3>map/2</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#map-2">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>
+</code></p>
+
+<h3>mapfoldl/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#mapfoldl-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>
+</code></p>
+
+<h3>mapfoldr/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#mapfoldr-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>
+</code></p>
+
+<h3>max/1</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#max-1">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>
+</code></p>
+
+<h3>member/2</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4></h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#member-2">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>
+</code></p>
+
+<h2>次回</h2>
+
+<p>次回は次の式の結果をやっていきます。</p>
+
+<p>```erlang
+lists:sublist(</p>
+
+<pre><code>lists:sort(
+    lists:map(
+        fun({F, A}) -&gt;
+            atom_to_list(F) ++
+            "/" ++
+            integer_to_list(A)
+        end,
+        lists:module_info(exports))),
+17,
+16).
+</code></pre>
+
+<p>```</p>
+
+<p><div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.ioblog/categories/erlang/atom.xml" data-via="mike_neck" data-counturl="http://mike-neck.github.ioblog/categories/erlang/atom.xml" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+  <br/>
+</div>
+
+
+
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4508687151223458";
+/* octopress */
+google_ad_slot = "1134799005";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Erlangのlistsモジュールを試してみる - 第1回]]></title>
@@ -25,7 +569,7 @@
 <p>なお、最初の16個は</p>
 
 <p>```erlang
-ists:sublist(</p>
+lists:sublist(</p>
 
 <pre><code>lists:sort(
     lists:map(
@@ -666,7 +1210,7 @@ ok
 <p>次回は次の式の結果をやっていきます。</p>
 
 <p>```erlang
-ists:sublist(</p>
+lists:sublist(</p>
 
 <pre><code>lists:sort(
     lists:map(

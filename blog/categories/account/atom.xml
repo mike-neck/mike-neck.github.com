@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Domain | mike、mikeなるままに…]]></title>
-  <link href="http://mike-neck.github.io/blog/categories/domain/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Account | mike、mikeなるままに…]]></title>
+  <link href="http://mike-neck.github.io/blog/categories/account/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-14T04:47:50+09:00</updated>
+  <updated>2013-05-14T23:46:29+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -87,7 +87,7 @@
 
 <p><div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.ioblog/categories/domain/atom.xml" data-via="mike_neck" data-counturl="http://mike-neck.github.ioblog/categories/domain/atom.xml" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.ioblog/categories/account/atom.xml" data-via="mike_neck" data-counturl="http://mike-neck.github.ioblog/categories/account/atom.xml" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
