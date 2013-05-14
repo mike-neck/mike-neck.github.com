@@ -13,7 +13,7 @@ Erlangのlistsモジュールを試してみるの第一回になります。
 なお、最初の16個は
 
 ```erlang
-ists:sublist(
+lists:sublist(
     lists:sort(
         lists:map(
             fun({F, A}) ->
@@ -635,7 +635,7 @@ ok
 次回は次の式の結果をやっていきます。
 
 ```erlang
-ists:sublist(
+lists:sublist(
     lists:sort(
         lists:map(
             fun({F, A}) ->
