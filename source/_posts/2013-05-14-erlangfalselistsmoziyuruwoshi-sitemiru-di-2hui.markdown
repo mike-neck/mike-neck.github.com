@@ -139,48 +139,109 @@ lists:sublist(
 
 #### Erlang公式ドキュメント
 
-> #### 
+> #### keyfind(Key, N, TupleList) -> Tuple | false
 > 
 > #### Types
 > 
-> + 
-> + 
+> + Key = term()
+> + N = integer() >= 1 (1..tuple_size(Tuple))
+> + TupleList = [Tuple]
+> + Tuple = tuple()
 > 
+> Searches the list of tuples TupleList for a tuple whose Nth element compares equal to Key. Returns Tuple if such a tuple is found, otherwise false.
 > 
 > [参照元](http://erlang.org/doc/man/lists.html#keyfind-3)
 
 #### Explain
 
+タプルのリストから指定位置の要素について`Key`に一致する最初のタプルを返します。
 
 
 #### Example
 
 ```
+1> lists:keyfind(36, 2,
+1> [
+1>     {mike, 32, programmer}, {jim, 22, engineer}, {tim, 40, scientist},
+1>     {bob, 36, officer}, {lod, 22, dentist}, {iwan, 27, evangelist},
+1>     {simon, 36, typist}, {dag, 34, student}, {jack, 21, programmer},
+1>     {john, 21, engineer}, {mike, 27, scientist}, {jim, 24, officer}
+1> ]).
+{bob,36,officer}
+2> lists:keyfind(jim, 1, 
+2> [
+2>     {mike, 32, programmer}, {jim, 22, engineer}, {tim, 40, scientist},
+2>     {bob, 36, officer}, {lod, 22, dentist}, {iwan, 27, evangelist},
+2>     {simon, 36, typist}, {dag, 34, student}, {jack, 21, programmer},
+2>     {john, 21, engineer}, {mike, 27, scientist}, {jim, 24, officer}
+2> ]).
+{jim,22,engineer}
+3> lists:keyfind(madscientist, 3,
+3> [
+3>     {mike, 32, programmer}, {jim, 22, engineer}, {tim, 40, scientist},
+3>     {bob, 36, officer}, {lod, 22, dentist}, {iwan, 27, evangelist},
+3>     {simon, 36, typist}, {dag, 34, student}, {jack, 21, programmer},
+3>     {john, 21, engineer}, {mike, 27, scientist}, {jim, 24, officer}
+3> ]).
+false
 ```
+
+最初の例ではタプルの二番目の値が`36`のものを探して、返します。
+
+次の例ではタプルの最初の値が`jim`のものを探して返しますが、9番目に現れるものは返されません。
+
+最後の例では一致するものがない条件で検索を行いますが、存在しないため`false`が返ってきます。
 
 
 ### keymap/3
 
 #### Erlang公式ドキュメント
 
-> #### 
+> #### keymap(Fun, N, TupleList1) -> TupleList2
 > 
 > #### Types
 > 
-> + 
-> + 
+> + Fun = fun((Term1 :: term()) -> Term2 :: term())
+> + N = integer() >= 1 (1..tuple_size(Tuple))
+> + TupleList1 = TupleList2 = [Tuple]
+> + Tuple = tuple()
 > 
+> Returns a list of tuples where, for each tuple in TupleList1, the Nth element Term1 of the tuple has been replaced with the result of calling Fun(Term1).
 > 
 > [参照元](http://erlang.org/doc/man/lists.html#keymap-3)
 
 #### Explain
 
+タプルに対して指定した位置の要素に、引数で渡した関数を実行した結果が入れられた、新しいタプルのリストが返されます。
 
 
 #### Example
 
 ```
+1> IsProgrammer = fun(X) -> X =:= programmer end.
+#Fun<erl_eval.6.17052888>
+2> lists:keymap(IsProgrammer, 3, 
+2> [
+2>     {mike, 32, programmer}, {jim, 22, engineer}, {tim, 40, scientist},
+2>     {bob, 36, officer}, {lod, 22, dentist}, {iwan, 27, evangelist},
+2>     {simon, 36, typist}, {dag, 34, student}, {jack, 21, programmer},
+2>     {john, 21, engineer}, {mike, 27, scientist}, {jim, 24, officer}
+2> ]).
+[{mike,32,true},
+ {jim,22,false},
+ {tim,40,false},
+ {bob,36,false},
+ {lod,22,false},
+ {iwan,27,false},
+ {simon,36,false},
+ {dag,34,false},
+ {jack,21,true},
+ {john,21,false},
+ {mike,27,false},
+ {jim,24,false}]
 ```
+
+この例ではタプルの3番目の要素がprogrammerならtrueに変換し、そうでなければfalseに変換した新しいタプルのリストを返します。
 
 
 
