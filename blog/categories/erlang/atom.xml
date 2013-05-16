@@ -4,7 +4,7 @@
   <title><![CDATA[Category: erlang | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/erlang/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-14T23:46:29+09:00</updated>
+  <updated>2013-05-16T09:04:11+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -153,47 +153,114 @@ lists:sublist(</p>
 
 <h4>Erlang公式ドキュメント</h4>
 
-<blockquote><h4></h4>
+<blockquote><h4>keyfind(Key, N, TupleList) &ndash;> Tuple | false</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>Key = term()</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList = [Tuple]</li>
+<li>Tuple = tuple()</li>
 </ul>
 
+
+<p>Searches the list of tuples TupleList for a tuple whose Nth element compares equal to Key. Returns Tuple if such a tuple is found, otherwise false.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#keyfind-3">参照元</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p>タプルのリストから指定位置の要素について<code>Key</code>に一致する最初のタプルを返します。</p>
+
 <h4>Example</h4>
 
 <p><code>
+1&gt; lists:keyfind(36, 2,
+1&gt; [
+1&gt;     {mike, 32, programmer}, {jim, 22, engineer}, {tim, 40, scientist},
+1&gt;     {bob, 36, officer}, {lod, 22, dentist}, {iwan, 27, evangelist},
+1&gt;     {simon, 36, typist}, {dag, 34, student}, {jack, 21, programmer},
+1&gt;     {john, 21, engineer}, {mike, 27, scientist}, {jim, 24, officer}
+1&gt; ]).
+{bob,36,officer}
+2&gt; lists:keyfind(jim, 1,
+2&gt; [
+2&gt;     {mike, 32, programmer}, {jim, 22, engineer}, {tim, 40, scientist},
+2&gt;     {bob, 36, officer}, {lod, 22, dentist}, {iwan, 27, evangelist},
+2&gt;     {simon, 36, typist}, {dag, 34, student}, {jack, 21, programmer},
+2&gt;     {john, 21, engineer}, {mike, 27, scientist}, {jim, 24, officer}
+2&gt; ]).
+{jim,22,engineer}
+3&gt; lists:keyfind(madscientist, 3,
+3&gt; [
+3&gt;     {mike, 32, programmer}, {jim, 22, engineer}, {tim, 40, scientist},
+3&gt;     {bob, 36, officer}, {lod, 22, dentist}, {iwan, 27, evangelist},
+3&gt;     {simon, 36, typist}, {dag, 34, student}, {jack, 21, programmer},
+3&gt;     {john, 21, engineer}, {mike, 27, scientist}, {jim, 24, officer}
+3&gt; ]).
+false
 </code></p>
+
+<p>最初の例ではタプルの二番目の値が<code>36</code>のものを探して、返します。</p>
+
+<p>次の例ではタプルの最初の値が<code>jim</code>のものを探して返しますが、9番目に現れるものは返されません。</p>
+
+<p>最後の例では一致するものがない条件で検索を行いますが、存在しないため<code>false</code>が返ってきます。</p>
 
 <h3>keymap/3</h3>
 
 <h4>Erlang公式ドキュメント</h4>
 
-<blockquote><h4></h4>
+<blockquote><h4>keymap(Fun, N, TupleList1) &ndash;> TupleList2</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>Fun = fun((Term1 :: term()) &ndash;> Term2 :: term())</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList1 = TupleList2 = [Tuple]</li>
+<li>Tuple = tuple()</li>
 </ul>
 
+
+<p>Returns a list of tuples where, for each tuple in TupleList1, the Nth element Term1 of the tuple has been replaced with the result of calling Fun(Term1).</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#keymap-3">参照元</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p>タプルに対して指定した位置の要素に、引数で渡した関数を実行した結果が入れられた、新しいタプルのリストが返されます。</p>
+
 <h4>Example</h4>
 
-<p><code>
-</code></p>
+<p>```
+1> IsProgrammer = fun(X) &ndash;> X =:= programmer end.</p>
+
+<h1>Fun&lt;erl_eval.6.17052888></h1>
+
+<p>2> lists:keymap(IsProgrammer, 3,
+2> [
+2>     {mike, 32, programmer}, {jim, 22, engineer}, {tim, 40, scientist},
+2>     {bob, 36, officer}, {lod, 22, dentist}, {iwan, 27, evangelist},
+2>     {simon, 36, typist}, {dag, 34, student}, {jack, 21, programmer},
+2>     {john, 21, engineer}, {mike, 27, scientist}, {jim, 24, officer}
+2> ]).
+[{mike,32,true},
+ {jim,22,false},
+ {tim,40,false},
+ {bob,36,false},
+ {lod,22,false},
+ {iwan,27,false},
+ {simon,36,false},
+ {dag,34,false},
+ {jack,21,true},
+ {john,21,false},
+ {mike,27,false},
+ {jim,24,false}]
+```</p>
+
+<p>この例ではタプルの3番目の要素がprogrammerならtrueに変換し、そうでなければfalseに変換した新しいタプルのリストを返します。</p>
 
 <h3>keymember/3</h3>
 
