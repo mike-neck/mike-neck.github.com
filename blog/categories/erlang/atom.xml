@@ -4,7 +4,7 @@
   <title><![CDATA[Category: erlang | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/erlang/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-16T09:04:11+09:00</updated>
+  <updated>2013-05-17T14:51:52+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -266,47 +266,108 @@ false
 
 <h4>Erlang公式ドキュメント</h4>
 
-<blockquote><h4></h4>
+<blockquote><h4>keymember(Key, N, TupleList) &ndash;> boolean()</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>Key = term()</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList = [Tuple]</li>
+<li>Tuple = tuple()</li>
 </ul>
 
+
+<p>Returns true if there is a tuple in TupleList whose Nth element compares equal to Key, otherwise false.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#keymember-3">参照元</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p>指定位置に<code>Key</code>を含むタプルがリスト中にあれば<code>true</code>、なければ<code>false</code>が返ってきます。</p>
+
 <h4>Example</h4>
 
 <p><code>
+1&gt; lists:keymember(bob, 1,
+1&gt; [{mike,32,programmer},
+1&gt;  {jim,22,engineer},
+1&gt;  {tim,40,scientist},
+1&gt;  {bob,36,officer},
+1&gt;  {lod,22,dentist},
+1&gt;  {iwan,27,evangelist},
+1&gt;  {simon,36,typist},
+1&gt;  {dag,34,student},
+1&gt;  {jack,21,programmer},
+1&gt;  {john,21,engineer},
+1&gt;  {mike,27,scientist},
+1&gt;  {jim,24,officer}   
+1&gt; ]).
+true
+2&gt; lists:keymember(madscientist, 3,
+2&gt; [
+2&gt;  {mike,32,programmer},
+2&gt;  {jim,22,engineer},
+2&gt;  {tim,40,scientist},
+2&gt;  {bob,36,officer},
+2&gt;  {lod,22,dentist},
+2&gt;  {iwan,27,evangelist},
+2&gt;  {simon,36,typist},
+2&gt;  {dag,34,student},
+2&gt;  {jack,21,programmer},
+2&gt;  {john,21,engineer},
+2&gt;  {mike,27,scientist},
+2&gt;  {jim,24,officer}
+2&gt; ]).
+false
 </code></p>
+
+<p>最初の例では、1番目の要素が<code>bob</code>であるタプルがリスト中に含まれていますので、<code>true</code>が返されます。</p>
+
+<p>次の例では、3番目の要素が<code>madscientist</code>のタプルはリスト中に含まれていないので、<code>false</code>が返されます。</p>
 
 <h3>keymerge/3</h3>
 
 <h4>Erlang公式ドキュメント</h4>
 
-<blockquote><h4></h4>
+<blockquote><h4>keymerge(N, TupleList1, TupleList2) &ndash;> TupleList3</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList1 = [T1]</li>
+<li>TupleList2 = [T2]</li>
+<li>TupleList3 = [(T1 | T2)]</li>
+<li>T1 = T2 = Tuple</li>
+<li>Tuple = tuple()</li>
 </ul>
 
+
+<p>Returns the sorted list formed by merging TupleList1 and TupleList2. The merge is performed on the Nth element of each tuple. Both TupleList1 and TupleList2 must be key-sorted prior to evaluating this function. When two tuples compare equal, the tuple from TupleList1 is picked before the tuple from TupleList2.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#keymerge-3">参照元</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p>この関数は引数で与えられた二つのタプルリストをソートしてマージした状態で返します。ソートのキーは引数の<code>N</code>番目の要素になります。引数に与えられるタプルリストは事前にソートされていることが求められます。双方のタプルでキーの値が一致する場合、左側の引数のリストから取られたタプルが右のものに優先されます。</p>
+
 <h4>Example</h4>
 
 <p><code>
+1&gt; lists:keymerge(1,  
+1&gt;   [{a, 1}, {c, 1}, {d, 1}],
+1&gt;   [{b, 2}, {d, 2}]).
+[{a,1},{b,2},{c,1},{d,1},{d,2}]
+2&gt; lists:keymerge(1,
+2&gt;   [{x, 1}, {d, 1}, {e, 1}],
+2&gt;   [{t, 2}, {a, 2}, {d, 2}]).
+[{t,2},{a,2},{d,2},{x,1},{d,1},{e,1}]
 </code></p>
+
+<p>最初の例では、事前にソートされたタプルリストが引数として与えられ、マージされたリストが返されます。また、<code>[{d, 1}, {d, 2}]</code>のようにキーの値が一致するものは左側の引数に与えられたものが優先されています。</p>
+
+<p>次の例では、事前にソートされていないタプルリストが引数として与えられていますが、返されるリストはマージされていない状態で返ってきます。</p>
 
 <h3>keyreplace/4</h3>
 
