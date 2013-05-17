@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-17T14:51:52+09:00</updated>
+  <updated>2013-05-17T18:18:48+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -533,6 +533,262 @@
 
 <h4>Erlang公式ドキュメント</h4>
 
+<blockquote><h4>keyreplace(Key, N, TupleList1, NewTuple) &ndash;> TupleList2</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Key = term()</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList1 = TupleList2 = [Tuple]</li>
+<li>NewTuple = Tuple</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Returns a copy of TupleList1 where the first occurrence of a T tuple whose Nth element compares equal to Key is replaced with NewTuple, if there is such a tuple T.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keyreplace-4">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>タプルリストの中で最も最初に現れた<code>N</code>番目の要素が<code>Key</code>であるタプルを引数で指定されたタプルに変更したリストを返します。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keyreplace</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">not_change</span><span class="p">}],</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">changed</span><span class="p">}).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="n">original</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">b</span><span class="p">,</span><span class="n">changed</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">c</span><span class="p">,</span><span class="n">original</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">d</span><span class="p">,</span><span class="n">original</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">b</span><span class="p">,</span><span class="n">not_change</span><span class="p">}]</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keyreplace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="n">original</span><span class="p">}],</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">{</span><span class="n">x</span><span class="p">,</span> <span class="n">not_appear</span><span class="p">}).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="n">original</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="n">original</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="n">original</span><span class="p">}]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最初の例では最も最初に現れる1番目の要素が<code>b</code>であるタプルが引数で与えられたタプルと交換されて返されます。最後に現れる同じ<code>Key</code>をもつタプルは変わっていません。</p>
+
+<p>次の例では<code>Key</code>に一致するタプルが存在しないため、元のリストと同じ物が返ってきます。</p>
+
+<h3>keysearch/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>keysearch(Key, N, TupleList) &ndash;> {value, Tuple} | false</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Key = term()</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList = [Tuple]</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Searches the list of tuples TupleList for a tuple whose Nth element compares equal to Key. Returns {value, Tuple} if such a tuple is found, otherwise false.</p>
+
+<blockquote><p>This function is retained for backward compatibility. The function lists:keyfind/3 (introduced in R13A) is in most cases more convenient.</p></blockquote>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keysearch-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>タプルリストの中で<code>N</code>番目の要素が<code>Key</code>である最初のタプルを探して、<code>{value, Tuple}</code>の形式で返します。見つからない場合は、<code>false</code>を返します。</p>
+
+<p>なお、この関数は下位互換のために残っているものであり、R13Aより導入された<code>lists:keyfind/3</code>関数の方が便利です。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keysearch</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">2</span><span class="p">}]).</span>
+</span><span class='line'><span class="p">{</span><span class="n">value</span><span class="p">,{</span><span class="n">c</span><span class="p">,</span><span class="mi">1</span><span class="p">}}</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keysearch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">2</span><span class="p">}]).</span>
+</span><span class='line'><span class="n">false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最初の例では1番目の要素が<code>c</code>であるタプルを探して<code>{value, {c, 1}}</code>のように返します。二番目に現れるものは返しません。</p>
+
+<p>次の例では条件に該当するタプルがないために<code>false</code>が返ってきます。</p>
+
+<h3>keysort/2</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>keysort(N, TupleList1) &ndash;> TupleList2</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList1 = TupleList2 = [Tuple]</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Returns a list containing the sorted elements of the list TupleList1. Sorting is performed on the Nth element of the tuples. The sort is stable.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keysort-2">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>引数に渡されたタプルリストを<code>N</code>番目の要素でソートしたリストを返します。ソートは安定ソートです。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keysort</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">r</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">t</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">s</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">r</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">x</span><span class="p">,</span> <span class="mi">3</span><span class="p">}]).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">r</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">r</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">s</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">t</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">x</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="p">}]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ソートされた結果が返ってきます。安定ソートのため、重複するキーに対しては元の順番が維持されます。</p>
+
+<h3>keystore/4</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>keystore(Key, N, TupleList1, NewTuple) &ndash;> TupleList2</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Key = term()</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList1 = [Tuple]</li>
+<li>TupleList2 = [Tuple, &hellip;]</li>
+<li>NewTuple = Tuple</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Returns a copy of TupleList1 where the first occurrence of a tuple T whose Nth element compares equal to Key is replaced with NewTuple, if there is such a tuple T. If there is no such tuple T a copy of TupleList1 where [NewTuple] has been appended to the end is returned.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keystore-4">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>タプルリストの中で一番最初に出てくる<code>N</code>番目の要素が<code>Key</code>であるタプルを、引数のタプルと交換したリストを返します。<code>Key</code>に一致するリストがない場合は、リストの最後に追加されて返されます。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keystore</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">not_store</span><span class="p">}],</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">new_tuple</span><span class="p">}).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="n">origin</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="n">new_tuple</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="n">origin</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="n">not_store</span><span class="p">}]</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keystore</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">not_store</span><span class="p">}],</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">x</span><span class="p">,</span> <span class="n">not_found</span><span class="p">}).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="n">origin</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">b</span><span class="p">,</span><span class="n">origin</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">c</span><span class="p">,</span><span class="n">origin</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">b</span><span class="p">,</span><span class="n">not_store</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">x</span><span class="p">,</span><span class="n">not_found</span><span class="p">}]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最初の例では、1番目の要素が<code>b</code>であるタプルが、引数に与えられた新しいタプルに交換されたリストが返ってきます。</p>
+
+<p>次の例では、該当するタプルが存在しないため、引数に与えられた新しいタプルがリストの最後に追加されて返ってきます。</p>
+
+<h3>keytake/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
 <blockquote><h4></h4>
 
 <h4>Types</h4>
@@ -543,7 +799,7 @@
 </ul>
 
 
-<p><a href="http://erlang.org/doc/man/lists.html#keyreplace-4">参照元</a></p></blockquote>
+<p><a href="http://erlang.org/doc/man/lists.html#keytake-3">参照元</a></p></blockquote>
 
 <h4>Explain</h4>
 
@@ -576,171 +832,7 @@
 </span><span class='line'>
 </span><span class='line'>
 </span><span class='line'>
-</span><span class='line'><span class="err">###</span> <span class="n">keysearch</span><span class="o">/</span><span class="mi">3</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#keysearch</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">keysort</span><span class="o">/</span><span class="mi">2</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#keysort</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">keystore</span><span class="o">/</span><span class="mi">4</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#keystore</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">keytake</span><span class="o">/</span><span class="mi">3</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照元</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#keytake</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">last</span><span class="o">/</span><span class="mi">1</span>
+</span><span class='line'><span class="err">###</span> <span class="n">last</span><span class="o">/</span><span class="mi">1</span>
 </span><span class='line'>
 </span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span><span class="err">公式ドキュメント</span>
 </span><span class='line'>
