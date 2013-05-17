@@ -249,50 +249,105 @@ false
 
 #### Erlang公式ドキュメント
 
-> #### 
+> #### keymember(Key, N, TupleList) -> boolean()
 > 
 > #### Types
 > 
-> + 
-> + 
+> + Key = term()
+> + N = integer() >= 1 (1..tuple_size(Tuple))
+> + TupleList = [Tuple]
+> + Tuple = tuple()
 > 
+> Returns true if there is a tuple in TupleList whose Nth element compares equal to Key, otherwise false.
 > 
 > [参照元](http://erlang.org/doc/man/lists.html#keymember-3)
 
 #### Explain
 
+指定位置に`Key`を含むタプルがリスト中にあれば`true`、なければ`false`が返ってきます。
 
 
 #### Example
 
 ```
+1> lists:keymember(bob, 1, 
+1> [{mike,32,programmer},
+1>  {jim,22,engineer},
+1>  {tim,40,scientist},
+1>  {bob,36,officer},
+1>  {lod,22,dentist},
+1>  {iwan,27,evangelist},
+1>  {simon,36,typist},
+1>  {dag,34,student},
+1>  {jack,21,programmer},
+1>  {john,21,engineer},
+1>  {mike,27,scientist},
+1>  {jim,24,officer}   
+1> ]).
+true
+2> lists:keymember(madscientist, 3,
+2> [
+2>  {mike,32,programmer},
+2>  {jim,22,engineer},
+2>  {tim,40,scientist},
+2>  {bob,36,officer},
+2>  {lod,22,dentist},
+2>  {iwan,27,evangelist},
+2>  {simon,36,typist},
+2>  {dag,34,student},
+2>  {jack,21,programmer},
+2>  {john,21,engineer},
+2>  {mike,27,scientist},
+2>  {jim,24,officer}
+2> ]).
+false
 ```
 
+最初の例では、1番目の要素が`bob`であるタプルがリスト中に含まれていますので、`true`が返されます。
+
+次の例では、3番目の要素が`madscientist`のタプルはリスト中に含まれていないので、`false`が返されます。
 
 
 ### keymerge/3
 
 #### Erlang公式ドキュメント
 
-> #### 
+> #### keymerge(N, TupleList1, TupleList2) -> TupleList3
 > 
 > #### Types
 > 
-> + 
-> + 
+> + N = integer() >= 1 (1..tuple_size(Tuple))
+> + TupleList1 = [T1]
+> + TupleList2 = [T2]
+> + TupleList3 = [(T1 | T2)]
+> + T1 = T2 = Tuple
+> + Tuple = tuple()
 > 
+> Returns the sorted list formed by merging TupleList1 and TupleList2. The merge is performed on the Nth element of each tuple. Both TupleList1 and TupleList2 must be key-sorted prior to evaluating this function. When two tuples compare equal, the tuple from TupleList1 is picked before the tuple from TupleList2.
 > 
 > [参照元](http://erlang.org/doc/man/lists.html#keymerge-3)
 
 #### Explain
 
+この関数は引数で与えられた二つのタプルリストをソートしてマージした状態で返します。ソートのキーは引数の`N`番目の要素になります。引数に与えられるタプルリストは事前にソートされていることが求められます。双方のタプルでキーの値が一致する場合、左側の引数のリストから取られたタプルが右のものに優先されます。
 
 
 #### Example
 
 ```
+1> lists:keymerge(1,  
+1>   [{a, 1}, {c, 1}, {d, 1}],
+1>   [{b, 2}, {d, 2}]).
+[{a,1},{b,2},{c,1},{d,1},{d,2}]
+2> lists:keymerge(1,
+2>   [{x, 1}, {d, 1}, {e, 1}],
+2>   [{t, 2}, {a, 2}, {d, 2}]).
+[{t,2},{a,2},{d,2},{x,1},{d,1},{e,1}]
 ```
 
+最初の例では、事前にソートされたタプルリストが引数として与えられ、マージされたリストが返されます。また、`[{d, 1}, {d, 2}]`のようにキーの値が一致するものは左側の引数に与えられたものが優先されています。
+
+次の例では、事前にソートされていないタプルリストが引数として与えられていますが、返されるリストはマージされていない状態で返ってきます。
 
 
 ### keyreplace/4
