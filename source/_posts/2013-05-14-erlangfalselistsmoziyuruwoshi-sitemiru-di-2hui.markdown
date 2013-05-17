@@ -546,25 +546,38 @@ false
 
 #### Erlang公式ドキュメント
 
-> #### 
+> #### keytake(Key, N, TupleList1) -> {value, Tuple, TupleList2} | false
 > 
 > #### Types
 > 
-> + 
-> + 
+> + Key = term()
+> + N = integer() >= 1 (1..tuple_size(Tuple))
+> + TupleList1 = TupleList2 = [Tuple]
+> + Tuple = tuple()
 > 
+> Searches the list of tuples TupleList1 for a tuple whose Nth element compares equal to Key. Returns {value, Tuple, TupleList2} if such a tuple is found, otherwise false. TupleList2 is a copy of TupleList1 where the first occurrence of Tuple has been removed.
 > 
 > [参照元](http://erlang.org/doc/man/lists.html#keytake-3)
 
 #### Explain
 
+タプルリストの中から初めて現れる`N`番目の要素が`Key`であるタプルを取り出し、`{value, Tuple, TupleList2}`の形式で返します。戻されるタプルリストには条件に一致したタプルは含まれていません。一致するものがない場合は、`false`が返されます。
 
 
 #### Example
 
 ```
+1> lists:keytake(b, 1, 
+1> [{a, 1}, {b, 1}, {c, 1}, {b, 2}]).
+{value,{b,1},[{a,1},{c,1},{b,2}]}
+2> lists:keytake(x, 1,               
+2> [{a, 1}, {b, 1}, {c, 1}, {b, 2}]).
+false
 ```
 
+最初の例では一番最初に現れる1番目の要素が`b`のタプルが取り出され、後から現れるものは残ったリストとともに返されています。
+
+次の例では、条件に一致するタプルがないため、`false`が返されます。
 
 
 ### last/1
