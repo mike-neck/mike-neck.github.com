@@ -459,26 +459,41 @@ false
 
 #### Erlang公式ドキュメント
 
-> #### 
+> #### keysort(N, TupleList1) -> TupleList2
 > 
 > #### Types
 > 
 > + N = integer() >= 1 (1..tuple_size(Tuple))
-> + 
-> + 
+> + TupleList1 = TupleList2 = [Tuple]
+> + Tuple = tuple()
 > 
+> Returns a list containing the sorted elements of the list TupleList1. Sorting is performed on the Nth element of the tuples. The sort is stable.
 > 
 > [参照元](http://erlang.org/doc/man/lists.html#keysort-2)
 
 #### Explain
 
+引数に渡されたタプルリストを`N`番目の要素でソートしたリストを返します。ソートは安定ソートです。
 
 
 #### Example
 
 ```
+1> lists:keysort(1,
+1> [ 
+1>   {x, 1},
+1>   {r, 1},
+1>   {t, 1},
+1>   {x, 2},
+1>   {c, 1},
+1>   {s, 1},
+1>   {r, 2},
+1>   {a, 1},
+1>   {x, 3}]).
+[{a,1},{c,1},{r,1},{r,2},{s,1},{t,1},{x,1},{x,2},{x,3}]
 ```
 
+ソートされた結果が返ってきます。安定ソートのため、重複するキーに対しては元の順番が維持されます。
 
 
 ### keystore/4
