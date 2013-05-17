@@ -407,27 +407,52 @@ false
 
 #### Erlang公式ドキュメント
 
-> #### 
+> #### keysearch(Key, N, TupleList) -> {value, Tuple} | false
 > 
 > #### Types
 > 
 > + Key = term()
 > + N = integer() >= 1 (1..tuple_size(Tuple))
-> + 
-> + 
+> + TupleList = [Tuple]
+> + Tuple = tuple()
 > 
+> Searches the list of tuples TupleList for a tuple whose Nth element compares equal to Key. Returns {value, Tuple} if such a tuple is found, otherwise false.
+> 
+> > This function is retained for backward compatibility. The function lists:keyfind/3 (introduced in R13A) is in most cases more convenient.
 > 
 > [参照元](http://erlang.org/doc/man/lists.html#keysearch-3)
 
 #### Explain
 
+タプルリストの中で`N`番目の要素が`Key`である最初のタプルを探して、`{value, Tuple}`の形式で返します。見つからない場合は、`false`を返します。
+
+なお、この関数は下位互換のために残っているものであり、R13Aより導入された`lists:keyfind/3`関数の方が便利です。
 
 
 #### Example
 
 ```
+1> lists:keysearch(c, 1, 
+1> [
+1>   {a, 1},
+1>   {b, 1},
+1>   {c, 1},
+1>   {d, 1},
+1>   {c, 2}]).
+{value,{c,1}}
+2> lists:keysearch(x, 1,
+2> [                    
+2>   {a, 1},            
+2>   {b, 1},            
+2>   {c, 1},            
+2>   {d, 1},            
+2>   {c, 2}]).          
+false
 ```
 
+最初の例では1番目の要素が`c`であるタプルを探して`{value, {c, 1}}`のように返します。二番目に現れるものは返しません。
+
+次の例では条件に該当するタプルがないために`false`が返ってきます。
 
 
 ### keysort/2
