@@ -354,25 +354,53 @@ false
 
 #### Erlang公式ドキュメント
 
-> #### 
+> #### keyreplace(Key, N, TupleList1, NewTuple) -> TupleList2
 > 
 > #### Types
 > 
-> + 
-> + 
+> + Key = term()
+> + N = integer() >= 1 (1..tuple_size(Tuple))
+> + TupleList1 = TupleList2 = [Tuple]
+> + NewTuple = Tuple
+> + Tuple = tuple()
 > 
+> Returns a copy of TupleList1 where the first occurrence of a T tuple whose Nth element compares equal to Key is replaced with NewTuple, if there is such a tuple T.
 > 
 > [参照元](http://erlang.org/doc/man/lists.html#keyreplace-4)
 
 #### Explain
 
+タプルリストの中で最も最初に現れた`N`番目の要素が`Key`であるタプルを引数で指定されたタプルに変更したリストを返します。
 
 
 #### Example
 
 ```
+1> lists:keyreplace(b, 1,
+1> [                     
+1>  {a, original},       
+1>  {b, original},       
+1>  {c, original},       
+1>  {d, original},       
+1>  {b, not_change}],
+1> {b, changed}).        
+[{a,original},
+ {b,changed},
+ {c,original},
+ {d,original},
+ {b,not_change}]
+2> lists:keyreplace(x, 1,
+2> [ 
+2>  {a, original},
+2>  {b, original},
+2>  {c, original}],
+2> {x, not_appear}).
+[{a,original},{b,original},{c,original}]
 ```
 
+最初の例では最も最初に現れる1番目の要素が`b`であるタプルが引数で与えられたタプルと交換されて返されます。最後に現れる同じ`Key`をもつタプルは変わっていません。
+
+次の例では`Key`に一致するタプルが存在しないため、元のリストと同じ物が返ってきます。
 
 
 ### keysearch/3
@@ -383,6 +411,8 @@ false
 > 
 > #### Types
 > 
+> + Key = term()
+> + N = integer() >= 1 (1..tuple_size(Tuple))
 > + 
 > + 
 > 
@@ -408,6 +438,7 @@ false
 > 
 > #### Types
 > 
+> + N = integer() >= 1 (1..tuple_size(Tuple))
 > + 
 > + 
 > 
@@ -433,6 +464,7 @@ false
 > 
 > #### Types
 > 
+> + N = integer() >= 1 (1..tuple_size(Tuple))
 > + 
 > + 
 > 
