@@ -500,26 +500,46 @@ false
 
 #### Erlang公式ドキュメント
 
-> #### 
+> #### keystore(Key, N, TupleList1, NewTuple) -> TupleList2
 > 
 > #### Types
 > 
+> + Key = term()
 > + N = integer() >= 1 (1..tuple_size(Tuple))
-> + 
-> + 
+> + TupleList1 = [Tuple]
+> + TupleList2 = [Tuple, ...]
+> + NewTuple = Tuple
+> + Tuple = tuple()
 > 
+> Returns a copy of TupleList1 where the first occurrence of a tuple T whose Nth element compares equal to Key is replaced with NewTuple, if there is such a tuple T. If there is no such tuple T a copy of TupleList1 where [NewTuple] has been appended to the end is returned.
 > 
 > [参照元](http://erlang.org/doc/man/lists.html#keystore-4)
 
 #### Explain
 
+タプルリストの中で一番最初に出てくる`N`番目の要素が`Key`であるタプルを、引数のタプルと交換したリストを返します。`Key`に一致するリストがない場合は、リストの最後に追加されて返されます。
 
 
 #### Example
 
 ```
+1> lists:keystore(b, 1,                                     
+1>   [{a, origin}, {b, origin}, {c, origin}, {b, not_store}],
+1>   {b, new_tuple}).
+[{a,origin},{b,new_tuple},{c,origin},{b,not_store}]
+2> lists:keystore(x, 1,                                      
+2>   [{a, origin}, {b, origin}, {c, origin}, {b, not_store}],
+2>   {x, not_found}).                                        
+[{a,origin},
+ {b,origin},
+ {c,origin},
+ {b,not_store},
+ {x,not_found}]
 ```
 
+最初の例では、1番目の要素が`b`であるタプルが、引数に与えられた新しいタプルに交換されたリストが返ってきます。
+
+次の例では、該当するタプルが存在しないため、引数に与えられた新しいタプルがリストの最後に追加されて返ってきます。
 
 
 ### keytake/3
