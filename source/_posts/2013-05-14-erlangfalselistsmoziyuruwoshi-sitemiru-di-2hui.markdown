@@ -584,25 +584,39 @@ false
 
 #### Erlang公式ドキュメント
 
-> #### 
+> #### last(List) -> Last
 > 
 > #### Types
 > 
-> + 
-> + 
+> + List = [T, ...]
+> + Last = T
+> + T = term()
 > 
+> Returns the last element in List.
 > 
 > [参照元](http://erlang.org/doc/man/lists.html#last-1)
 
 #### Explain
 
+リストの最後の要素を返します。
 
 
 #### Example
 
 ```
+1> lists:last([1,2,3,4,5]).
+5
+2> lists:last([1]).
+1
+3> lists:last([]). 
+** exception error: no function clause matching lists:last([]) (lists.erl, line 213)
 ```
 
+最初の例ではリストの最後の要素`5`が返されます。
+
+次の例では長さ1のリストを引数として渡して、最後の要素=たったひとつの要素である`1`が返されます。
+
+最後の例では長さ0のリストを引数として渡します。この場合は例外が発生します。
 
 
 ### map/2
