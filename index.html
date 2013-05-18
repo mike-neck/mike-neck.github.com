@@ -9,9 +9,7 @@
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="gitのコミットの粒度はなるべく細かいほうがいいですよね こんにちわ、みけです。 今日はgitの話です。 表題にあるようにgitは細かくコミットしたほうがよいです。 なぜなら、 mergeが簡単にできる
-やらかした時に細かいレベルで元に戻れる
-細かければpushするときにまとめればいいや的な &hellip;">
+  <meta name="description" content="普通のエンタープライズ系プログラマーであれば、会計用語はちゃんと英語で覚えているものですよね(白目 僕は前にも言ったとおりに、 出来損ないのエンタープライズ系プログラマーなので、 アメリカの中学生向けの会計の簡単な本で勉強しています。 この本の第二章に書かれていることをまとめてみます。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +78,330 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/18/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-2/">プログラマーのための会計知識・用語 - (2)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-18T15:04:00+09:00" pubdate data-updated="true">May 18<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>普通のエンタープライズ系プログラマーであれば、会計用語はちゃんと英語で覚えているものですよね(白目</h2>
+
+<p><img src="http://img5.blogs.yahoo.co.jp/ybi/1/9f/9a/fpdxw092/folder/1455483/img_1455483_52010810_1?1205033611"></p>
+
+<p>僕は<a href="http://mike-neck.github.io/blog/2013/05/13/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-1/">前</a>にも言ったとおりに、</p>
+
+<p>出来損ないのエンタープライズ系プログラマーなので、</p>
+
+<p>アメリカの中学生向けの会計の簡単な本で勉強しています。</p>
+
+<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=0071779752" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>この本の第二章に書かれていることをまとめてみます。</p>
+
+<h2>会計の基本用語</h2>
+
+<ul>
+<li>勘定 : <strong>Account</strong></li>
+<li>勘定科目 : <strong>Account Titile</strong></li>
+<li>借方 : <strong>Debit</strong></li>
+<li>貸方 : <strong>Credit</strong></li>
+<li>総勘定元帳 : <strong>Ledger</strong></li>
+<li>勘定科目一覧 : <strong>The Chart of Accounts</strong></li>
+<li>仕訳 : <strong>Journal</strong></li>
+<li>複式簿記 : <strong>Double-Entry Bookkeeping</strong></li>
+<li>試算表 : <strong>Trial balance</strong></li>
+</ul>
+
+
+<h4><a href="http://mike-neck.github.io/blog/2013/05/13/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-1/">前回の復習</a></h4>
+
+<ul>
+<li>資産 : <strong>Assets</strong></li>
+<li>負債 : <strong>Liabilities</strong></li>
+<li>資本 : <strong>Capital</strong></li>
+</ul>
+
+
+<h2>借方と貸方の決まり事 (<strong>Convention</strong>)</h2>
+
+<p>エンタープライズ系プログラマーなら当然わかっていると思いますが…</p>
+
+<p>勘定科目(<strong>Account Title</strong>)は借方科目なのか貸方科目なのか決まっていますね。</p>
+
+<h4>借方系の勘定 (<strong>The Account to be debited</strong>)</h4>
+
+<ul>
+<li>資産(<strong>Asset</strong>)の増加</li>
+<li>費用(<strong>Expense</strong>)の増加</li>
+<li>負債(<strong>Liabilities</strong>)の減少</li>
+<li>資本(<strong>Capital</strong>)の減少</li>
+<li>収入(<strong>Income</strong>)の減少</li>
+</ul>
+
+
+<h4>借方系の勘定 (<strong>The Account to be credited</strong>)</h4>
+
+<ul>
+<li>負債(<strong>Liabilities</strong>)の増加</li>
+<li>資本(<strong>Capital</strong>)の増加</li>
+<li>収入(<strong>Income</strong>)の増加</li>
+<li>資産(<strong>Asset</strong>)の減少</li>
+<li>費用(<strong>Expense</strong>)の減少</li>
+</ul>
+
+
+<h2>会計のドメインモデルを作ってみる</h2>
+
+<p>ここまで来たら、もう会計のドメインモデル作れますね。</p>
+
+<h4>勘定</h4>
+
+<figure class='code'><figcaption><span>Account.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="nd">@Cannonical</span>
+</span><span class='line'><span class="kd">class</span> <span class="nc">Account</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">title</span>
+</span><span class='line'>    <span class="n">AccountChart</span> <span class="n">accountChart</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>取引</h4>
+
+<figure class='code'><figcaption><span>Transaction.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="nd">@Cannonical</span>
+</span><span class='line'><span class="kd">class</span> <span class="nc">Transaction</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">long</span> <span class="n">id</span>
+</span><span class='line'>    <span class="n">Date</span> <span class="n">date</span>
+</span><span class='line'>    <span class="n">Debit</span> <span class="n">debit</span>
+</span><span class='line'>    <span class="n">Credit</span> <span class="n">credit</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">memo</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>借方</h4>
+
+<figure class='code'><figcaption><span>Debit.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="nd">@ToString</span>
+</span><span class='line'><span class="kd">class</span> <span class="nc">Debit</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Account</span> <span class="n">item</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">value</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">memo</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>貸方</h4>
+
+<figure class='code'><figcaption><span>Credit.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="nd">@ToString</span>
+</span><span class='line'><span class="kd">class</span> <span class="nc">Credit</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Account</span> <span class="n">item</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">value</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">memo</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>借方と貸方でクラスの構造が全く同じなので、</p>
+
+<p>訓練されたSIer諸氏に於いては同じクラスを使おうと言い出すとおもいます。</p>
+
+<p>しかし、java-ja.dddで増田さんがおっしゃっていたとおり、</p>
+
+<p>借方と貸方は別物なので、別のクラスにします。</p>
+
+<p><a href="https://gist.github.com/yamashiro/5230921">java-ja.dddのまとめについてはこちら</a></p>
+
+<h4>勘定科目</h4>
+
+<figure class='code'><figcaption><span>AccountChart.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kd">enum</span> <span class="n">AccountChart</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">ASSET</span><span class="o">{</span>
+</span><span class='line'>        <span class="n">AccountConvention</span> <span class="nf">increase</span><span class="o">()</span> <span class="o">{</span><span class="n">AccountConvention</span><span class="o">.</span><span class="na">DEBIT</span><span class="o">}</span>
+</span><span class='line'>        <span class="n">AccountConvention</span> <span class="nf">decrease</span><span class="o">()</span> <span class="o">{</span><span class="n">AccountConvention</span><span class="o">.</span><span class="na">CREDIT</span><span class="o">}</span>
+</span><span class='line'>    <span class="o">},</span> <span class="n">EXPENSE</span><span class="o">{</span>
+</span><span class='line'>        <span class="n">AccountConvention</span> <span class="nf">increase</span><span class="o">()</span> <span class="o">{</span><span class="n">AccountConvention</span><span class="o">.</span><span class="na">DEBIT</span><span class="o">}</span>
+</span><span class='line'>        <span class="n">AccountConvention</span> <span class="nf">decrease</span><span class="o">()</span> <span class="o">{</span><span class="n">AccountConvention</span><span class="o">.</span><span class="na">CREDIT</span><span class="o">}</span>
+</span><span class='line'>    <span class="o">},</span> <span class="n">LIABILITIES</span><span class="o">{</span>
+</span><span class='line'>        <span class="n">AccountConvention</span> <span class="nf">increase</span><span class="o">()</span> <span class="o">{</span><span class="n">AccountConvention</span><span class="o">.</span><span class="na">CREDIT</span><span class="o">}</span>
+</span><span class='line'>        <span class="n">AccountConvention</span> <span class="nf">decrease</span><span class="o">()</span> <span class="o">{</span><span class="n">AccountConvention</span><span class="o">.</span><span class="na">DEBIT</span><span class="o">}</span>
+</span><span class='line'>    <span class="o">},</span> <span class="n">CAPITAL</span><span class="o">{</span>
+</span><span class='line'>        <span class="n">AccountConvention</span> <span class="nf">increase</span><span class="o">()</span> <span class="o">{</span><span class="n">AccountConvention</span><span class="o">.</span><span class="na">CREDIT</span><span class="o">}</span>
+</span><span class='line'>        <span class="n">AccountConvention</span> <span class="nf">decrease</span><span class="o">()</span> <span class="o">{</span><span class="n">AccountConvention</span><span class="o">.</span><span class="na">DEBIT</span><span class="o">}</span>
+</span><span class='line'>    <span class="o">},</span> <span class="n">INCOME</span><span class="o">{</span>
+</span><span class='line'>        <span class="n">AccountConvention</span> <span class="nf">increase</span><span class="o">()</span> <span class="o">{</span><span class="n">AccountConvention</span><span class="o">.</span><span class="na">CREDIT</span><span class="o">}</span>
+</span><span class='line'>        <span class="n">AccountConvention</span> <span class="nf">decrease</span><span class="o">()</span> <span class="o">{</span><span class="n">AccountConvention</span><span class="o">.</span><span class="na">DEBIT</span><span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>勘定の決まりごと</h4>
+
+<figure class='code'><figcaption><span>AccountConveintion.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kd">enum</span> <span class="n">AccountConvention</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">DEBIT</span><span class="o">,</span> <span class="n">CREDIT</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この二つのクラスを書いていて、<code>Debit</code>とか<code>Credit</code>のクラスを生成するメソッドはこのあたりにあるといいなと思ってきた。</p>
+
+<p>例えば、費用が増加した場合</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">AccountChart</span><span class="o">.</span><span class="na">EXPENSE</span>
+</span><span class='line'>        <span class="o">.</span><span class="na">increase</span><span class="o">()</span>
+</span><span class='line'>        <span class="o">.</span><span class="na">by</span><span class="o">(</span><span class="s1">&#39;売上原価&#39;</span><span class="o">,</span> <span class="s1">&#39;商品が売れた&#39;</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">.</span><span class="na">for</span><span class="o">(</span><span class="n">item</span><span class="o">.</span><span class="na">asCredit</span><span class="o">())</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>という感じで書きたいですね。</p>
+
+<p>そうすると、<code>AccountChart.groovy</code>を少し直さないといけないですね…</p>
+
+<h2>以下、宿題</h2>
+
+<h4>Rearrange the following list of accounts and produce a trial balance.</h4>
+
+<ul>
+<li>Accounts Payable(900)</li>
+<li>Accounts Receivable(1,400)</li>
+<li>Capital(3,200)</li>
+<li>Cash(2,000)</li>
+<li>Drawing(400)</li>
+<li>Equipment(1,800)</li>
+<li>Fees income(2,600)</li>
+<li>General expense(100)</li>
+<li>Notes Payable(1,100)</li>
+<li>Rent expense(500)</li>
+<li>Salaries expense(800)</li>
+<li>Supplies(600)</li>
+<li>Supplies expense(200)</li>
+</ul>
+
+
+<div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/05/18/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-2/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/05/18/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-2/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+  <br/>
+</div>
+
+
+
+
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4508687151223458";
+/* octopress */
+google_ad_slot = "1134799005";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+
+
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -3600,6 +3922,10 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/05/18/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-2/">プログラマーのための会計知識・用語 - (2)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/05/18/sourcetreedexi-kakukomitutosuru/">SourceTreeで細かくコミットする</a>
       </li>
     
@@ -3613,10 +3939,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     
       <li class="post">
         <a href="/blog/2013/05/13/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-1/">プログラマーのための会計知識・用語 - (1)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/12/jjug-ccc-2013-spring-nixing-tutekita/">JJUG CCC 2013 Spring に行ってきた</a>
       </li>
     
   </ul>

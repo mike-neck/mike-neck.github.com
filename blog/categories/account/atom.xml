@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Account | mike、mikeなるままに…]]></title>
+  <title><![CDATA[Category: Account, | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/account/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-18T14:29:07+09:00</updated>
+  <updated>2013-05-18T16:58:27+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -14,75 +14,222 @@
 
   
   <entry>
-    <title type="html"><![CDATA[プログラマーのための会計知識・用語 - (1)]]></title>
-    <link href="http://mike-neck.github.io/blog/2013/05/13/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-1/"/>
-    <updated>2013-05-13T10:17:00+09:00</updated>
-    <id>http://mike-neck.github.io/blog/2013/05/13/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-1</id>
-    <content type="html"><![CDATA[<p>こんにちわみけです。</p>
+    <title type="html"><![CDATA[プログラマーのための会計知識・用語 - (2)]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/05/18/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-2/"/>
+    <updated>2013-05-18T15:04:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/05/18/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-2</id>
+    <content type="html"><![CDATA[<h2>普通のエンタープライズ系プログラマーであれば、会計用語はちゃんと英語で覚えているものですよね(白目</h2>
 
-<p>一般的にエンタープライズ系プログラマーは</p>
+<p><img class="<a" src="href="http://img5.blogs.yahoo.co.jp/ybi/1/9f/9a/fpdxw092/folder/1455483/img_1455483_52010810_1?1205033611">http://img5.blogs.yahoo.co.jp/ybi/1/9f/9a/fpdxw092/folder/1455483/img_1455483_52010810_1?1205033611</a>"></p>
 
-<p>会計用語の英単語は丸暗記していると聞きました。</p>
+<p>僕は<a href="http://mike-neck.github.io/blog/2013/05/13/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-1/">前</a>にも言ったとおりに、</p>
 
-<p>僕は戦えないエンタープライズ系プログラマーなので、</p>
+<p>出来損ないのエンタープライズ系プログラマーなので、</p>
 
-<p>今、猛勉強しています。</p>
+<p>アメリカの中学生向けの会計の簡単な本で勉強しています。</p>
 
-<h2>超基本用語</h2>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th align="left"> 英単語 </th>
-<th align="center"> 日本語 </th>
-<th align="left"> 意味 </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-<td align="left"> Assets </td>
-<td align="center"> 資産 </td>
-<td align="left"> 今持っている価値のある物 |</td>
-</tr>
-<tr>
-<td></td>
-<td align="left"> Liabilities </td>
-<td align="center"> 負債 </td>
-<td align="left"> 外部に起因する価値 |</td>
-</tr>
-<tr>
-<td></td>
-<td align="left"> Capital </td>
-<td align="center"> 資本 </td>
-<td align="left"> 権利者が持っている価値 |</td>
-</tr>
-</tbody>
-</table>
+<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=0071779752" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
 
 
-<h2>基本重要式</h2>
+<p>この本の第二章に書かれていることをまとめてみます。</p>
+
+<h2>会計の基本用語</h2>
 
 <ul>
-<li><strong>Assets = Liabilities + Capital</strong></li>
-<li><strong>資産 = 負債 + 資本</strong></li>
+<li>勘定 : <strong>Account</strong></li>
+<li>勘定科目 : <strong>Account Titile</strong></li>
+<li>借方 : <strong>Debit</strong></li>
+<li>貸方 : <strong>Credit</strong></li>
+<li>総勘定元帳 : <strong>Ledger</strong></li>
+<li>勘定科目一覧 : <strong>The Chart of Accounts</strong></li>
+<li>仕訳 : <strong>Journal</strong></li>
+<li>複式簿記 : <strong>Double-Entry Bookkeeping</strong></li>
+<li>試算表 : <strong>Trial balance</strong></li>
 </ul>
 
 
-<h2>まとめ</h2>
+<h4><a href="http://mike-neck.github.io/blog/2013/05/13/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-1/">前回の復習</a></h4>
 
-<blockquote><p>The accounting equation of</p>
+<ul>
+<li>資産 : <strong>Assets</strong></li>
+<li>負債 : <strong>Liabilities</strong></li>
+<li>資本 : <strong>Capital</strong></li>
+</ul>
 
-<p><strong>Assets = Liablities + Capital</strong></p>
 
-<p>shouled balance after every transaction.</p>
+<h2>借方と貸方の決まり事 (<strong>Convention</strong>)</h2>
 
-<p>  from (<strong>Schaum&rsquo;s Easy Outlines</strong> <em>Bookkeeping and Accounting</em> p.2)</p></blockquote>
+<p>エンタープライズ系プログラマーなら当然わかっていると思いますが…</p>
 
-<p>会計式「資産 = 負債 + 資本」はすべての取引において成立しなければならない。</p>
+<p>勘定科目(<strong>Account Title</strong>)は借方科目なのか貸方科目なのか決まっていますね。</p>
 
-<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=0071779752" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+<h4>借方系の勘定 (<strong>The Account to be debited</strong>)</h4>
+
+<ul>
+<li>資産(<strong>Asset</strong>)の増加</li>
+<li>費用(<strong>Expense</strong>)の増加</li>
+<li>負債(<strong>Liabilities</strong>)の減少</li>
+<li>資本(<strong>Capital</strong>)の減少</li>
+<li>収入(<strong>Income</strong>)の減少</li>
+</ul>
+
+
+<h4>借方系の勘定 (<strong>The Account to be credited</strong>)</h4>
+
+<ul>
+<li>負債(<strong>Liabilities</strong>)の増加</li>
+<li>資本(<strong>Capital</strong>)の増加</li>
+<li>収入(<strong>Income</strong>)の増加</li>
+<li>資産(<strong>Asset</strong>)の減少</li>
+<li>費用(<strong>Expense</strong>)の減少</li>
+</ul>
+
+
+<h2>会計のドメインモデルを作ってみる</h2>
+
+<p>ここまで来たら、もう会計のドメインモデル作れますね。</p>
+
+<h4>勘定</h4>
+
+<p>```groovy Account.groovy
+@Cannonical
+class Account {</p>
+
+<pre><code>String title
+AccountChart accountChart
+</code></pre>
+
+<p>}
+```</p>
+
+<h4>取引</h4>
+
+<p>```groovy Transaction.groovy
+@Cannonical
+class Transaction {</p>
+
+<pre><code>long id
+Date date
+Debit debit
+Credit credit
+String memo
+</code></pre>
+
+<p>}
+```</p>
+
+<h4>借方</h4>
+
+<p>```groovy Debit.groovy
+@ToString
+class Debit {</p>
+
+<pre><code>Account item
+int value
+String memo
+</code></pre>
+
+<p>}
+```</p>
+
+<h4>貸方</h4>
+
+<p>```groovy Credit.groovy
+@ToString
+class Credit {</p>
+
+<pre><code>Account item
+int value
+String memo
+</code></pre>
+
+<p>}
+```</p>
+
+<p>借方と貸方でクラスの構造が全く同じなので、</p>
+
+<p>訓練されたSIer諸氏に於いては同じクラスを使おうと言い出すとおもいます。</p>
+
+<p>しかし、java-ja.dddで増田さんがおっしゃっていたとおり、</p>
+
+<p>借方と貸方は別物なので、別のクラスにします。</p>
+
+<p><a href="https://gist.github.com/yamashiro/5230921">java-ja.dddのまとめについてはこちら</a></p>
+
+<h4>勘定科目</h4>
+
+<p>```groovy AccountChart.groovy
+enum AccountChart {</p>
+
+<pre><code>ASSET{
+    AccountConvention increase() {AccountConvention.DEBIT}
+    AccountConvention decrease() {AccountConvention.CREDIT}
+}, EXPENSE{
+    AccountConvention increase() {AccountConvention.DEBIT}
+    AccountConvention decrease() {AccountConvention.CREDIT}
+}, LIABILITIES{
+    AccountConvention increase() {AccountConvention.CREDIT}
+    AccountConvention decrease() {AccountConvention.DEBIT}
+}, CAPITAL{
+    AccountConvention increase() {AccountConvention.CREDIT}
+    AccountConvention decrease() {AccountConvention.DEBIT}
+}, INCOME{
+    AccountConvention increase() {AccountConvention.CREDIT}
+    AccountConvention decrease() {AccountConvention.DEBIT}
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<h4>勘定の決まりごと</h4>
+
+<p>```groovy AccountConveintion.groovy
+enum AccountConvention {</p>
+
+<pre><code>DEBIT, CREDIT
+</code></pre>
+
+<p>}
+```</p>
+
+<p>この二つのクラスを書いていて、<code>Debit</code>とか<code>Credit</code>のクラスを生成するメソッドはこのあたりにあるといいなと思ってきた。</p>
+
+<p>例えば、費用が増加した場合</p>
+
+<p>```groovy
+AccountChart.EXPENSE</p>
+
+<pre><code>    .increase()
+    .by('売上原価', '商品が売れた')
+    .for(item.asCredit())
+</code></pre>
+
+<p>```</p>
+
+<p>という感じで書きたいですね。</p>
+
+<p>そうすると、<code>AccountChart.groovy</code>を少し直さないといけないですね…</p>
+
+<h2>以下、宿題</h2>
+
+<h4>Rearrange the following list of accounts and produce a trial balance.</h4>
+
+<ul>
+<li>Accounts Payable(900)</li>
+<li>Accounts Receivable(1,400)</li>
+<li>Capital(3,200)</li>
+<li>Cash(2,000)</li>
+<li>Drawing(400)</li>
+<li>Equipment(1,800)</li>
+<li>Fees income(2,600)</li>
+<li>General expense(100)</li>
+<li>Notes Payable(1,100)</li>
+<li>Rent expense(500)</li>
+<li>Salaries expense(800)</li>
+<li>Supplies(600)</li>
+<li>Supplies expense(200)</li>
+</ul>
 
 
 <p><div class="sharing">
