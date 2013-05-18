@@ -623,25 +623,32 @@ false
 
 #### Erlang公式ドキュメント
 
-> #### 
+> #### map(Fun, List1) -> List2
 > 
 > #### Types
 > 
-> + 
-> + 
+> + Fun = fun((A) -> B)
+> + List1 = [A]
+> + List2 = [B]
+> + A = B = term()
 > 
+> Takes a function from As to Bs, and a list of As and produces a list of Bs by applying the function to every element in the list. This function is used to obtain the return values. The evaluation order is implementation dependent.
 > 
 > [参照元](http://erlang.org/doc/man/lists.html#map-2)
 
 #### Explain
 
+要素を返還する関数を引数に取ります。そしてリストの要素１つずつに関数を適用した結果が入ったリストが返されます。なお、実行順序は実装に依存しています。
 
 
 #### Example
 
 ```
+1> lists:map(fun(X) -> X rem 2 =:= 0 end, [1, 2, 3, 4, 5]).
+[false,true,false,true,false]
 ```
 
+引数に偶数かどうか判定する関数を渡します。引数のリストは1から5までの整数ですので、`false`と`true`が繰り返されるリストが返ってきます。
 
 
 ### mapfoldl/3
