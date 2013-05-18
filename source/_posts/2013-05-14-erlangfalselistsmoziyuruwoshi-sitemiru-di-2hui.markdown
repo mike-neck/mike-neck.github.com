@@ -763,25 +763,35 @@ false
 
 #### Erlang公式ドキュメント
 
-> #### 
+> #### member(Elem, List) -> boolean()
 > 
 > #### Types
 > 
-> + 
-> + 
+> + Elem = T
+> + List = [T]
+> + T = term()
 > 
+> Returns true if Elem matches some element of List, otherwise false.
 > 
 > [参照元](http://erlang.org/doc/man/lists.html#member-2)
 
 #### Explain
 
+指定した要素と一致する要素があれば`true`を、なければ`false`を返します。
 
 
 #### Example
 
 ```
+1> lists:member({a,1}, [{b,1},{c,1},{a,2},{d,1},{a,1}]).
+true
+2> lists:member({a,1}, [{b,1},{c,1},{a,2},{d,1}]).      
+false
 ```
 
+最初の例では指定した要素`{a,1}`に一致する要素がリストにあるため`true`が返ってきます。
+
+次の例では指定した要素`{a,1}`に一致する要素がリストにないため`false`が返ってきます。
 
 
 次回
