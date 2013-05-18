@@ -694,25 +694,38 @@ false
 
 #### Erlang公式ドキュメント
 
-> #### 
+> #### mapfoldr(Fun, Acc0, List1) -> {List2, Acc1}
 > 
 > #### Types
 > 
-> + 
-> + 
+> + Fun = fun((A, AccIn) -> {B, AccOut})
+> + Acc0 = Acc1 = AccIn = AccOut = term()
+> + List1 = [A]
+> + List2 = [B]
+> + A = B = term()
 > 
+> mapfoldr combines the operations of map/2 and foldr/3 into one pass.
 > 
 > [参照元](http://erlang.org/doc/man/lists.html#mapfoldr-3)
 
 #### Explain
 
+`mapfoldr`関数は`map/2`関数と`foldr/3`関数を組み合わせた関数です。
 
 
 #### Example
 
 ```
+1> Multiply = fun ({R1, I1}, {R2, I2}) ->
+1>     {R1 * R2 - I1 * I2, R1 * I2 + I1 * R2} end.
+#Fun<erl_eval.12.17052888>
+2> lists:mapfoldr(fun(X, A) -> Res = Multiply(X, A), {Res, Res} end,
+2>   {1, 0},                                                        
+2> [{1, -1}, {-1, 1}, {-1, -1}, {1, -1}]).                          
+{[{0,-4},{2,-2},{-2,0},{1,-1}],{0,-4}}
 ```
 
+先ほどと同じく複素数の計算をしています。返されたタプルの左側の順序が先ほどの`mapfoldl/3`関数と異なっていることがわかると思います。
 
 
 ### max/1
