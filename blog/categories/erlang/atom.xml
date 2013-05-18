@@ -4,7 +4,7 @@
   <title><![CDATA[Category: erlang | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/erlang/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-17T18:18:48+09:00</updated>
+  <updated>2013-05-18T12:29:20+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -569,162 +569,263 @@ false
 
 <h4>Erlang公式ドキュメント</h4>
 
-<blockquote><h4></h4>
+<blockquote><h4>keytake(Key, N, TupleList1) &ndash;> {value, Tuple, TupleList2} | false</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>Key = term()</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList1 = TupleList2 = [Tuple]</li>
+<li>Tuple = tuple()</li>
 </ul>
 
+
+<p>Searches the list of tuples TupleList1 for a tuple whose Nth element compares equal to Key. Returns {value, Tuple, TupleList2} if such a tuple is found, otherwise false. TupleList2 is a copy of TupleList1 where the first occurrence of Tuple has been removed.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#keytake-3">参照元</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p>タプルリストの中から初めて現れる<code>N</code>番目の要素が<code>Key</code>であるタプルを取り出し、<code>{value, Tuple, TupleList2}</code>の形式で返します。戻されるタプルリストには条件に一致したタプルは含まれていません。一致するものがない場合は、<code>false</code>が返されます。</p>
+
 <h4>Example</h4>
 
 <p><code>
+1&gt; lists:keytake(b, 1,
+1&gt; [{a, 1}, {b, 1}, {c, 1}, {b, 2}]).
+{value,{b,1},[{a,1},{c,1},{b,2}]}
+2&gt; lists:keytake(x, 1,               
+2&gt; [{a, 1}, {b, 1}, {c, 1}, {b, 2}]).
+false
 </code></p>
+
+<p>最初の例では一番最初に現れる1番目の要素が<code>b</code>のタプルが取り出され、後から現れるものは残ったリストとともに返されています。</p>
+
+<p>次の例では、条件に一致するタプルがないため、<code>false</code>が返されます。</p>
 
 <h3>last/1</h3>
 
 <h4>Erlang公式ドキュメント</h4>
 
-<blockquote><h4></h4>
+<blockquote><h4>last(List) &ndash;> Last</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>List = [T, &hellip;]</li>
+<li>Last = T</li>
+<li>T = term()</li>
 </ul>
 
+
+<p>Returns the last element in List.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#last-1">参照元</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p>リストの最後の要素を返します。</p>
+
 <h4>Example</h4>
 
 <p><code>
+1&gt; lists:last([1,2,3,4,5]).
+5
+2&gt; lists:last([1]).
+1
+3&gt; lists:last([]).
+** exception error: no function clause matching lists:last([]) (lists.erl, line 213)
 </code></p>
+
+<p>最初の例ではリストの最後の要素<code>5</code>が返されます。</p>
+
+<p>次の例では長さ1のリストを引数として渡して、最後の要素=たったひとつの要素である<code>1</code>が返されます。</p>
+
+<p>最後の例では長さ0のリストを引数として渡します。この場合は例外が発生します。</p>
 
 <h3>map/2</h3>
 
 <h4>Erlang公式ドキュメント</h4>
 
-<blockquote><h4></h4>
+<blockquote><h4>map(Fun, List1) &ndash;> List2</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>Fun = fun((A) &ndash;> B)</li>
+<li>List1 = [A]</li>
+<li>List2 = [B]</li>
+<li>A = B = term()</li>
 </ul>
 
+
+<p>Takes a function from As to Bs, and a list of As and produces a list of Bs by applying the function to every element in the list. This function is used to obtain the return values. The evaluation order is implementation dependent.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#map-2">参照元</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p>要素を返還する関数を引数に取ります。そしてリストの要素１つずつに関数を適用した結果が入ったリストが返されます。なお、実行順序は実装に依存しています。</p>
+
 <h4>Example</h4>
 
 <p><code>
+1&gt; lists:map(fun(X) -&gt; X rem 2 =:= 0 end, [1, 2, 3, 4, 5]).
+[false,true,false,true,false]
 </code></p>
+
+<p>引数に偶数かどうか判定する関数を渡します。引数のリストは1から5までの整数ですので、<code>false</code>と<code>true</code>が繰り返されるリストが返ってきます。</p>
 
 <h3>mapfoldl/3</h3>
 
 <h4>Erlang公式ドキュメント</h4>
 
-<blockquote><h4></h4>
+<blockquote><h4>mapfoldl(Fun, Acc0, List1) &ndash;> {List2, Acc1}</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>Fun = fun((A, AccIn) &ndash;> {B, AccOut})</li>
+<li>Acc0 = Acc1 = AccIn = AccOut = term()</li>
+<li>List1 = [A]</li>
+<li>List2 = [B]</li>
+<li>A = B = term()</li>
 </ul>
 
+
+<p>mapfoldl combines the operations of map/2 and foldl/3 into one pass.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#mapfoldl-3">参照元</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p><code>mapfoldl/3</code>関数は<code>map/2</code>関数と<code>foldl/3</code>関数を一つにまとめたような関数です。</p>
+
 <h4>Example</h4>
 
-<p><code>
-</code></p>
+<p>```
+1> Multiply = fun ({R1, I1}, {R2, I2}) &ndash;>
+1>     {R1 * R2 &ndash; I1 * I2, R1 * I2 + I1 * R2} end.</p>
+
+<h1>Fun&lt;erl_eval.12.17052888></h1>
+
+<p>2> lists:mapfoldl(fun(X, A) &ndash;> Res = Multiply(X, A), {Res, Res} end,
+2>   {1, 0},
+2> [{1, -1}, {-1, 1}, {-1, -1}, {1, -1}]).
+{[{1,-1},{0,2},{2,-2},{0,-4}],{0,-4}}
+```</p>
+
+<p>複素数<code>{R, I}</code>に対して、掛け算をする関数<code>Multiply</code>を定義し、<code>lists:mapfoldl/3</code>で初期値<code>{1, 0}</code>から左から順繰りに掛け算をしていきます。返されたタプルの左要素には掛け算の経過が、タプルの右側の要素には最終的な掛け算の結果が返っています。</p>
 
 <h3>mapfoldr/3</h3>
 
 <h4>Erlang公式ドキュメント</h4>
 
-<blockquote><h4></h4>
+<blockquote><h4>mapfoldr(Fun, Acc0, List1) &ndash;> {List2, Acc1}</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>Fun = fun((A, AccIn) &ndash;> {B, AccOut})</li>
+<li>Acc0 = Acc1 = AccIn = AccOut = term()</li>
+<li>List1 = [A]</li>
+<li>List2 = [B]</li>
+<li>A = B = term()</li>
 </ul>
 
+
+<p>mapfoldr combines the operations of map/2 and foldr/3 into one pass.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#mapfoldr-3">参照元</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p><code>mapfoldr</code>関数は<code>map/2</code>関数と<code>foldr/3</code>関数を組み合わせた関数です。</p>
+
 <h4>Example</h4>
 
-<p><code>
-</code></p>
+<p>```
+1> Multiply = fun ({R1, I1}, {R2, I2}) &ndash;>
+1>     {R1 * R2 &ndash; I1 * I2, R1 * I2 + I1 * R2} end.</p>
+
+<h1>Fun&lt;erl_eval.12.17052888></h1>
+
+<p>2> lists:mapfoldr(fun(X, A) &ndash;> Res = Multiply(X, A), {Res, Res} end,
+2>   {1, 0},                                                      <br/>
+2> [{1, -1}, {-1, 1}, {-1, -1}, {1, -1}]).                        <br/>
+{[{0,-4},{2,-2},{-2,0},{1,-1}],{0,-4}}
+```</p>
+
+<p>先ほどと同じく複素数の計算をしています。返されたタプルの左側の順序が先ほどの<code>mapfoldl/3</code>関数と異なっていることがわかると思います。</p>
 
 <h3>max/1</h3>
 
 <h4>Erlang公式ドキュメント</h4>
 
-<blockquote><h4></h4>
+<blockquote><h4>max(List) &ndash;> Max</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>List = [T, &hellip;]</li>
+<li>Max = T</li>
+<li>T = term()</li>
 </ul>
 
+
+<p>Returns the first element of List that compares greater than or equal to all other elements of List.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#max-1">参照元</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p>他のすべての要素より大きい最初の要素を返します。</p>
+
 <h4>Example</h4>
 
 <p><code>
+1&gt; lists:max([0,-2,4,-6]).
+4
 </code></p>
+
+<p>リストの中の最大値である<code>4</code>が返されます。</p>
 
 <h3>member/2</h3>
 
 <h4>Erlang公式ドキュメント</h4>
 
-<blockquote><h4></h4>
+<blockquote><h4>member(Elem, List) &ndash;> boolean()</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>Elem = T</li>
+<li>List = [T]</li>
+<li>T = term()</li>
 </ul>
 
+
+<p>Returns true if Elem matches some element of List, otherwise false.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#member-2">参照元</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p>指定した要素と一致する要素があれば<code>true</code>を、なければ<code>false</code>を返します。</p>
+
 <h4>Example</h4>
 
 <p><code>
+1&gt; lists:member({a,1}, [{b,1},{c,1},{a,2},{d,1},{a,1}]).
+true
+2&gt; lists:member({a,1}, [{b,1},{c,1},{a,2},{d,1}]).      
+false
 </code></p>
+
+<p>最初の例では指定した要素<code>{a,1}</code>に一致する要素がリストにあるため<code>true</code>が返ってきます。</p>
+
+<p>次の例では指定した要素<code>{a,1}</code>に一致する要素がリストにないため<code>false</code>が返ってきます。</p>
 
 <h2>次回</h2>
 
