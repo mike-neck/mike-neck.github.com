@@ -732,25 +732,31 @@ false
 
 #### Erlang公式ドキュメント
 
-> #### 
+> #### max(List) -> Max
 > 
 > #### Types
 > 
-> + 
-> + 
+> + List = [T, ...]
+> + Max = T
+> + T = term()
 > 
+> Returns the first element of List that compares greater than or equal to all other elements of List.
 > 
 > [参照元](http://erlang.org/doc/man/lists.html#max-1)
 
 #### Explain
 
+他のすべての要素より大きい最初の要素を返します。
 
 
 #### Example
 
 ```
+1> lists:max([0,-2,4,-6]).
+4
 ```
 
+リストの中の最大値である`4`が返されます。
 
 
 ### member/2
