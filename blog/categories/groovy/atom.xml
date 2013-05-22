@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Groovy | mike、mikeなるままに…]]></title>
+  <title><![CDATA[Category: groovy | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-18T17:01:45+09:00</updated>
+  <updated>2013-05-22T20:29:54+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -14,405 +14,80 @@
 
   
   <entry>
-    <title type="html"><![CDATA[プログラマーのための会計知識・用語 - (2)]]></title>
-    <link href="http://mike-neck.github.io/blog/2013/05/18/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-2/"/>
-    <updated>2013-05-18T15:04:00+09:00</updated>
-    <id>http://mike-neck.github.io/blog/2013/05/18/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-2</id>
-    <content type="html"><![CDATA[<h2>普通のエンタープライズ系プログラマーであれば、会計用語はちゃんと英語で覚えているものですよね(白目</h2>
+    <title type="html"><![CDATA[gradle1.6からgroovyのconfigurationはdeprecatedになっています]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/05/22/gradle1-dot-6karagroovyfalseconfigurationhadeprecatedninatuteimasu/"/>
+    <updated>2013-05-22T20:08:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/05/22/gradle1-dot-6karagroovyfalseconfigurationhadeprecatedninatuteimasu</id>
+    <content type="html"><![CDATA[<h2>gradle1.6からgroovyのconfigurationは非推奨になっています</h2>
 
-<p><img class="<a" src="href="http://img5.blogs.yahoo.co.jp/ybi/1/9f/9a/fpdxw092/folder/1455483/img_1455483_52010810_1?1205033611">http://img5.blogs.yahoo.co.jp/ybi/1/9f/9a/fpdxw092/folder/1455483/img_1455483_52010810_1?1205033611</a>"></p>
+<p>まあ今さらですが、さきほどbuild.gradleを書いた時に、</p>
 
-<p>僕は<a href="http://mike-neck.github.io/blog/2013/05/13/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-1/">前</a>にも言ったとおりに、</p>
+<p>```
+$ gradle idea
+The groovy configuration has been deprecated and is scheduled to be removed in Gradle 2.0. Typically, usages of &lsquo;groovy&rsquo; can simply be replaced with &lsquo;compile&rsquo;. In some cases, it may be necessary to additionally configure the &lsquo;groovyClasspath&rsquo; property of GroovyCompile and Groovydoc tasks.
+:ideaModule
+Download <a href="http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.pom">http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.pom</a>
+Download <a href="http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3-sources.jar">http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3-sources.jar</a>
+Download <a href="http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.jar">http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.jar</a>
+:ideaProject
+:ideaWorkspace
+:idea</p>
 
-<p>出来損ないのエンタープライズ系プログラマーなので、</p>
+<p>BUILD SUCCESSFUL</p>
 
-<p>アメリカの中学生向けの会計の簡単な本で勉強しています。</p>
+<p>Total time: 11.174 secs
+$
+```</p>
 
-<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=0071779752" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+<p>と表示されたので、「うぉっ」と思ってドキュメントを読んでみました。</p>
 
+<p><a href="http://www.gradle.org/docs/current/release-notes#groovy-configuration-is-deprecated">groovy configuration is deprecated</a></p>
 
-<p>この本の第二章に書かれていることをまとめてみます。</p>
+<p>じゃあ、今後どうするのかというと、</p>
 
-<h2>会計の基本用語</h2>
+<h1>compile configurationにgroovyのartifactを指定する</h1>
 
-<ul>
-<li>勘定 : <strong>Account</strong></li>
-<li>勘定科目 : <strong>Account Titile</strong></li>
-<li>借方 : <strong>Debit</strong></li>
-<li>貸方 : <strong>Credit</strong></li>
-<li>総勘定元帳 : <strong>Ledger</strong></li>
-<li>勘定科目一覧 : <strong>The Chart of Accounts</strong></li>
-<li>仕訳 : <strong>Journal</strong></li>
-<li>複式簿記 : <strong>Double-Entry Bookkeeping</strong></li>
-<li>試算表 : <strong>Trial balance</strong></li>
-</ul>
+<p>ということです。</p>
 
+<p>つまり、これまでは</p>
 
-<h4><a href="http://mike-neck.github.io/blog/2013/05/13/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-1/">前回の復習</a></h4>
+<p>```groovy build.gradle
+dependencies {</p>
 
-<ul>
-<li>資産 : <strong>Assets</strong></li>
-<li>負債 : <strong>Liabilities</strong></li>
-<li>資本 : <strong>Capital</strong></li>
-</ul>
-
-
-<h2>借方と貸方の決まり事 (<strong>Convention</strong>)</h2>
-
-<p>エンタープライズ系プログラマーなら当然わかっていると思いますが…</p>
-
-<p>勘定科目(<strong>Account Title</strong>)は借方科目なのか貸方科目なのか決まっていますね。</p>
-
-<h4>借方系の勘定 (<strong>The Account to be debited</strong>)</h4>
-
-<ul>
-<li>資産(<strong>Asset</strong>)の増加</li>
-<li>費用(<strong>Expense</strong>)の増加</li>
-<li>負債(<strong>Liabilities</strong>)の減少</li>
-<li>資本(<strong>Capital</strong>)の減少</li>
-<li>収入(<strong>Income</strong>)の減少</li>
-</ul>
-
-
-<h4>借方系の勘定 (<strong>The Account to be credited</strong>)</h4>
-
-<ul>
-<li>負債(<strong>Liabilities</strong>)の増加</li>
-<li>資本(<strong>Capital</strong>)の増加</li>
-<li>収入(<strong>Income</strong>)の増加</li>
-<li>資産(<strong>Asset</strong>)の減少</li>
-<li>費用(<strong>Expense</strong>)の減少</li>
-</ul>
-
-
-<h2>会計のドメインモデルを作ってみる</h2>
-
-<p>ここまで来たら、もう会計のドメインモデル作れますね。</p>
-
-<h4>勘定</h4>
-
-<p>```groovy Account.groovy
-@Cannonical
-class Account {</p>
-
-<pre><code>String title
-AccountChart accountChart
+<pre><code>groovy : 'org.codehaus:groovy:groovy-all:2.1.3'
 </code></pre>
 
 <p>}
 ```</p>
 
-<h4>取引</h4>
+<p>と書いていましたが、</p>
 
-<p>```groovy Transaction.groovy
-@Cannonical
-class Transaction {</p>
+<p>```groovy build.gradle
+dependencies {</p>
 
-<pre><code>long id
-Date date
-Debit debit
-Credit credit
-String memo
+<pre><code>compile : 'org.codehaus.groovy:groovy-all:2.1.3'
 </code></pre>
 
 <p>}
 ```</p>
 
-<h4>借方</h4>
+<p>と書けばよいようです。</p>
+
+<table>
+<tbody>
+<tr>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B009X5KIFK" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=3864900492" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1617291307" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+</tr>
+</tbody>
+</table>
 
-<p>```groovy Debit.groovy
-@ToString
-class Debit {</p>
 
-<pre><code>Account item
-int value
-String memo
-</code></pre>
 
-<p>}
-```</p>
-
-<h4>貸方</h4>
-
-<p>```groovy Credit.groovy
-@ToString
-class Credit {</p>
-
-<pre><code>Account item
-int value
-String memo
-</code></pre>
-
-<p>}
-```</p>
-
-<p>借方と貸方でクラスの構造が全く同じなので、</p>
-
-<p>訓練されたSIer諸氏に於いては同じクラスを使おうと言い出すとおもいます。</p>
-
-<p>しかし、java-ja.dddで増田さんがおっしゃっていたとおり、</p>
-
-<p>借方と貸方は別物なので、別のクラスにします。</p>
-
-<p><a href="https://gist.github.com/yamashiro/5230921">java-ja.dddのまとめについてはこちら</a></p>
-
-<h4>勘定科目</h4>
-
-<p>```groovy AccountChart.groovy
-enum AccountChart {</p>
-
-<pre><code>ASSET{
-    AccountConvention increase() {AccountConvention.DEBIT}
-    AccountConvention decrease() {AccountConvention.CREDIT}
-}, EXPENSE{
-    AccountConvention increase() {AccountConvention.DEBIT}
-    AccountConvention decrease() {AccountConvention.CREDIT}
-}, LIABILITIES{
-    AccountConvention increase() {AccountConvention.CREDIT}
-    AccountConvention decrease() {AccountConvention.DEBIT}
-}, CAPITAL{
-    AccountConvention increase() {AccountConvention.CREDIT}
-    AccountConvention decrease() {AccountConvention.DEBIT}
-}, INCOME{
-    AccountConvention increase() {AccountConvention.CREDIT}
-    AccountConvention decrease() {AccountConvention.DEBIT}
-}
-</code></pre>
-
-<p>}
-```</p>
-
-<h4>勘定の決まりごと</h4>
-
-<p>```groovy AccountConveintion.groovy
-enum AccountConvention {</p>
-
-<pre><code>DEBIT, CREDIT
-</code></pre>
-
-<p>}
-```</p>
-
-<p>この二つのクラスを書いていて、<code>Debit</code>とか<code>Credit</code>のクラスを生成するメソッドはこのあたりにあるといいなと思ってきた。</p>
-
-<p>例えば、費用が増加した場合</p>
-
-<p>```groovy
-AccountChart.EXPENSE</p>
-
-<pre><code>    .increase()
-    .by('売上原価', '商品が売れた')
-    .for(item.asCredit())
-</code></pre>
-
-<p>```</p>
-
-<p>という感じで書きたいですね。</p>
-
-<p>そうすると、<code>AccountChart.groovy</code>を少し直さないといけないですね…</p>
-
-<h2>以下、宿題</h2>
-
-<h4>Rearrange the following list of accounts and produce a trial balance.</h4>
-
-<ul>
-<li>Accounts Payable(900)</li>
-<li>Accounts Receivable(1,400)</li>
-<li>Capital(3,200)</li>
-<li>Cash(2,000)</li>
-<li>Drawing(400)</li>
-<li>Equipment(1,800)</li>
-<li>Fees income(2,600)</li>
-<li>General expense(100)</li>
-<li>Notes Payable(1,100)</li>
-<li>Rent expense(500)</li>
-<li>Salaries expense(800)</li>
-<li>Supplies(600)</li>
-<li>Supplies expense(200)</li>
-</ul>
-
-
-<p><div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.ioblog/categories/groovy/atom.xml" data-via="mike_neck" data-counturl="http://mike-neck.github.ioblog/categories/groovy/atom.xml" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-  <br/>
-</div>
-
-
-
-<script type="text/javascript"><!--
-google_ad_client = "ca-pub-4508687151223458";
-/* octopress */
-google_ad_slot = "1134799005";
-google_ad_width = 300;
-google_ad_height = 250;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[FC2ブログのエディターがクソいのでGroovyのMarkupBuilderで記事を書いた件]]></title>
-    <link href="http://mike-neck.github.io/blog/2013/05/10/too-poor-fc2-blog-editor-make-me-write-a-new-entry-with-groovys-markupbuilder/"/>
-    <updated>2013-05-10T20:00:00+09:00</updated>
-    <id>http://mike-neck.github.io/blog/2013/05/10/too-poor-fc2-blog-editor-make-me-write-a-new-entry-with-groovys-markupbuilder</id>
-    <content type="html"><![CDATA[<p>こんにちわ、自虐的なみけです。</p>
-
-<p>自虐的なツイートをtogetterにまとめたら、</p>
-
-<p><strong>自虐的だからたかが知れている、ビジネスなめてんの</strong></p>
-
-<p>とコメントいただきました。</p>
-
-<p>はい。</p>
-
-<h3>FC2ブログのエディターがクソな件</h3>
-
-<p>まあ、このブログを始めると同時に、</p>
-
-<p><a href="http://mikeneckdq.blog.fc2.com/">ドラクエ用のブログをFC2</a>の方に</p>
-
-<p>書いているわけですが、</p>
-
-<p>FC2のあのブログエディターなめてんの？</p>
-
-<p>テーブル書いたら</p>
-
-<p>わけわからん改行が出てくるし、</p>
-
-<p>スタイルタグはシカトされるし、</p>
-
-<p>UI舐めきってて、ビジネスを舐めているとしか考えられん。</p>
-
-<h3>しかたがないのでタグの中にstyle属性を</h3>
-
-<p>書くことにしたわけですが、</p>
-
-<p>テーブルの要素一つ一つにstyleを手でちまちま書いていた日には、</p>
-
-<p>いくら暇すぎる僕でも、</p>
-
-<p>忙しくなりすぎる。</p>
-
-<p>しかたないので、</p>
-
-<p><strong>Groovy</strong> の <strong>groovy.xml.MarkupBuilder</strong> を</p>
-
-<p>使うことにしました。</p>
-
-<p><div><script src='https://gist.github.com/5551749.js'></script>
-<noscript><pre><code></code></pre></noscript></div>
-</p>
-
-<h3>何をやろうとしてたかというと、</h3>
-
-<p>仕訳を作ろうとしていたわけで、</p>
-
-<p>いくらの投資でいくら回収できるという</p>
-
-<p>話をするのに複式簿記がよくて、</p>
-
-<p>それをGroovyで自動集計させながら、</p>
-
-<p>最終的に総勘定元帳を作り出すというもの。</p>
-
-<p><strong>MarkupBuilder便利すな</strong></p>
-
-<h3>ところで…</h3>
-
-<p>このスクリプトを書いている時に、</p>
-
-<ul>
-<li>簿記 (Bookkeeping)</li>
-<li>仕訳 (Journal)</li>
-<li>借方 (Debit)</li>
-<li>貸方 (Credit)</li>
-</ul>
-
-
-<p>といった基本的な単語がわかってないことが</p>
-
-<p>わかりました。</p>
-
-<blockquote class="twitter-tweet" lang="ja"><p>簿記３級くらいの知識が欲しい</p>&mdash; 器官なき身体さん (@mike_neck) <a href="https://twitter.com/mike_neck/status/332655391110467585">2013年5月10日</a></blockquote>
-
-
-<script async src="http://mike-neck.github.io//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p>というわけで、</p>
-
-<p>簿記・会計のドメインに強くなるべく、</p>
-
-<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=0071779752" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-
-
-<p>この本を買ったとさ。</p>
-
-<p>おわり。</p>
-
-<p><div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.ioblog/categories/groovy/atom.xml" data-via="mike_neck" data-counturl="http://mike-neck.github.ioblog/categories/groovy/atom.xml" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-  <br/>
-</div>
-
-
-
-<script type="text/javascript"><!--
-google_ad_client = "ca-pub-4508687151223458";
-/* octopress */
-google_ad_slot = "1134799005";
-google_ad_width = 300;
-google_ad_height = 250;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-</p>
 ]]></content>
   </entry>
   
