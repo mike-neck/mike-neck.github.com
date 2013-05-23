@@ -11,4 +11,5 @@ categories: Atlassian
 
 [Atlassianユーザーグループ@株式会社ロフトワーク(渋谷) #augj](http://www.zusaar.com/event/735003)に参加して来る予定です。
 
+TシャツはM/S/Lの順番で希望です。
 
