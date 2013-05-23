@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Atlassian | mike、mikeなるままに…]]></title>
+  <link href="http://mike-neck.github.io/blog/categories/atlassian/atom.xml" rel="self"/>
+  <link href="http://mike-neck.github.io/"/>
+  <updated>2013-05-23T12:34:47+09:00</updated>
+  <id>http://mike-neck.github.io/</id>
+  <author>
+    <name><![CDATA[mike-neck]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Atlassianユーザーグループ #augjに行ってきた]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/05/23/atlassianyuzagurupu-number-augjnixing-tutekita/"/>
+    <updated>2013-05-23T12:28:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/05/23/atlassianyuzagurupu-number-augjnixing-tutekita</id>
+    <content type="html"><![CDATA[<p>みけです。</p>
+
+<p><a href="http://www.zusaar.com/event/735003">Atlassianユーザーグループ@株式会社ロフトワーク(渋谷) #augj</a>に参加して来る予定です。</p>
+]]></content>
+  </entry>
+  
+</feed>
