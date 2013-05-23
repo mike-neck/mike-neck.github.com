@@ -9,8 +9,18 @@
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="みけです。 Atlassianユーザーグループ@株式会社ロフトワーク(渋谷) #augjに参加して来る予定です。 TシャツはM/S/Lの順番で希望です。
-">
+  <meta name="description" content="Erlangのlistsモジュールを試してみるの第三回は次のコマンドの結果について試していきます。 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+lists:sublist( lists:sort( lists:map( fun({F, A}) -&gt; atom_to_list(F &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +89,775 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/23/erlangfalselistsmoziyuruwoshi-sitemiru-di-3hui/">Erlangのlistsモジュールを試してみる - 第3回</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-23T13:01:00+09:00" pubdate data-updated="true">May 23<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Erlangのlistsモジュールを試してみるの第三回は次のコマンドの結果について試していきます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="nn">lists</span><span class="p">:</span><span class="nf">sublist</span><span class="p">(</span>
+</span><span class='line'>    <span class="nn">lists</span><span class="p">:</span><span class="nf">sort</span><span class="p">(</span>
+</span><span class='line'>        <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span>
+</span><span class='line'>            <span class="k">fun</span><span class="p">({</span><span class="nv">F</span><span class="p">,</span> <span class="nv">A</span><span class="p">})</span> <span class="o">-&gt;</span>
+</span><span class='line'>                <span class="nb">atom_to_list</span><span class="p">(</span><span class="nv">F</span><span class="p">)</span> <span class="o">++</span>
+</span><span class='line'>                <span class="s">&quot;/&quot;</span> <span class="o">++</span>
+</span><span class='line'>                <span class="nb">integer_to_list</span><span class="p">(</span><span class="nv">A</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">end</span><span class="p">,</span>
+</span><span class='line'>            <span class="nn">lists</span><span class="p">:</span><span class="nf">module_info</span><span class="p">(</span><span class="n">exports</span><span class="p">))),</span>
+</span><span class='line'>    <span class="mi">33</span><span class="p">,</span>
+</span><span class='line'>    <span class="mi">16</span><span class="p">).</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>結果</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="p">[</span>
+</span><span class='line'>  <span class="s">&quot;merge/1&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;merge/2&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;merge/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;merge3/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;min/1&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;module_info/0&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;module_info/1&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;nth/2&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;nthtail/2&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;partition/2&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;prefix/2&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;reverse/1&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;reverse/2&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;rkeymerge/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;rmerge/2&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;rmerge/3&quot;</span>
+</span><span class='line'><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>merge/1</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>merge(ListOfLists) &ndash;> List1</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>ListOfLists = [List]</li>
+<li>List = List1 = [T]</li>
+<li>T = term()</li>
+</ul>
+
+
+<p>Returns the sorted list formed by merging all the sub-lists of ListOfLists. All sub-lists must be sorted prior to evaluating this function. When two elements compare equal, the element from the sub-list with the lowest position in ListOfLists is picked before the other element.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#merge-1">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>リスト内のリストをソートしてマージしたリストを返します。なお、リスト内のリストは事前にソートされている必要があります。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">merge</span><span class="p">([</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">9</span><span class="p">],</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]]).</span>
+</span><span class='line'><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>複数のリストがマージされて新しいリストが返されます。</p>
+
+<h3>merge/2</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>merge(List1, List2) &ndash;> List3</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>List1 = [X]</li>
+<li>List2 = [Y]</li>
+<li>List3 = [(X | Y)]</li>
+<li>X = Y = term()</li>
+</ul>
+
+
+<p>Returns the sorted list formed by merging List1 and List2. Both List1 and List2 must be sorted prior to evaluating this function. When two elements compare equal, the element from List1 is picked before the element from List2.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#merge-2">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>二つのリストをソートしてマージした新しいリストを返します。二つのリストは事前にソートされている必要があります。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">merge</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]).</span>
+</span><span class='line'><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>二つのリストがマージされた新しいリストが返されます。</p>
+
+<h3>merge/3</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>merge(Fun, List1, List2) &ndash;> List3</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Fun = fun((A, B) &ndash;> boolean())</li>
+<li>List1 = [A]</li>
+<li>List2 = [B]</li>
+<li>List3 = [(A | B)]</li>
+<li>A = B = term()</li>
+</ul>
+
+
+<p>Returns the sorted list formed by merging List1 and List2. Both List1 and List2 must be sorted according to the <a href="http://www.erlang.org/doc/man/lists.html#ordering_function">ordering function</a> <code>Fun</code> prior to evaluating this function. <code>Fun(A, B)</code> should return <code>true</code> if <code>A</code> compares less than or equal to <code>B</code> in the ordering, <code>false</code> otherwise. When two elements compare equal, the element from List1 is picked before the element from List2.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#merge-3">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p><code>List1</code>と<code>List2</code>をソートしてマージした新しいリストを返します。引数のリストは事前にソートされている必要があります。<code>Fun(A, B)</code>はソートオーダーに関して<code>A</code>が先に来るべきである場合は<code>true</code>を、そうでない場合は<code>false</code>を返します。同じ値の要素がある場合は、<code>List1</code>のものが<code>List2</code>のものに優先されます。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">merge</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">A</span><span class="p">,</span> <span class="nv">B</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">A</span> <span class="o">&gt;</span> <span class="nv">B</span> <span class="k">end</span><span class="p">,[</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">7</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]).</span>
+</span><span class='line'><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">merge</span><span class="p">(</span><span class="k">fun</span><span class="p">({</span><span class="nv">A</span><span class="p">,_},</span> <span class="p">{</span><span class="nv">B</span><span class="p">,_})</span> <span class="o">-&gt;</span> <span class="nv">A</span> <span class="o">=&lt;</span> <span class="nv">B</span> <span class="k">end</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[{</span><span class="mi">1</span><span class="p">,</span><span class="n">a</span><span class="p">},{</span><span class="mi">3</span><span class="p">,</span><span class="n">a</span><span class="p">},{</span><span class="mi">4</span><span class="p">,</span><span class="n">a</span><span class="p">},{</span><span class="mi">5</span><span class="p">,</span><span class="n">a</span><span class="p">}],</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[{</span><span class="mi">0</span><span class="p">,</span><span class="n">b</span><span class="p">},{</span><span class="mi">2</span><span class="p">,</span><span class="n">b</span><span class="p">},{</span><span class="mi">4</span><span class="p">,</span><span class="n">b</span><span class="p">},{</span><span class="mi">6</span><span class="p">,</span><span class="n">b</span><span class="p">}]).</span>
+</span><span class='line'><span class="p">[{</span><span class="mi">0</span><span class="p">,</span><span class="n">b</span><span class="p">},{</span><span class="mi">1</span><span class="p">,</span><span class="n">a</span><span class="p">},{</span><span class="mi">2</span><span class="p">,</span><span class="n">b</span><span class="p">},{</span><span class="mi">3</span><span class="p">,</span><span class="n">a</span><span class="p">},{</span><span class="mi">4</span><span class="p">,</span><span class="n">a</span><span class="p">},{</span><span class="mi">4</span><span class="p">,</span><span class="n">b</span><span class="p">},{</span><span class="mi">5</span><span class="p">,</span><span class="n">a</span><span class="p">},{</span><span class="mi">6</span><span class="p">,</span><span class="n">b</span><span class="p">}]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最初の例では、降順にソートする関数で評価してリストをマージして新しいリストを返します。</p>
+
+<p>後者の例では、昇順ソートです。同一の値の場合に<code>List1</code>から要素が取得されています。</p>
+
+<h3>merge3/3</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>merge3</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#merge3-3">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<h3>min/1</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>min</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#min-1">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">```</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">###</span> <span class="n">module_info</span><span class="o">/</span><span class="mi">0</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span> <span class="nv">Document</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="n">module_info</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照先</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#module_info</span><span class="o">-</span><span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>erlang</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">module_info</span><span class="o">/</span><span class="mi">1</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span> <span class="nv">Document</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="n">module_info</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照先</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#module_info</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>erlang</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">nth</span><span class="o">/</span><span class="mi">2</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span> <span class="nv">Document</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="n">nth</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照先</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#nth</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>erlang</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">nthtail</span><span class="o">/</span><span class="mi">2</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span> <span class="nv">Document</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="n">nthtail</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照先</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#nthtail</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>erlang</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">partition</span><span class="o">/</span><span class="mi">2</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span> <span class="nv">Document</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="n">partition</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照先</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#partition</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>erlang</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">prefix</span><span class="o">/</span><span class="mi">2</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span> <span class="nv">Document</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="n">prefix</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照先</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#prefix</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>erlang</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">reverse</span><span class="o">/</span><span class="mi">1</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span> <span class="nv">Document</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="n">reverse</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照先</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#reverse</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>erlang</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">reverse</span><span class="o">/</span><span class="mi">2</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span> <span class="nv">Document</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="n">reverse</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照先</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#reverse</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>erlang</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">rkeymerge</span><span class="o">/</span><span class="mi">3</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span> <span class="nv">Document</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="n">rkeymerge</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照先</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#rkeymerge</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>erlang</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">rmerge</span><span class="o">/</span><span class="mi">2</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span> <span class="nv">Document</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="n">rmerge</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照先</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#rmerge</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>erlang</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="err">###</span> <span class="n">rmerge</span><span class="o">/</span><span class="mi">3</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Erlang</span> <span class="nv">Document</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="n">rmerge</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="err">####</span> <span class="nv">Types</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="o">+</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="err">参照先</span><span class="p">](</span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">erlang</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">man</span><span class="o">/</span><span class="n">lists</span><span class="p">.</span><span class="n">html</span><span class="nl">#rmerge</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Explain</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">####</span> <span class="nv">Example</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>erlang
+&#8220;`</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -3798,182 +4577,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/10/too-poor-fc2-blog-editor-make-me-write-a-new-entry-with-groovys-markupbuilder/">FC2ブログのエディターがクソいのでGroovyのMarkupBuilderで記事を書いた件</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-10T20:00:00+09:00" pubdate data-updated="true">May 10<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>こんにちわ、自虐的なみけです。</p>
-
-<p>自虐的なツイートをtogetterにまとめたら、</p>
-
-<p><strong>自虐的だからたかが知れている、ビジネスなめてんの</strong></p>
-
-<p>とコメントいただきました。</p>
-
-<p>はい。</p>
-
-<h3>FC2ブログのエディターがクソな件</h3>
-
-<p>まあ、このブログを始めると同時に、</p>
-
-<p><a href="http://mikeneckdq.blog.fc2.com/">ドラクエ用のブログをFC2</a>の方に</p>
-
-<p>書いているわけですが、</p>
-
-<p>FC2のあのブログエディターなめてんの？</p>
-
-<p>テーブル書いたら</p>
-
-<p>わけわからん改行が出てくるし、</p>
-
-<p>スタイルタグはシカトされるし、</p>
-
-<p>UI舐めきってて、ビジネスを舐めているとしか考えられん。</p>
-
-<h3>しかたがないのでタグの中にstyle属性を</h3>
-
-<p>書くことにしたわけですが、</p>
-
-<p>テーブルの要素一つ一つにstyleを手でちまちま書いていた日には、</p>
-
-<p>いくら暇すぎる僕でも、</p>
-
-<p>忙しくなりすぎる。</p>
-
-<p>しかたないので、</p>
-
-<p><strong>Groovy</strong> の <strong>groovy.xml.MarkupBuilder</strong> を</p>
-
-<p>使うことにしました。</p>
-
-<div><script src='https://gist.github.com/5551749.js'></script>
-<noscript><pre><code></code></pre></noscript></div>
-
-
-<h3>何をやろうとしてたかというと、</h3>
-
-<p>仕訳を作ろうとしていたわけで、</p>
-
-<p>いくらの投資でいくら回収できるという</p>
-
-<p>話をするのに複式簿記がよくて、</p>
-
-<p>それをGroovyで自動集計させながら、</p>
-
-<p>最終的に総勘定元帳を作り出すというもの。</p>
-
-<p><strong>MarkupBuilder便利すな</strong></p>
-
-<h3>ところで…</h3>
-
-<p>このスクリプトを書いている時に、</p>
-
-<ul>
-<li>簿記 (Bookkeeping)</li>
-<li>仕訳 (Journal)</li>
-<li>借方 (Debit)</li>
-<li>貸方 (Credit)</li>
-</ul>
-
-
-<p>といった基本的な単語がわかってないことが</p>
-
-<p>わかりました。</p>
-
-<blockquote class="twitter-tweet" lang="ja"><p>簿記３級くらいの知識が欲しい</p>&mdash; 器官なき身体さん (@mike_neck) <a href="https://twitter.com/mike_neck/status/332655391110467585">2013年5月10日</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p>というわけで、</p>
-
-<p>簿記・会計のドメインに強くなるべく、</p>
-
-<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=0071779752" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-
-
-<p>この本を買ったとさ。</p>
-
-<p>おわり。</p>
-
-<div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/05/10/too-poor-fc2-blog-editor-make-me-write-a-new-entry-with-groovys-markupbuilder/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/05/10/too-poor-fc2-blog-editor-make-me-write-a-new-entry-with-groovys-markupbuilder/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-  <br/>
-</div>
-
-
-
-
-<script type="text/javascript"><!--
-google_ad_client = "ca-pub-4508687151223458";
-/* octopress */
-google_ad_slot = "1134799005";
-google_ad_width = 300;
-google_ad_height = 250;
-//-->
-</script>
-
-
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-
-
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -3989,6 +4592,10 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/05/23/erlangfalselistsmoziyuruwoshi-sitemiru-di-3hui/">Erlangのlistsモジュールを試してみる - 第3回</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/05/23/atlassianyuzagurupu-number-augjnixing-tutekita/">Atlassianユーザーグループ #augjに行ってきた</a>
       </li>
     
@@ -4002,10 +4609,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     
       <li class="post">
         <a href="/blog/2013/05/18/sourcetreedexi-kakukomitutosuru/">SourceTreeで細かくコミットする</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/14/erlangfalselistsmoziyuruwoshi-sitemiru-di-2hui/">Erlangのlistsモジュールを試してみる - 第2回</a>
       </li>
     
   </ul>

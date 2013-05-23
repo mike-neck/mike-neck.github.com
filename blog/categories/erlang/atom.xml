@@ -4,7 +4,7 @@
   <title><![CDATA[Category: erlang | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/erlang/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-23T12:49:41+09:00</updated>
+  <updated>2013-05-23T16:39:32+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -12,6 +12,459 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Erlangのlistsモジュールを試してみる - 第3回]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/05/23/erlangfalselistsmoziyuruwoshi-sitemiru-di-3hui/"/>
+    <updated>2013-05-23T13:01:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/05/23/erlangfalselistsmoziyuruwoshi-sitemiru-di-3hui</id>
+    <content type="html"><![CDATA[<p>Erlangのlistsモジュールを試してみるの第三回は次のコマンドの結果について試していきます。</p>
+
+<p>```erlang
+lists:sublist(</p>
+
+<pre><code>lists:sort(
+    lists:map(
+        fun({F, A}) -&gt;
+            atom_to_list(F) ++
+            "/" ++
+            integer_to_list(A)
+        end,
+        lists:module_info(exports))),
+33,
+16).
+</code></pre>
+
+<p>```</p>
+
+<p>結果</p>
+
+<p><code>
+[
+  "merge/1",
+  "merge/2",
+  "merge/3",
+  "merge3/3",
+  "min/1",
+  "module_info/0",
+  "module_info/1",
+  "nth/2",
+  "nthtail/2",
+  "partition/2",
+  "prefix/2",
+  "reverse/1",
+  "reverse/2",
+  "rkeymerge/3",
+  "rmerge/2",
+  "rmerge/3"
+]
+</code></p>
+
+<h3>merge/1</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>merge(ListOfLists) &ndash;> List1</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>ListOfLists = [List]</li>
+<li>List = List1 = [T]</li>
+<li>T = term()</li>
+</ul>
+
+
+<p>Returns the sorted list formed by merging all the sub-lists of ListOfLists. All sub-lists must be sorted prior to evaluating this function. When two elements compare equal, the element from the sub-list with the lowest position in ListOfLists is picked before the other element.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#merge-1">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>リスト内のリストをソートしてマージしたリストを返します。なお、リスト内のリストは事前にソートされている必要があります。</p>
+
+<h4>Example</h4>
+
+<p><code>erlang
+1&gt; lists:merge([
+1&gt; [0,2,4],     
+1&gt; [3,6,9],     
+1&gt; [1,5,7]]).   
+[0,1,2,3,4,5,6,7,9]
+</code></p>
+
+<p>複数のリストがマージされて新しいリストが返されます。</p>
+
+<h3>merge/2</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>merge(List1, List2) &ndash;> List3</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>List1 = [X]</li>
+<li>List2 = [Y]</li>
+<li>List3 = [(X | Y)]</li>
+<li>X = Y = term()</li>
+</ul>
+
+
+<p>Returns the sorted list formed by merging List1 and List2. Both List1 and List2 must be sorted prior to evaluating this function. When two elements compare equal, the element from List1 is picked before the element from List2.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#merge-2">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>二つのリストをソートしてマージした新しいリストを返します。二つのリストは事前にソートされている必要があります。</p>
+
+<h4>Example</h4>
+
+<p><code>erlang
+1&gt; lists:merge([1,3,4,6],[0,2,5,7]).
+[0,1,2,3,4,5,6,7]
+</code></p>
+
+<p>二つのリストがマージされた新しいリストが返されます。</p>
+
+<h3>merge/3</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>merge(Fun, List1, List2) &ndash;> List3</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Fun = fun((A, B) &ndash;> boolean())</li>
+<li>List1 = [A]</li>
+<li>List2 = [B]</li>
+<li>List3 = [(A | B)]</li>
+<li>A = B = term()</li>
+</ul>
+
+
+<p>Returns the sorted list formed by merging List1 and List2. Both List1 and List2 must be sorted according to the <a href="http://www.erlang.org/doc/man/lists.html#ordering_function">ordering function</a> <code>Fun</code> prior to evaluating this function. <code>Fun(A, B)</code> should return <code>true</code> if <code>A</code> compares less than or equal to <code>B</code> in the ordering, <code>false</code> otherwise. When two elements compare equal, the element from List1 is picked before the element from List2.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#merge-3">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p><code>List1</code>と<code>List2</code>をソートしてマージした新しいリストを返します。引数のリストは事前にソートされている必要があります。<code>Fun(A, B)</code>はソートオーダーに関して<code>A</code>が先に来るべきである場合は<code>true</code>を、そうでない場合は<code>false</code>を返します。同じ値の要素がある場合は、<code>List1</code>のものが<code>List2</code>のものに優先されます。</p>
+
+<h4>Example</h4>
+
+<p><code>erlang
+1&gt; lists:merge(fun(A, B) -&gt; A &gt; B end,[6,4,3,1],[7,5,2,0]).
+[7,6,5,4,3,2,1,0]
+2&gt; lists:merge(fun({A,_}, {B,_}) -&gt; A =&lt; B end,            
+2&gt; [{1,a},{3,a},{4,a},{5,a}],                  
+2&gt; [{0,b},{2,b},{4,b},{6,b}]).                 
+[{0,b},{1,a},{2,b},{3,a},{4,a},{4,b},{5,a},{6,b}]
+</code></p>
+
+<p>最初の例では、降順にソートする関数で評価してリストをマージして新しいリストを返します。</p>
+
+<p>後者の例では、昇順ソートです。同一の値の場合に<code>List1</code>から要素が取得されています。</p>
+
+<h3>merge3/3</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>merge3</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#merge3-3">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<h3>min/1</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>min</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#min-1">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>erlang
+</code></p>
+
+<h3>module_info/0</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>module_info</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#module_info-0">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>erlang
+</code></p>
+
+<h3>module_info/1</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>module_info</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#module_info-1">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>erlang
+</code></p>
+
+<h3>nth/2</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>nth</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#nth-2">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>erlang
+</code></p>
+
+<h3>nthtail/2</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>nthtail</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#nthtail-2">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>erlang
+</code></p>
+
+<h3>partition/2</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>partition</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#partition-2">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>erlang
+</code></p>
+
+<h3>prefix/2</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>prefix</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#prefix-2">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>erlang
+</code></p>
+
+<h3>reverse/1</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>reverse</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#reverse-1">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>erlang
+</code></p>
+
+<h3>reverse/2</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>reverse</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#reverse-2">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>erlang
+</code></p>
+
+<h3>rkeymerge/3</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>rkeymerge</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#rkeymerge-3">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>erlang
+</code></p>
+
+<h3>rmerge/2</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>rmerge</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#rmerge-2">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>erlang
+</code></p>
+
+<h3>rmerge/3</h3>
+
+<h4>Erlang Document</h4>
+
+<blockquote><h4>rmerge</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li></li>
+<li></li>
+</ul>
+
+
+<p><a href="http://erlang.org/doc/man/lists.html#rmerge-3">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<h4>Example</h4>
+
+<p><code>erlang
+</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Erlangのlistsモジュールを試してみる - 第2回]]></title>
