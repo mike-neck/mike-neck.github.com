@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Java | mike、mikeなるままに…]]></title>
+  <title><![CDATA[Category: java | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-25T12:04:32+09:00</updated>
+  <updated>2013-05-25T22:49:55+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -14,105 +14,125 @@
 
   
   <entry>
-    <title type="html"><![CDATA[JJUG CCC 2013 Spring に行ってきた]]></title>
-    <link href="http://mike-neck.github.io/blog/2013/05/12/jjug-ccc-2013-spring-nixing-tutekita/"/>
-    <updated>2013-05-12T16:47:00+09:00</updated>
-    <id>http://mike-neck.github.io/blog/2013/05/12/jjug-ccc-2013-spring-nixing-tutekita</id>
+    <title type="html"><![CDATA[JavaではじめてSocketプログラムを書いてみた]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/05/25/javadehazimetesocketpuroguramuwoshu-itemita/"/>
+    <updated>2013-05-25T21:13:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/05/25/javadehazimetesocketpuroguramuwoshu-itemita</id>
     <content type="html"><![CDATA[<p>みけです。</p>
 
-<p>2013/05/11行われた<a href="http://www.java-users.jp/?page_id=330">JJUG CCC 2013 Spring</a>に午後から行って来ました。</p>
+<p>jjugのメーリングリストにconcurrentに関する質問が着ていたので、</p>
 
-<p>なんか午前の基本講演のJim Weaverさんと</p>
+<p>答えようと思ってみたんですが、</p>
 
-<p><a href="http://atnd.org/events/33874">JavaFX Advent Calendar2012</a>をやった人達で</p>
+<p>Socketを使ったプログラムで、</p>
 
-<p>ランチに行ってきたそうです。</p>
+<p><strong>そういえば僕、Socketを使ったプログラム書いたこと無いな</strong></p>
 
-<p>午前に行けなくて残念…</p>
+<p>と思い至り、書いてみることにしました。</p>
 
-<p>以下、僕が参加したセッションのまとめ</p>
+<h2>SocketServerのほう</h2>
 
-<h2>H-1 Java EE 6 から Java EE 7 に向かって</h2>
+<p><code>java.net.ServerSocket</code>を使って書くようです。</p>
 
-<p>王子こと寺田さんのセッション。</p>
+<p>```java SimpleServer.java
+package org.mikeneck.socket;</p>
 
-<p>まあ、大体聞いたことのある話でした(失礼！)。</p>
+<p>import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;</p>
 
-<ul>
-<li>JavaEE7に向けてJavaEE6も勉強して下さい。</li>
-<li>JavaEE6はJavaEE5以前に比べてかなり軽量化されています。</li>
-<li>JavaEE6からはテストも非常に容易になっています。</li>
-</ul>
+<p>/<em>*
+ * @author mike_neck
+ </em>/
+public class SimpleServer implements Runnable {</p>
 
+<pre><code>private final ServerSocket serverSocket;
 
-<p>といった感じです。</p>
+public SimpleServer(int port) throws IOException {
+    serverSocket = new ServerSocket(port);
+}
 
-<p>その他、JavaEE7に追加される機能の一部の概要の説明がありました。</p>
-
-<h3>結論</h3>
-
-<ul>
-<li>JavaEE7はおもろいので、ぜひやろうぜ</li>
-<li>JavaEE6やってない人はJavaEE6からどうぞ</li>
-<li>資料公開してくれるはず、はず、はず</li>
-</ul>
-
-
-<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4798124605" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-
-
-<h2>H-2 H-2 Project Lambda Essential</h2>
-
-<p>桜庭さんのProject Lambdaに関するセッション。</p>
-
-<p>まあ、ラムダは大体わかっているし、あれでしたが、</p>
-
-<p>Streamに関する話は面白かったです。</p>
-
-<h3>Streamとは？</h3>
-
-<p>終端の定義されていないCollectionのことだそうです。</p>
-
-<p>次のようなクラスが定義されています。</p>
-
-<ul>
-<li>Object用 <code>java.util.stream.Stream&lt;T&gt;</code></li>
-<li>int用 <code>java.util.stream.IntStream</code></li>
-<li>long用 <code>java.util.stream.LongStream</code></li>
-<li>double用 <code>java.util.stream.DoubleStream</code></li>
-</ul>
-
-
-<h4>メソッドとか</h4>
-
-<p>メソッドとかの例を上げてみます。</p>
-
-<p>ちなみに、昔(今)どうやっているかも一緒に書きます。</p>
-
-<h5>filter</h5>
-
-<p>```java filter
-IntStream stream = IntStream.range(1,10);
-int[] result = stream.filter(x &ndash;> x % 2 == 0).toArray();
-// result &ndash;> [2, 4, 6, 8, 10]</p>
-
-<p>```</p>
-
-<p>昔のやり方</p>
-
-<p>```java filter-old-style
-List<Integer> list = new ArrayList&lt;>();
-List<Integer> result = new ArrayList&lt;>();
-for (int i = 1; i &lt;= 10; i ++) {</p>
-
-<pre><code>list.add(i);
+@Override
+public void run() {
+    while(true) {
+        try (Socket socket = serverSocket.accept();
+             BufferedReader reader = new BufferedReader(
+                 new InputStreamReader(socket.getInputStream()));
+             PrintStream writer = new PrintStream(socket.getOutputStream())
+        ) {
+            String line = reader.readLine();
+            writer.println(line);
+            if (line.equals("BYE")) {
+                break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
 </code></pre>
 
 <p>}
-for (int item : list) {</p>
+```</p>
 
-<pre><code>if (item % 2 == 0) {
-    result.add(item);
+<h2>SocketClientのほう</h2>
+
+<p>クライアントアプリケーションの方は<code>java.net.Socket</code>を用いるようです。</p>
+
+<p>```java SimpleClient.java
+package org.mikeneck.multithreads;</p>
+
+<p>import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;</p>
+
+<p>/<em>*
+ * @author mike_neck
+ </em>/
+public class SimpleClient implements AutoCloseable {</p>
+
+<pre><code>private final Socket socket;
+
+private DataOutputStream output;
+
+private BufferedReader input;
+
+public SimpleClient(String hostname, int port) throws IOException {
+    socket = new Socket(hostname, port);
+}
+
+public SimpleClient open () throws IOException {
+    output = new DataOutputStream(socket.getOutputStream());
+    input = new BufferedReader(
+        new InputStreamReader(socket.getInputStream()));
+    return this;
+}
+
+public String sendMessage(String message) throws IOException {
+    output.writeBytes(message + '\n');
+    String line;
+    if ((line = input.readLine()) != null) {
+        return line;
+    } else {
+        return "";
+    }
+}
+
+public void bye () throws IOException {
+    output.writeBytes("BYE\n");
+}
+
+@Override
+public void close() throws Exception {
+    if (!socket.isClosed()) {
+        socket.close();
+    }
 }
 </code></pre>
 
@@ -120,359 +140,74 @@ for (int item : list) {</p>
 
 <p>```</p>
 
-<h5>map</h5>
+<h2>SocketServerでの疑問</h2>
 
-<p>```java map
-IntStream stream = IntStream.range(1,4);
-int[] result = stream.map(x &ndash;> x * x).toArray();
-// result &ndash;> [1, 4, 9, 16]</p>
+<p>と、まあ簡単なプログラムを書いたのですが、</p>
 
-<p>```</p>
+<p>二回メッセージを送る場合はどうなるのかとか、疑問が残りますね。</p>
 
-<p>ちなみに昔のやり方</p>
+<p>で、テストを書くわけですが…</p>
 
-<p>```java map-old-style
-List<Integer> list = new ArrayList&lt;>();
-List<Integer> result = new ArrayList&lt;>();
-for (int i = 1; i &lt;= 4; i ++) {</p>
+<p>案の定落ちました。</p>
 
-<pre><code>list.add(i);
+<p>```java SendManyMessages.java
+// import とか packageとか省略
+public static class SendManyMessages {</p>
+
+<pre><code>private static final ExecutorService SERVICE = Executors.newFixedThreadPool(1);
+
+private static final int PORT = 14541;
+
+private static final String LOCALHOST = "localhost";
+
+@Rule
+public TestName testName = new TestName();
+
+@BeforeClass
+public static void start () throws IOException {
+    SERVICE.execute(new SimpleServer(PORT));
+}
+
+@AfterClass
+public static void end () throws IOException {
+    new SimpleClient(LOCALHOST, PORT).open().bye();
+}
+
+@ThisTestWillFail
+@Test
+public void send2times () throws IOException {
+    SimpleClient client = new SimpleClient(LOCALHOST, PORT).open();
+
+    assertThat(client.sendMessage("hello"), is("hello"));
+    assertThat(client.sendMessage("good-bye"), is("good-bye"));
+}
 </code></pre>
 
 <p>}
-for (int item : list) {</p>
-
-<pre><code>list.add(item * item);
-</code></pre>
-
-<p>}</p>
-
-<p>```</p>
-
-<h5>reduce</h5>
-
-<p>```java reduce
-IntStream stream = IntStream.range(1,10);
-int result = stream.reduce(0, (x, y) &ndash;> x + y).get();
-// result &ndash;> 55</p>
-
-<p>```</p>
-
-<p>ちなみに昔のやり方</p>
-
-<p>```java reduce-old-style
-List<Integer> list = new ArrayList&lt;>();
-int result = 0;
-for (int i = 1; i &lt;= 10; i ++) {</p>
-
-<pre><code>list.add(i);
-</code></pre>
-
-<p>}
-for (int item : list) {</p>
-
-<pre><code>result += item;
-</code></pre>
-
-<p>}</p>
-
-<p>```</p>
-
-<h4>対応</h4>
-
-<ul>
-<li>filter &ndash;> if文</li>
-<li>map &ndash;> getter</li>
-<li>reduce &ndash;> 副作用プログラミング</li>
-</ul>
-
-
-<h3>Project Lambdaに関して</h3>
-
-<h4>lambdaを使用しているのにHoge$A.classみたいなものができない</h4>
-
-<p>lambda式が表しているクラスは動的に評価されてinvoke dynamicで実行される</p>
-
-<h4>mapとreduceを実行しているのに、ループが一回しかまわらない</h4>
-
-<p>map/reduce式は遅延して実行される</p>
-
-<h3>まとめ</h3>
-
-<ul>
-<li>Project LambdaとかStreamは記法がかなり変わるので、使用禁止と言われないように勉強しろ(とくにプロジェクトの<strike>エロイ</strike>エライ人)</li>
-</ul>
-
-
-<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=0321927761" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-
-
-<h2>R5-3 Type Annotation って何? それを使うとプログラムはどう変わる?</h2>
-
-<p>Type Annotationに関するセッション</p>
-
-<h3>比較</h3>
-
-<ul>
-<li>これまでのアノテーション(AnnotationType)は宣言をするアノテーション</li>
-<li>TypeAnnotationは型、参照の利用に関する説明のアノテーション</li>
-</ul>
-
-
-<h3>例</h3>
-
-<p>```java TypeAnnotation-example
-// 空リストではない、読み取り専用のリスト
-@NotEmpty @ReadOnly List<String> customer = CustomerService.getCustomer().withMultipleAccount();</p>
-
-<p>// nullなkey不可、空リストでなく読み取り専用なvalueを持つマップ
-Map&lt;@NonNull String, @NotEmpty List&lt;@ReadOnly Text>> document = DocumentService.splitDocumentToTextList(doc);
 ```</p>
 
-<p>ここでなんとかServiceとか書いていますが、テキトーなので突っ込まないで下さい。</p>
+<p>```
+java.net.SocketException: Broken pipe</p>
 
-<h3>記述位置で意味が異なる</h3>
+<pre><code>at java.net.SocketOutputStream.socketWrite0(Native Method)
+at java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:109)
+at java.net.SocketOutputStream.write(SocketOutputStream.java:132)
+at java.io.DataOutputStream.writeBytes(DataOutputStream.java:276)
+at org.mikeneck.multithreads.SimpleClient.sendMessage(SimpleClient.java:31)
+at org.mikeneck.multithreads.SendManyMessages.send2times(SimpleSocketTest.java:37)
+</code></pre>
 
-<p>```java position-has-much-meanings
-// 読み取り専用のリスト
-// customers.add(customer)や、customers.replace(index, customer)はできない。
-@ReadOnly List<Customer> customers = CustomerService.getCustomer().withMultipleAccount();</p>
+<p>```</p>
 
-<p>// 変更可能なリスト
-// ただし入っているCustomerへの変更は不可
-// customer.addNewAddress(address)などは実行できない
-List&lt;@ReadOnly Customer> customers = CustomerService.getCustomer().withMultipleAccount();
-```</p>
+<p>うん、まあ、今回は別になんか状態を持つようなサーバーを作りたいわけではないし、</p>
 
-<h3>使えない場所</h3>
+<p>そういうサーバーを作りたい場合は、まあ、そういう工夫をすればいいということだけ覚えておこう。</p>
 
-<ul>
-<li>クラスリテラル</li>
-<li>import文</li>
-<li>staticメンバー</li>
-</ul>
+<p>なお、他に書いたテストもありますが、</p>
 
+<p>面倒なので、gistにあげておきました。</p>
 
-<h3>簡単な例</h3>
-
-<ul>
-<li><code>@NonNull</code></li>
-<li><code>@NotEmpty</code></li>
-<li><code>@Interned</code></li>
-<li><code>@ReadOnly</code></li>
-<li><code>@Critical</code></li>
-</ul>
-
-
-<h3>残念なこと</h3>
-
-<ul>
-<li>書けるけど、意味は無い…</li>
-<li>JavaSE8で事前定義された型アノテーションは(今のところ)ない</li>
-<li>Java SE8でも入らないし、Java SE9でも入らないかもしれない</li>
-<li>単純に実装者が気をつけろよレベル</li>
-</ul>
-
-
-<h3>まとめ</h3>
-
-<p>うむ、なんかちょっと残念。</p>
-
-<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=0321927761" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-
-
-<h2>H-4 失敗から学ぶAPI設計</h2>
-
-<p>イケメンことゆーすけさんのセッション</p>
-
-<p>Twitter4Jのプロモーションとか、たくさん使ってもらうためにしたことなどを発表</p>
-
-<h3>たくさん使ってもらうためのプロモーション的な</h3>
-
-<ul>
-<li>汚いことでもなんでもする</li>
-<li>手厚いサポートをする。ggrksとかしない</li>
-</ul>
-
-
-<h3>たくさん使ってもらうための技術的な</h3>
-
-<ul>
-<li>インターフェースを使わないでクラスを使う</li>
-<li>あまりパッケージを増やさない</li>
-<li>名前はよく考える</li>
-<li>デザパタとかも使わせない</li>
-<li>継承させない</li>
-<li>本当に使ってほしくないクラスは異様な名前にする</li>
-</ul>
-
-
-<p>あとは、資料が公表されているので、そちらを参照。</p>
-
-<iframe src="http://www.slideshare.net/slideshow/embed_code/20968265" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen> </iframe>
-
-
-<p> <div style="margin-bottom:5px"> <strong> <a href="http://www.slideshare.net/yusukey/api-ccch4-jjug-jjugccc-jjug-ccc-2013-spring" title="失敗から学ぶAPI設計 #ccc_h4 #jjug #jjug_ccc JJUG CCC 2013 Spring " target="_blank">失敗から学ぶAPI設計 #ccc_h4 #jjug #jjug_ccc JJUG CCC 2013 Spring </a> </strong> from <strong><a href="http://www.slideshare.net/yusukey" target="_blank">Yusuke Yamamoto</a></strong> </div></p>
-
-<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=477414732X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-
-
-<h2>R5-5 [BOF] Java読書会ライブ</h2>
-
-<p>実は昔デブサミのLT大会でLTを聞いてから興味を持っていたので、聞いてみたかったセッション</p>
-
-<p>実際に音読をしているし、途中で議論をやっていて面白そうでした。</p>
-
-<p>今は<a href="http://www.amazon.co.jp/gp/product/477415377X/ref=as_li_ss_tl?ie=UTF8&amp;camp=247&amp;creative=7399&amp;creativeASIN=477415377X&amp;linkCode=as2&amp;tag=kkkjkrt-22">JUnit実践入門</a>を読んでいるそうです。</p>
-
-<h3>概要</h3>
-
-<ul>
-<li>月一回土曜日に開催</li>
-<li>まず自己紹介と近況の報告をする</li>
-<li>書記を選出する</li>
-<li>書記は議論のポイントなどをまとめてサイトに掲載する</li>
-<li>午前10:00くらいから昼間でと午後5時まで続ける</li>
-<li>その後は有志で飲みに行く</li>
-</ul>
-
-
-<p>まあ、普通の勉強会ですね。</p>
-
-<h3>質疑応答</h3>
-
-<h4>読む本はどうやって決定しているか？</h4>
-
-<ul>
-<li>投票によって決定しているそうです。</li>
-<li>なお、投票は普通の参加者は1票、書記は2票を入れることができるそうです。</li>
-</ul>
-
-
-<h4>どれくらいのスピードで読んでいるのか</h4>
-
-<ul>
-<li>毎回約60ページ程度読んでいます。</li>
-</ul>
-
-
-<h4>予習とか必要か？</h4>
-
-<ul>
-<li>してないけど、してくる人もいる</li>
-</ul>
-
-
-<h4>コードの実行をしたりするのか？</h4>
-
-<ul>
-<li>パソコン持ってきていてやってくれる人もいる</li>
-</ul>
-
-
-<h4>どんな本が読書会に向いているか</h4>
-
-<ul>
-<li>入門本よりはすこし難しめな本で、どうしても積ん読になってしまうようなもののほうが適している</li>
-<li>いろんなコンテキストを持っている人が参加するので、それが勉強になる</li>
-</ul>
-
-
-<h3>まとめ</h3>
-
-<p>面白そうなので、一回参加してみたいと思いました。</p>
-
-<p>参考リンク : <a href="http://www.javareading.com/bof/">Java読書会BOFのページ</a></p>
-
-<h2>R2-6 [BOF] 地方における勉強会事情</h2>
-
-<p>沖縄、大都会岡山、札幌＋急遽大阪のコミュニティ・勉強会の主催者によるパネルディスカッション</p>
-
-<p>東京の勉強会との違いがわかる一方で、</p>
-
-<p>Javaの勉強会が抱えている問題と共通するものがあるなーという感じがしました。</p>
-
-<p>詳しくはtogetterにまとめられていますので、</p>
-
-<p>そちらを参照して下さい。</p>
-
-<p><a href="http://togetter.com/li/501590">JJUG CCC 2013 Spring R2-6 [BOF] 地方における勉強会事情</a></p>
-
-<blockquote><p>2013/05/12 19:54 追記</p>
-
-<p>地方の勉強会で初参加する人は</p>
-
-<p>勉強会に参加してきたというブログを読んで</p>
-
-<p>いけそうだなと思って参加するらしいです。</p>
-
-<p>したがって、勉強会の活性化をしたいなら</p>
-
-<ul>
-<li><strong>とにかくブログを書け</strong></li>
-<li><strong>勉強会はブログを書くまでが勉強会です</strong></li>
-</ul>
-</blockquote>
-
-<h2>JJUG CCC 2013 Spring 懇親会</h2>
-
-<p>一応参加して来ました。</p>
-
-<p>そしてなぜかLTさせられることになったので、</p>
-
-<p>グダグダなやつをやってきました。</p>
-
-<p>参考 : <a href="http://mikeneck.blogspot.jp/2013/05/sushi.html">ゆとりさんが鮨を奢ってくれるそうなので、感謝の気持を込めて、たくさんのプロセスに「sushi」と言わせてみた</a></p>
-
-<h2>まとめ</h2>
-
-<p>Java楽しいですね。</p>
-
-<p>僕はもう人間的にかなり不活性ですが、</p>
-
-<p>Java自体は活性化して貰いたいので、</p>
-
-<p>なんか継続できる勉強会でもやりたいなと思います。</p>
-
-<p><div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.ioblog/categories/java/atom.xml" data-via="mike_neck" data-counturl="http://mike-neck.github.ioblog/categories/java/atom.xml" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-  <br/>
-</div>
-
-
-
-<script type="text/javascript"><!--
-google_ad_client = "ca-pub-4508687151223458";
-/* octopress */
-google_ad_slot = "1134799005";
-google_ad_width = 300;
-google_ad_height = 250;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-</p>
+<p><a href="https://gist.github.com/mike-neck/5649095">こちらをどうぞ</a></p>
 ]]></content>
   </entry>
   
