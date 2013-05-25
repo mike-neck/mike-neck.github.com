@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-25T22:49:55+09:00</updated>
+  <updated>2013-05-25T22:52:12+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -316,7 +316,7 @@
 </span><span class='line'>  <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">SocketOutputStream</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">SocketOutputStream</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">132</span><span class="o">)</span>
 </span><span class='line'>  <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">DataOutputStream</span><span class="o">.</span><span class="na">writeBytes</span><span class="o">(</span><span class="n">DataOutputStream</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">276</span><span class="o">)</span>
 </span><span class='line'>  <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="na">mikeneck</span><span class="o">.</span><span class="na">multithreads</span><span class="o">.</span><span class="na">SimpleClient</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="n">SimpleClient</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">31</span><span class="o">)</span>
-</span><span class='line'>  <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="na">mikeneck</span><span class="o">.</span><span class="na">multithreads</span><span class="o">.</span><span class="na">SendManyMessages</span><span class="o">.</span><span class="na">send2times</span><span class="o">(</span><span class="n">SimpleSocketTest</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">37</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="na">mikeneck</span><span class="o">.</span><span class="na">multithreads</span><span class="o">.</span><span class="na">SendManyMessages</span><span class="o">.</span><span class="na">send2times</span><span class="o">(</span><span class="n">SendManyMessages</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">37</span><span class="o">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
