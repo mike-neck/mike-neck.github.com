@@ -194,3 +194,5 @@ java.net.SocketException: Broken pipe
 
 [こちらをどうぞ](https://gist.github.com/mike-neck/5649095)
 
+{% render_partial _includes/post/post_footer.html %}
+

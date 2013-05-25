@@ -510,6 +510,8 @@ b
 
 
 
+{% render_partial _includes/post/post_footer.html %}
+
 
 ### rmerge/3
 
@@ -537,5 +539,7 @@ b
 ```
 
 
+
+{% render_partial _includes/post/post_footer.html %}
 
 
