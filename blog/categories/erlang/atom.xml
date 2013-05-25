@@ -4,7 +4,7 @@
   <title><![CDATA[Category: erlang | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/erlang/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-23T16:39:32+09:00</updated>
+  <updated>2013-05-25T12:04:32+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -172,44 +172,82 @@ lists:sublist(</p>
 
 <h4>Erlang Document</h4>
 
-<blockquote><h4>merge3</h4>
+<blockquote><h4>merge3(List1, List2, List3) &ndash;> List4</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>List1 = [X]</li>
+<li>List2 = [Y]</li>
+<li>List3 = [Z]</li>
+<li>List4 = [(X | Y | Z)]</li>
+<li>X = Y = Z = term()</li>
 </ul>
 
+
+<p>Returns the sorted list formed by merging List1, List2 and List3. All of List1, List2 and List3 must be sorted prior to evaluating this function. When two elements compare equal, the element from List1, if there is such an element, is picked before the other element, otherwise the element from List2 is picked before the element from List3.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#merge3-3">参照先</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p>三つのリストをソートしてマージした新しいリストを返します。引数のリストは事前にソートされている必要があります。もし同じ値の要素があった場合は<code>List1</code>、<code>List2</code>、<code>List3</code>の順番で優先されます。</p>
+
 <h4>Example</h4>
+
+<p><code>
+50&gt; lists:merge3(
+50&gt;   [2, 5, 8],
+50&gt;   [1, 4, 9],
+50&gt;   [3, 6, 7]).
+[1,2,3,4,5,6,7,8,9]
+</code></p>
 
 <h3>min/1</h3>
 
 <h4>Erlang Document</h4>
 
-<blockquote><h4>min</h4>
+<blockquote><h4>min(List) &ndash;> Min</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>List = [T, …]</li>
+<li>Min = T</li>
+<li>T = term()</li>
 </ul>
 
+
+<p>Returns the first element of List that compares less than or equal to all other elements of List.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#min-1">参照先</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p>リスト中、最初に現れた最も小さい要素を返します。</p>
+
 <h4>Example</h4>
 
 <p><code>erlang
+1&gt; lists:min([5, 3, 1, 4, 5]).
+1
+2&gt; lists:min([h, b, n, t, l]).
+b
+3&gt; lists:min([0,0.0]).
+0
+4&gt; lists:min([0.0,0]).
+0.0
+5&gt; lists:min(['A', 123, a, 123.0]).
+123
 </code></p>
+
+<p>最初の例では引数のリストの最小整数1が返されます。</p>
+
+<p>次の例では引数のリストの最小のatom<code>b</code>が返されます。</p>
+
+<p>三番目と四番目の例では整数と浮動小数点数の0を比較して最初に現れた要素が返されます。</p>
+
+<p>最後の例では整数と浮動小数点数とatomを比較しています。最初に現れた最小の要素(整数)が返されます。</p>
 
 <h3>module_info/0</h3>
 
@@ -232,6 +270,7 @@ lists:sublist(</p>
 <h4>Example</h4>
 
 <p><code>erlang
+1&gt;
 </code></p>
 
 <h3>module_info/1</h3>
@@ -255,6 +294,7 @@ lists:sublist(</p>
 <h4>Example</h4>
 
 <p><code>erlang
+1&gt;
 </code></p>
 
 <h3>nth/2</h3>
@@ -278,6 +318,7 @@ lists:sublist(</p>
 <h4>Example</h4>
 
 <p><code>erlang
+1&gt;
 </code></p>
 
 <h3>nthtail/2</h3>
@@ -301,6 +342,7 @@ lists:sublist(</p>
 <h4>Example</h4>
 
 <p><code>erlang
+1&gt;
 </code></p>
 
 <h3>partition/2</h3>
@@ -324,6 +366,7 @@ lists:sublist(</p>
 <h4>Example</h4>
 
 <p><code>erlang
+1&gt;
 </code></p>
 
 <h3>prefix/2</h3>
@@ -347,6 +390,7 @@ lists:sublist(</p>
 <h4>Example</h4>
 
 <p><code>erlang
+1&gt;
 </code></p>
 
 <h3>reverse/1</h3>
@@ -370,6 +414,7 @@ lists:sublist(</p>
 <h4>Example</h4>
 
 <p><code>erlang
+1&gt;
 </code></p>
 
 <h3>reverse/2</h3>
@@ -393,6 +438,7 @@ lists:sublist(</p>
 <h4>Example</h4>
 
 <p><code>erlang
+1&gt;
 </code></p>
 
 <h3>rkeymerge/3</h3>
@@ -416,6 +462,7 @@ lists:sublist(</p>
 <h4>Example</h4>
 
 <p><code>erlang
+1&gt;
 </code></p>
 
 <h3>rmerge/2</h3>
@@ -439,6 +486,7 @@ lists:sublist(</p>
 <h4>Example</h4>
 
 <p><code>erlang
+1&gt;
 </code></p>
 
 <h3>rmerge/3</h3>
@@ -462,6 +510,7 @@ lists:sublist(</p>
 <h4>Example</h4>
 
 <p><code>erlang
+1&gt;
 </code></p>
 ]]></content>
   </entry>
