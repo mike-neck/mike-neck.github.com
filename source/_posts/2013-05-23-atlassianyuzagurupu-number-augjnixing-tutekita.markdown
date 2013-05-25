@@ -76,4 +76,5 @@ HipChatいいですね
 
 で、<span style="font-decoration : line-through;">なんか開催前にイケメンの人から</span>もらいました。
 
+{% render_partial _includes/post/post_footer.html %}
 
