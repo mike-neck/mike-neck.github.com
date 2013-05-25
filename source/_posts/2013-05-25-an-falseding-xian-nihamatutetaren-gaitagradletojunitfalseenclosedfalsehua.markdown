@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "案の定先にはまってた人がいたgradleとJUnitのEnclosedの話"
+title: "gradleとJUnitのEnclosedの話"
 date: 2013-05-25 23:19
 comments: true
 categories: java, gradle, groovy
