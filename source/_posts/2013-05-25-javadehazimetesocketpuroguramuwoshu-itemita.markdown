@@ -181,7 +181,7 @@ java.net.SocketException: Broken pipe
 	at java.net.SocketOutputStream.write(SocketOutputStream.java:132)
 	at java.io.DataOutputStream.writeBytes(DataOutputStream.java:276)
 	at org.mikeneck.multithreads.SimpleClient.sendMessage(SimpleClient.java:31)
-	at org.mikeneck.multithreads.SendManyMessages.send2times(SimpleSocketTest.java:37)
+	at org.mikeneck.multithreads.SendManyMessages.send2times(SendManyMessages.java:37)
 ```
 
 うん、まあ、今回は別になんか状態を持つようなサーバーを作りたいわけではないし、
