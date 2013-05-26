@@ -2,6 +2,10 @@ require "rubygems"
 require "bundler/setup"
 require "stringex"
 
+# -- sending ping -- #
+require "yaml"
+require "xmlrpc"
+
 ## -- Rsync Deploy config -- ##
 # Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
 ssh_user       = "user@domain.com"
@@ -224,7 +228,7 @@ task :deploy do
 end
 
 desc "Generate website and deploy"
-task :gen_deploy => [:integrate, :generate, :deploy] do
+task :gen_deploy => [:integrate, :generate, :deploy, :ping] do
 end
 
 desc "copy dot files for deployment"
@@ -352,6 +356,20 @@ task :setup_github_pages, :repo do |t, args|
     end
   end
   puts "\n---\n## Now you can deploy to #{url} with `rake deploy` ##"
+end
+
+#-- sending ping --#
+desc "Sedning ping to Web Search Engines"
+task :ping do
+  site_config = YAML.load(IO.read('_config.yml'))
+  blog_title = site_config['title']
+  blog_url = site_config['url']
+  ping_url = YAML.load(IO.read('ping.yml'))
+  ping_url.each do |url|
+    ping = XMLRPC::Client.new2(url)
+    result = ping.call('weblogUpdates.ping', blog_title, blog_url)
+    puts result
+  end
 end
 
 def ok_failed(condition)
