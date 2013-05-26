@@ -4,7 +4,7 @@ require "stringex"
 
 # -- sending ping -- #
 require "yaml"
-require "xmlrpc"
+require "xmlrpc/client"
 
 ## -- Rsync Deploy config -- ##
 # Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
