@@ -361,6 +361,7 @@ end
 #-- sending ping --#
 desc "Sedning ping to Web Search Engines"
 task :ping do
+  puts "\n## sending ping to Search Engines\n"
   site_config = YAML.load(IO.read('_config.yml'))
   blog_title = site_config['title']
   blog_url = site_config['url']
@@ -368,7 +369,7 @@ task :ping do
   ping_url.each do |url|
     ping = XMLRPC::Client.new2(url)
     result = ping.call('weblogUpdates.ping', blog_title, blog_url)
-    puts result
+    puts "#{url} : #{result}"
   end
 end
 
