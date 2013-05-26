@@ -76,7 +76,7 @@ end
 - http://ping.fc2.com/
 - http://rpc.weblogs.com/RPC2
 - http://rpc.reader.livedoor.com/ping
-- http://ping.myblog.jp/
+- http://ping.blogranking.net/
 - http://www.blogpeople.net/ping/
 ```
 
