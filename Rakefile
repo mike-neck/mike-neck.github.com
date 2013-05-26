@@ -368,8 +368,12 @@ task :ping do
   ping_url = YAML.load(IO.read('ping.yml'))
   ping_url.each do |url|
     ping = XMLRPC::Client.new2(url)
-    result = ping.call('weblogUpdates.ping', blog_title, blog_url)
-    puts "#{url} : #{result}"
+    begin
+      result = ping.call('weblogUpdates.ping', blog_title, blog_url)
+      puts "#{url} : #{result}"
+    rescue => e
+      puts "#{url} : #{e}"
+    end
   end
 end
 
