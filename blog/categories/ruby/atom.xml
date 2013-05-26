@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ruby | mike、mikeなるままに…]]></title>
+  <link href="http://mike-neck.github.io/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://mike-neck.github.io/"/>
+  <updated>2013-05-26T21:48:05+09:00</updated>
+  <id>http://mike-neck.github.io/</id>
+  <author>
+    <name><![CDATA[mike-neck]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[blogの更新pingを送れるようにrakeのタスクを書いてみた]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/05/26/blogfalsegeng-xin-pingwosong-reruyounirakefalsetasukuwoshu-itemita/"/>
+    <updated>2013-05-26T21:38:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/05/26/blogfalsegeng-xin-pingwosong-reruyounirakefalsetasukuwoshu-itemita</id>
+    <content type="html"><![CDATA[<p>こんにちわ、みけです。</p>
+
+<p>お金がないので、ブログを読んでもらって、</p>
+
+<p>google adsenseをみんなに押してもらわないと、</p>
+
+<p>死んでしまいます。</p>
+
+<p>さて、そんなことはどうでもよくて、</p>
+
+<p>bloggerでブログをやっていたときは、</p>
+
+<p>googleさんが勝手に検索エンジンに乗せてくれるので、</p>
+
+<p>検索しやすかったのですが、</p>
+
+<p>githubでブログを書くようになって、</p>
+
+<p>検索で出にくくなっていたので、</p>
+
+<p>更新pingをrakeで送りつけるようにしました。</p>
+
+<p>まあ、「更新ping ruby」でググった結果をrakeのタスクにしただけですが…</p>
+
+<p>で、追加したのがこんな感じのタスクです。</p>
+
+<p>```ruby rakefile
+require &ldquo;yaml&rdquo;
+require &ldquo;xmlrpc/client&rdquo;</p>
+
+<h1>&mdash; sending ping &mdash;</h1>
+
+<p>desc &ldquo;Sedning ping to Web Search Engines&rdquo;
+task :ping do
+  site_config = YAML.load(IO.read(&lsquo;_config.yml&rsquo;))
+  blog_title = site_config[&lsquo;title&rsquo;]
+  blog_url = site_config[&lsquo;url&rsquo;]
+  ping_url = YAML.load(IO.read(&lsquo;ping.yml&rsquo;))
+  ping_url.each do |url|</p>
+
+<pre><code>ping = XMLRPC::Client.new2(url)
+result = ping.call('weblogUpdates.ping', blog_title, blog_url)
+puts result
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>この新たに追加したタスクを後は、gen_deployタスクに追加します。</p>
+
+<p><code>ruby rakefile
+desc "Generate website and deploy"
+task :gen_deploy =&gt; [:integrate, :generate, :deploy, :ping] do
+end
+</code></p>
+
+<p>あと、適当に<code>ping.yml</code>に更新pingを送りつけるサイトを記述すればおｋです。</p>
+
+<p><code>yaml ping.yml
+- http://blogsearch.google.com/ping/RPC2
+- http://blog.goo.ne.jp/XMLRPC
+- http://api.my.yahoo.com/RPC2
+- http://ping.bloggers.jp/rpc/
+- http://ping.rss.drecom.jp/
+- http://rpc.blogrolling.com/pinger/
+- http://rpc.weblogs.com/RPC2
+- http://rpc.reader.livedoor.com/ping
+- http://www.blogstyle.jp/
+- http://www.blogpeople.net/ping/
+</code></p>
+
+<p><script type="text/javascript"><!--
+google_ad_client = "ca-pub-4508687151223458";
+/* octopress */
+google_ad_slot = "1134799005";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+</p>
+]]></content>
+  </entry>
+  
+</feed>

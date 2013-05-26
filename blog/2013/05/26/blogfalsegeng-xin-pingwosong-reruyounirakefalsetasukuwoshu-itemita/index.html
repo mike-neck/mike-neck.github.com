@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>mike、mikeなるままに…Githubに移動しました。 - mike、mikeなるままに…</title>
+  <title>blogの更新pingを送れるようにrakeのタスクを書いてみた - mike、mikeなるままに…</title>
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="どーも、みけです。
-Githubでブログを書くことにしました。 試しにgistのコードも載せてみます。 あまりマークダウン使いこなせてないんで、 良い感じの記事になるにはもうちょい時間かかると思う。 <!--
-google_ad_client = "ca-pub-4508687151223458 &hellip;">
+  <meta name="description" content="こんにちわ、みけです。 お金がないので、ブログを読んでもらって、 google adsenseをみんなに押してもらわないと、 死んでしまいます。 さて、そんなことはどうでもよくて、 bloggerでブログをやっていたときは、 googleさんが勝手に検索エンジンに乗せてくれるので、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@ google_ad_client = "ca-pub-4508687151223458 &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/05/08/first-post">
+  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/05/26/blogfalsegeng-xin-pingwosong-reruyounirakefalsetasukuwoshu-itemita">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="mike、mikeなるままに…" type="application/atom+xml">
@@ -83,7 +81,7 @@ google_ad_client = "ca-pub-4508687151223458 &hellip;">
   
   <header>
     
-      <h1 class="entry-title">mike、mikeなるままに…Githubに移動しました。</h1>
+      <h1 class="entry-title">Blogの更新pingを送れるようにrakeのタスクを書いてみた</h1>
     
     
       <p class="meta">
@@ -99,25 +97,111 @@ google_ad_client = "ca-pub-4508687151223458 &hellip;">
   
 
 
-<time datetime="2013-05-08T20:31:00+09:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
+<time datetime="2013-05-26T21:38:00+09:00" pubdate data-updated="true">May 26<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>どーも、みけです。
-Githubでブログを書くことにしました。</p>
+<div class="entry-content"><p>こんにちわ、みけです。</p>
 
-<p>試しにgistのコードも載せてみます。</p>
+<p>お金がないので、ブログを読んでもらって、</p>
 
-<div><script src='https://gist.github.com/5524789.js'></script>
-<noscript><pre><code></code></pre></noscript></div>
+<p>google adsenseをみんなに押してもらわないと、</p>
+
+<p>死んでしまいます。</p>
+
+<p>さて、そんなことはどうでもよくて、</p>
+
+<p>bloggerでブログをやっていたときは、</p>
+
+<p>googleさんが勝手に検索エンジンに乗せてくれるので、</p>
+
+<p>検索しやすかったのですが、</p>
+
+<p>githubでブログを書くようになって、</p>
+
+<p>検索で出にくくなっていたので、</p>
+
+<p>更新pingをrakeで送りつけるようにしました。</p>
+
+<p>まあ、「更新ping ruby」でググった結果をrakeのタスクにしただけですが…</p>
+
+<p>で、追加したのがこんな感じのタスクです。</p>
+
+<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;yaml&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;xmlrpc/client&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">#-- sending ping --#</span>
+</span><span class='line'><span class="n">desc</span> <span class="s2">&quot;Sedning ping to Web Search Engines&quot;</span>
+</span><span class='line'><span class="n">task</span> <span class="ss">:ping</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">site_config</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;_config.yml&#39;</span><span class="p">))</span>
+</span><span class='line'>  <span class="n">blog_title</span> <span class="o">=</span> <span class="n">site_config</span><span class="o">[</span><span class="s1">&#39;title&#39;</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">blog_url</span> <span class="o">=</span> <span class="n">site_config</span><span class="o">[</span><span class="s1">&#39;url&#39;</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">ping_url</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;ping.yml&#39;</span><span class="p">))</span>
+</span><span class='line'>  <span class="n">ping_url</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">url</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">ping</span> <span class="o">=</span> <span class="ss">XMLRPC</span><span class="p">:</span><span class="ss">:Client</span><span class="o">.</span><span class="n">new2</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">result</span> <span class="o">=</span> <span class="n">ping</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;weblogUpdates.ping&#39;</span><span class="p">,</span> <span class="n">blog_title</span><span class="p">,</span> <span class="n">blog_url</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="n">result</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>あまりマークダウン使いこなせてないんで、</p>
+<p>この新たに追加したタスクを後は、gen_deployタスクに追加します。</p>
 
-<p>良い感じの記事になるにはもうちょい時間かかると思う。</p>
+<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">desc</span> <span class="s2">&quot;Generate website and deploy&quot;</span>
+</span><span class='line'><span class="n">task</span> <span class="ss">:gen_deploy</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:integrate</span><span class="p">,</span> <span class="ss">:generate</span><span class="p">,</span> <span class="ss">:deploy</span><span class="p">,</span> <span class="ss">:ping</span><span class="o">]</span> <span class="k">do</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あと、適当に<code>ping.yml</code>に更新pingを送りつけるサイトを記述すればおｋです。</p>
+
+<figure class='code'><figcaption><span>ping.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://blogsearch.google.com/ping/RPC2</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://blog.goo.ne.jp/XMLRPC</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://api.my.yahoo.com/RPC2</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.bloggers.jp/rpc/</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.rss.drecom.jp/</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://rpc.blogrolling.com/pinger/</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://rpc.weblogs.com/RPC2</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://rpc.reader.livedoor.com/ping</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://www.blogstyle.jp/</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://www.blogpeople.net/ping/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
 
 <script type="text/javascript"><!--
 google_ad_client = "ca-pub-4508687151223458";
@@ -171,15 +255,21 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   
 
 
-<time datetime="2013-05-08T20:31:00+09:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
+<time datetime="2013-05-26T21:38:00+09:00" pubdate data-updated="true">May 26<span>th</span>, 2013</time>
       
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/05/08/first-post/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/05/08/first-post/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/05/26/blogfalsegeng-xin-pingwosong-reruyounirakefalsetasukuwoshu-itemita/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/05/26/blogfalsegeng-xin-pingwosong-reruyounirakefalsetasukuwoshu-itemita/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -193,8 +283,8 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/blog/2013/05/25/an-falseding-xian-nihamatutetaren-gaitagradletojunitfalseenclosedfalsehua/" title="Previous Post: gradleとJUnitのEnclosedの話">&laquo; gradleとJUnitのEnclosedの話</a>
       
-        <a class="basic-alignment right" href="/blog/2013/05/10/too-poor-fc2-blog-editor-make-me-write-a-new-entry-with-groovys-markupbuilder/" title="Next Post: FC2ブログのエディターがクソいのでGroovyのMarkupBuilderで記事を書いた件">FC2ブログのエディターがクソいのでGroovyのMarkupBuilderで記事を書いた件 &raquo;</a>
       
     </p>
   </footer>

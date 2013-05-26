@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Account, | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/account/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-25T23:48:27+09:00</updated>
+  <updated>2013-05-26T21:48:05+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -232,22 +232,7 @@ AccountChart.EXPENSE</p>
 </ul>
 
 
-<p><div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.ioblog/categories/account/atom.xml" data-via="mike_neck" data-counturl="http://mike-neck.github.ioblog/categories/account/atom.xml" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-  <br/>
-</div>
-
-
-
-<script type="text/javascript"><!--
+<p><script type="text/javascript"><!--
 google_ad_client = "ca-pub-4508687151223458";
 /* octopress */
 google_ad_slot = "1134799005";
