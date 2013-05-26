@@ -46,8 +46,12 @@ task :ping do
   ping_url = YAML.load(IO.read('ping.yml'))
   ping_url.each do |url|
     ping = XMLRPC::Client.new2(url)
-    result = ping.call('weblogUpdates.ping', blog_title, blog_url)
-    puts result
+    begin
+      result = ping.call('weblogUpdates.ping', blog_title, blog_url)
+      puts "#{url} : #{result}"
+    rescue => e
+      puts "#{url} : #{e}"
+    end
   end
 end
 ```
@@ -65,14 +69,14 @@ end
 
 ```yaml ping.yml
 - http://blogsearch.google.com/ping/RPC2
+- http://api.my.yahoo.co.jp/RPC2
 - http://blog.goo.ne.jp/XMLRPC
-- http://api.my.yahoo.com/RPC2
 - http://ping.bloggers.jp/rpc/
 - http://ping.rss.drecom.jp/
-- http://rpc.blogrolling.com/pinger/
+- http://ping.fc2.com/
 - http://rpc.weblogs.com/RPC2
 - http://rpc.reader.livedoor.com/ping
-- http://www.blogstyle.jp/
+- http://ping.myblog.jp/
 - http://www.blogpeople.net/ping/
 ```
 
