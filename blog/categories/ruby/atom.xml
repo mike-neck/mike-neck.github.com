@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-26T22:12:43+09:00</updated>
+  <updated>2013-05-26T22:16:21+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -59,8 +59,12 @@ task :ping do
   ping_url.each do |url|</p>
 
 <pre><code>ping = XMLRPC::Client.new2(url)
-result = ping.call('weblogUpdates.ping', blog_title, blog_url)
-puts result
+begin
+  result = ping.call('weblogUpdates.ping', blog_title, blog_url)
+  puts "#{url} : #{result}"
+rescue =&gt; e
+  puts "#{url} : #{e}"
+end
 </code></pre>
 
 <p>  end
@@ -79,14 +83,14 @@ end
 
 <p><code>yaml ping.yml
 - http://blogsearch.google.com/ping/RPC2
+- http://api.my.yahoo.co.jp/RPC2
 - http://blog.goo.ne.jp/XMLRPC
-- http://api.my.yahoo.com/RPC2
 - http://ping.bloggers.jp/rpc/
 - http://ping.rss.drecom.jp/
-- http://rpc.blogrolling.com/pinger/
+- http://ping.fc2.com/
 - http://rpc.weblogs.com/RPC2
 - http://rpc.reader.livedoor.com/ping
-- http://www.blogstyle.jp/
+- http://ping.myblog.jp/
 - http://www.blogpeople.net/ping/
 </code></p>
 

@@ -146,6 +146,10 @@
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;yaml&quot;</span>
 </span><span class='line'><span class="nb">require</span> <span class="s2">&quot;xmlrpc/client&quot;</span>
 </span><span class='line'>
@@ -158,8 +162,12 @@
 </span><span class='line'>  <span class="n">ping_url</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;ping.yml&#39;</span><span class="p">))</span>
 </span><span class='line'>  <span class="n">ping_url</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">url</span><span class="o">|</span>
 </span><span class='line'>    <span class="n">ping</span> <span class="o">=</span> <span class="ss">XMLRPC</span><span class="p">:</span><span class="ss">:Client</span><span class="o">.</span><span class="n">new2</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">result</span> <span class="o">=</span> <span class="n">ping</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;weblogUpdates.ping&#39;</span><span class="p">,</span> <span class="n">blog_title</span><span class="p">,</span> <span class="n">blog_url</span><span class="p">)</span>
-</span><span class='line'>    <span class="nb">puts</span> <span class="n">result</span>
+</span><span class='line'>    <span class="k">begin</span>
+</span><span class='line'>      <span class="n">result</span> <span class="o">=</span> <span class="n">ping</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;weblogUpdates.ping&#39;</span><span class="p">,</span> <span class="n">blog_title</span><span class="p">,</span> <span class="n">blog_url</span><span class="p">)</span>
+</span><span class='line'>      <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">url</span><span class="si">}</span><span class="s2"> : </span><span class="si">#{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="k">rescue</span> <span class="o">=&gt;</span> <span class="n">e</span>
+</span><span class='line'>      <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">url</span><span class="si">}</span><span class="s2"> : </span><span class="si">#{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -189,14 +197,14 @@
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 </pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://blogsearch.google.com/ping/RPC2</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://api.my.yahoo.co.jp/RPC2</span>
 </span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://blog.goo.ne.jp/XMLRPC</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://api.my.yahoo.com/RPC2</span>
 </span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.bloggers.jp/rpc/</span>
 </span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.rss.drecom.jp/</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://rpc.blogrolling.com/pinger/</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.fc2.com/</span>
 </span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://rpc.weblogs.com/RPC2</span>
 </span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://rpc.reader.livedoor.com/ping</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://www.blogstyle.jp/</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.myblog.jp/</span>
 </span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://www.blogpeople.net/ping/</span>
 </span></code></pre></td></tr></table></div></figure>
 
