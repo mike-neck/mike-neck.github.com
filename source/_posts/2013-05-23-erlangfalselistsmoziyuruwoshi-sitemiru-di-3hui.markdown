@@ -307,26 +307,23 @@ b
 
 > #### module_info
 > 
-> #### Types
+> The call module_info(Key), where key is an atom, returns a single piece of information about the module.
 > 
-> + 
-> + 
-> 
-> 
-> 
-> [参照先](http://erlang.org/doc/man/lists.html#module_info-1)
+> [参照先](http://erlang.org/doc/reference_manual/modules.html#id74571)
 
 #### Explain
 
+`module_info`関数から`Key`を指定して取り出します。
 
 
 #### Example
 
 ```erlang
-1>
+1> lists:module_info(attributes).
+[{vsn,[257948301539042745638557295194154171573]}]
 ```
 
-
+`lists:module_info/0`の結果の一部が返ってきます。
 
 
 ### nth/2
