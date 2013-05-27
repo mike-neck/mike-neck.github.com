@@ -237,26 +237,68 @@ b
 
 > #### module_info
 > 
-> #### Types
+> The module_info/0 function in each module returns a list of {Key,Value} tuples with information about the module. Currently, the list contain tuples with the following Keys: attributes, compile, exports, and imports. The order and number of tuples may change without prior notice.
 > 
-> + 
-> + 
+> ##### warning
 > 
+> The {imports,Value} tuple may be removed in a future release because Value is always an empty list. Do not write code that depends on it being present.
 > 
-> 
-> [参照先](http://erlang.org/doc/man/lists.html#module_info-0)
+> [参照先](http://erlang.org/doc/reference_manual/modules.html#id74571)
 
 #### Explain
 
+これはlistsモジュールでなく、すべてのモジュールに共通する関数ですな。
+モジュールに関する情報を`{Key, Value}`のタプルリストで返します。現在のところ、
 
++ attributes
++ compile
++ exports
++ imports
+
+といったキーです。なお、`{imports, Value}`タプルは常に空のリストしか返さないため、今後なくなる予定です。これに基づいたコードを記述しないで下さい。
 
 #### Example
 
 ```erlang
-1>
+1> lists:module_info().
+[{exports,[{append,2},
+           {append,1},
+           {subtract,2},
+           {nth,2},
+           {nthtail,2},
+           {prefix,2},
+           {suffix,2},
+           {last,1},
+           {seq,2},
+           {seq,3},
+           {sum,1},
+           {duplicate,2},
+           {min,1},
+           {max,1},
+           {sublist,3},
+           {sublist,2},
+           {zip,2},
+           {unzip,1},
+           {zip3,3},
+           {unzip3,1},
+           {zipwith,3},
+           {zipwith3,4},
+           {merge,1},
+           {merge3,3},
+           {rmerge3,...},
+           {...}|...]},
+ {imports,[]},
+ {attributes,[{vsn,[257948301539042745638557295194154171573]}]},
+ {compile,[{options,[{outdir,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../ebin"},
+                     {i,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../include"},
+                     {i,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../../kernel/include"},
+                     warnings_as_errors,debug_info]},
+           {version,"4.9"},
+           {time,{2013,2,25,19,27,47}},
+           {source,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/lists.erl"}]}]
 ```
 
-
+たくさん出てきた…
 
 
 ### module_info/1
