@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-27T05:57:43+09:00</updated>
+  <updated>2013-05-27T12:16:29+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -1086,24 +1086,107 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <blockquote><h4>module_info</h4>
 
-<h4>Types</h4>
+<p>The module_info/0 function in each module returns a list of {Key,Value} tuples with information about the module. Currently, the list contain tuples with the following Keys: attributes, compile, exports, and imports. The order and number of tuples may change without prior notice.</p>
+
+<h5>warning</h5>
+
+<p>The {imports,Value} tuple may be removed in a future release because Value is always an empty list. Do not write code that depends on it being present.</p>
+
+<p><a href="http://erlang.org/doc/reference_manual/modules.html#id74571">参照先</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>これはlistsモジュールでなく、すべてのモジュールに共通する関数ですな。
+モジュールに関する情報を<code>{Key, Value}</code>のタプルリストで返します。現在のところ、</p>
 
 <ul>
-<li></li>
-<li></li>
+<li>attributes</li>
+<li>compile</li>
+<li>exports</li>
+<li>imports</li>
 </ul>
 
 
-<p><a href="http://erlang.org/doc/man/lists.html#module_info-0">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
+<p>といったキーです。なお、<code>{imports, Value}</code>タプルは常に空のリストしか返さないため、今後なくなる予定です。これに基づいたコードを記述しないで下さい。</p>
 
 <h4>Example</h4>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">module_info</span><span class="p">().</span>
+</span><span class='line'><span class="p">[{</span><span class="n">exports</span><span class="p">,[{</span><span class="n">append</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">append</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">subtract</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">nth</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">nthtail</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">prefix</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">suffix</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">last</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">seq</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">seq</span><span class="p">,</span><span class="mi">3</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">sum</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">duplicate</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">min</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">max</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">sublist</span><span class="p">,</span><span class="mi">3</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">sublist</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">zip</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">unzip</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">zip3</span><span class="p">,</span><span class="mi">3</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">unzip3</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">zipwith</span><span class="p">,</span><span class="mi">3</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">zipwith3</span><span class="p">,</span><span class="mi">4</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">merge</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">merge3</span><span class="p">,</span><span class="mi">3</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">rmerge3</span><span class="p">,...},</span>
+</span><span class='line'>           <span class="p">{...}|...]},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">imports</span><span class="p">,[]},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">attributes</span><span class="p">,[{</span><span class="n">vsn</span><span class="p">,[</span><span class="mi">257948301539042745638557295194154171573</span><span class="p">]}]},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">compile</span><span class="p">,[{</span><span class="n">options</span><span class="p">,[{</span><span class="n">outdir</span><span class="p">,</span><span class="s">&quot;/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../ebin&quot;</span><span class="p">},</span>
+</span><span class='line'>                     <span class="p">{</span><span class="n">i</span><span class="p">,</span><span class="s">&quot;/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../include&quot;</span><span class="p">},</span>
+</span><span class='line'>                     <span class="p">{</span><span class="n">i</span><span class="p">,</span><span class="s">&quot;/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../../kernel/include&quot;</span><span class="p">},</span>
+</span><span class='line'>                     <span class="n">warnings_as_errors</span><span class="p">,</span><span class="n">debug_info</span><span class="p">]},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">version</span><span class="p">,</span><span class="s">&quot;4.9&quot;</span><span class="p">},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">time</span><span class="p">,{</span><span class="mi">2013</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">19</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="mi">47</span><span class="p">}},</span>
+</span><span class='line'>           <span class="p">{</span><span class="n">source</span><span class="p">,</span><span class="s">&quot;/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/lists.erl&quot;</span><span class="p">}]}]</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p>たくさん出てきた…</p>
 
 <h3>module_info/1</h3>
 
@@ -1111,24 +1194,24 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <blockquote><h4>module_info</h4>
 
-<h4>Types</h4>
+<p>The call module_info(Key), where key is an atom, returns a single piece of information about the module.</p>
 
-<ul>
-<li></li>
-<li></li>
-</ul>
-
-
-<p><a href="http://erlang.org/doc/man/lists.html#module_info-1">参照先</a></p></blockquote>
+<p><a href="http://erlang.org/doc/reference_manual/modules.html#id74571">参照先</a></p></blockquote>
 
 <h4>Explain</h4>
+
+<p><code>module_info</code>関数から<code>Key</code>を指定して取り出します。</p>
 
 <h4>Example</h4>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">module_info</span><span class="p">(</span><span class="n">attributes</span><span class="p">).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">vsn</span><span class="p">,[</span><span class="mi">257948301539042745638557295194154171573</span><span class="p">]}]</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p><code>lists:module_info/0</code>の結果の一部が返ってきます。</p>
 
 <h3>nth/2</h3>
 
