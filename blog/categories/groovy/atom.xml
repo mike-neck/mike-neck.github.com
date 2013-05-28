@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: groovy | mike、mikeなるままに…]]></title>
+  <title><![CDATA[Category: groovy, | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-27T12:18:46+09:00</updated>
+  <updated>2013-05-29T00:37:23+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -14,274 +14,125 @@
 
   
   <entry>
-    <title type="html"><![CDATA[gradleとJUnitのEnclosedの話]]></title>
-    <link href="http://mike-neck.github.io/blog/2013/05/25/an-falseding-xian-nihamatutetaren-gaitagradletojunitfalseenclosedfalsehua/"/>
-    <updated>2013-05-25T23:19:00+09:00</updated>
-    <id>http://mike-neck.github.io/blog/2013/05/25/an-falseding-xian-nihamatutetaren-gaitagradletojunitfalseenclosedfalsehua</id>
-    <content type="html"><![CDATA[<p>みけです。</p>
+    <title type="html"><![CDATA[AndroidがJavaだと思っている人のためのGroovy講座 - 1]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/05/27/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo/"/>
+    <updated>2013-05-27T12:29:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/05/27/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo</id>
+    <content type="html"><![CDATA[<p>タイトルが偉そうなこと書いていますが、</p>
 
-<p><a href="http://mike-neck.github.io/blog/2013/05/25/javadehazimetesocketpuroguramuwoshu-itemita/">先ほど書いたエントリー</a>でテストをgradleで走らせたのですが、</p>
+<p>大したことは書きません。</p>
 
-<blockquote class="twitter-tweet" lang="ja"><p>gradleでテストした時に謎のclassMethodとかいうテストが勝手に挟み込まれて、落ちて困っている</p>&mdash; もちださんさん (@mike_neck) <a href="https://twitter.com/mike_neck/status/338275875294441472">2013年5月25日</a></blockquote>
+<p>みけです。</p>
+
+<h1>Android Studioが出てきてgradleとは何ぞと思っている方がいると思います</h1>
+
+<p>gradleはgroovyで記述できるビルドシステムです。</p>
+
+<p>antの自由なところと、mavenの依存性管理を組み合わせたイケてるところが売りです。</p>
+
+<p>さて、この記事では…</p>
+
+<h1>gradleのことはほとんど書きません</h1>
+
+<p>Android開発者でgradleとは何やねん？って思っている方には</p>
+
+<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00C7AMKTU" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
 
 
-<script async src="http://mike-neck.github.io//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>こちらに詳細が書かれていますので、読んでみて下さい。</p>
+
+<p>で、この記事は何を書いているの？というわけで、</p>
+
+<h1>簡単なgroovyの文法の説明を書きます</h1>
+
+<p>これを覚えると、gradleの記述で少し楽をできるかもしれません。</p>
+
+<p>でも、groovyのことを完璧に説明しているかというと、そうでもないので、</p>
+
+<p>詳しくは次の本を買って読んで下さい。</p>
+
+<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4774147273" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
 
 
-<p>という状態が発生してました。</p>
+<p>では、以下、本題</p>
 
-<p>具体的には、</p>
+<h2>メソッドの引数部分の括弧は省略できる</h2>
 
-<p>```java
-package org.mikeneck.multithreads;</p>
+<p>多分gradleを初めて見た人で何やねんこれと思う記述はこういうやつだと思います。</p>
 
-<p>import org.junit.*;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.rules.TestName;
-import org.junit.runner.RunWith;</p>
+<p><code>groovy build.gradle
+task myTask
+</code></p>
 
-<p>import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.*;</p>
+<p>この<code>task</code>というのは、<code>AbstractProject</code>という抽象クラスで定義されている<code>public Task task(Object task)</code>というメソッドです。このメソッドはタスクをプロジェクトに登録するメソッドです。</p>
 
-<p>import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;</p>
+<p>したがって、上記の例では<code>task</code>メソッドによって<code>myTask.toString()</code>で得られる名前(<code>myTask</code>)のタスクが作成されます。</p>
 
-<p>/<em>*
- * @author mike
- </em>/
-@RunWith(Enclosed.class)
-public class SimpleSocketTest {</p>
+<p>gradleの中で同様な記述がたくさんあると思います。</p>
 
-<pre><code>public static class SingleClient {
+<p>例えば</p>
 
-    private static final ExecutorService SERVICE = Executors.newFixedThreadPool(1);
+<p>```groovy build.gradle
+repositories {</p>
 
-    private static final int PORT = 12521;
-
-    private static final String LOCALHOST = "localhost";
-
-    private SimpleClient client;
-
-    @Rule
-    public TestName testName = new TestName();
-
-    @BeforeClass
-    public static void start () throws IOException {
-        SERVICE.execute(new SimpleServer(PORT));
-    }
-
-    @Before
-    public void setup () throws IOException {
-        client = new SimpleClient(LOCALHOST, PORT);
-    }
-
-    @After
-    public void tearDown () throws Exception {
-        System.out.println(testName.getMethodName() + " is closing");
-        client.close();
-    }
-
-    @AfterClass
-    public static void end () throws IOException {
-        new SimpleClient(LOCALHOST, PORT).open().bye();
-    }
-
-    @Test
-    public void socketProcessing () throws IOException {
-        client.open();
-        String message = client.sendMessage("Hello");
-        System.out.println("Message from Server [" + message + "]");
-        assertThat(message, is("Hello"));
-        System.out.println("Assertion ends.");
-    }
-}
+<pre><code>// some repository configuration
 </code></pre>
 
 <p>}
-```</p>
-
-<p>というテストに対して、</p>
-
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRaS15VXNZRTNVWUU" style="width : 424px; height : 262px;" /></p>
-
-<p>という感じで、謎の<code>classMethod</code>というテストが追加されていて、</p>
-
-<p>実行されてテストが落ちてしまうようです。</p>
-
-<h2>先駆者はいた</h2>
-
-<p>とりあえず、<code>gradle</code>、<code>Enclosed</code>、<code>Junit</code>でググっていたところ、</p>
-
-<p>次の二つのエントリーを発見しました。</p>
-
-<ul>
-<li><a href="http://d.hatena.ne.jp/irof/20120430/p1">GradleでEnclosedのテストが二回実行されるんだ</a></li>
-<li><a href="http://d.hatena.ne.jp/shuji_w6e/20120808/1344386399">GradleでEnclosedテストが2回実行されることの対策</a></li>
-</ul>
-
-
-<p>というわけで、<code>gradle</code>と<code>Enclosed</code>の相性がわるいっぽい…</p>
-
-<h2>gradleでEnclosedなテストをする時の対策</h2>
-
-<p>というわけで、<a href="https://twitter.com/shuji_w6e">@shuji_w6e</a>さんのページによると</p>
-
-<p><strong>テストの実行時に除外クラスを指定すること。</strong></p>
-
-<p>だそうです。</p>
-
-<p>```groovy build.gradle
-apply plugin : &lsquo;groovy&rsquo;
-apply plugin : &lsquo;idea&rsquo;</p>
-
-<p>group = &lsquo;org.mikeneck.multithreads&rsquo;
-version = &lsquo;1.0&rsquo;</p>
-
-<p>def compatibility = 1.7</p>
-
-<p>sourceCompatibility = compatibility
-targetCompatibility = compatibility</p>
-
-<p>repositories {</p>
-
-<pre><code>mavenCentral ()
-</code></pre>
-
-<p>}</p>
-
-<p>dependencies {</p>
-
-<pre><code>compile 'org.codehaus.groovy:groovy-all:2.1.3'
-testCompile ('junit:junit:4.11') {
-    exclude module : 'hamcrest-core'
-    exclude module : 'hamcrest'
-}
-testCompile 'org.hamcrest:hamcrest-library:1.+'
-</code></pre>
-
-<p>}</p>
-
-<p>test {</p>
-
-<pre><code>exclude '**/*$*'
-</code></pre>
-
-<p>}
-```</p>
-
-<p>とりあえず、テストクラスを除外してみました。</p>
-
-<h2>結果</h2>
-
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRczBZcy04U2tNMms" style="width : 424px; height : 252px;"" /></p>
-
-<p>という感じで、テストが通りました。</p>
-
-<p><script type="text/javascript"><!--
-google_ad_client = "ca-pub-4508687151223458";
-/* octopress */
-google_ad_slot = "1134799005";
-google_ad_width = 300;
-google_ad_height = 250;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[gradle1.6からgroovyのconfigurationはdeprecatedになっています]]></title>
-    <link href="http://mike-neck.github.io/blog/2013/05/22/gradle1-dot-6karagroovyfalseconfigurationhadeprecatedninatuteimasu/"/>
-    <updated>2013-05-22T20:08:00+09:00</updated>
-    <id>http://mike-neck.github.io/blog/2013/05/22/gradle1-dot-6karagroovyfalseconfigurationhadeprecatedninatuteimasu</id>
-    <content type="html"><![CDATA[<h2>gradle1.6からgroovyのconfigurationは非推奨になっています</h2>
-
-<p>まあ今さらですが、さきほどbuild.gradleを書いた時に、</p>
-
-<p>```
-$ gradle idea
-The groovy configuration has been deprecated and is scheduled to be removed in Gradle 2.0. Typically, usages of &lsquo;groovy&rsquo; can simply be replaced with &lsquo;compile&rsquo;. In some cases, it may be necessary to additionally configure the &lsquo;groovyClasspath&rsquo; property of GroovyCompile and Groovydoc tasks.
-:ideaModule
-Download <a href="http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.pom">http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.pom</a>
-Download <a href="http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3-sources.jar">http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3-sources.jar</a>
-Download <a href="http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.jar">http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.jar</a>
-:ideaProject
-:ideaWorkspace
-:idea</p>
-
-<p>BUILD SUCCESSFUL</p>
-
-<p>Total time: 11.174 secs
-$
-```</p>
-
-<p>と表示されたので、「うぉっ」と思ってドキュメントを読んでみました。</p>
-
-<p><a href="http://www.gradle.org/docs/current/release-notes#groovy-configuration-is-deprecated">groovy configuration is deprecated</a></p>
-
-<p>じゃあ、今後どうするのかというと、</p>
-
-<h1>compile configurationにgroovyのartifactを指定する</h1>
-
-<p>ということです。</p>
-
-<p>つまり、これまでは</p>
-
-<p>```groovy build.gradle
 dependencies {</p>
 
-<pre><code>groovy : 'org.codehaus:groovy:groovy-all:2.1.3'
+<pre><code>// some dependency configuration
 </code></pre>
 
 <p>}
 ```</p>
 
-<p>と書いていましたが、</p>
+<p>これら<code>repositories</code>や、<code>dependencies</code>も、実はみんなメソッドです。</p>
 
-<p>```groovy build.gradle
-dependencies {</p>
+<h3>裏をとってみる</h3>
 
-<pre><code>compile : 'org.codehaus.groovy:groovy-all:2.1.3'
+<p>では、こっから先はちょっと混みいった話</p>
+
+<p>gradleのprojectの元になるクラスは<code>org.gradle.api.internal.project.AbstractProject</code>クラスです。</p>
+
+<p>このクラスの中を少し見てみましょう。</p>
+
+<p>```java AbstractProject.java
+public abstract class AbstractProject</p>
+
+<pre><code>    extends AbstractPluginAware
+    implements ProjectInternal, DynamicObjectAware {
+// some codes
+
+public void repositories(Closure configureClosure) {
+    ConfigureUtil.configure(configureClosure, getRepositories());
+}
+
+public void dependencies(Closure configureClosure) {
+    ConfigureUtil.configure(configureClosure, getDependencies());
+}
+
+// some codes
+
+public Task task(String task) {
+    return taskContainer.create(task);
+}
+
+public Task task(Object task) {
+    return taskContainer.create(task.toString());
+}
+
+// some codes
 </code></pre>
 
 <p>}
 ```</p>
 
-<p>と書けばよいようです。</p>
+<p>はい、<code>dependencies</code>や<code>repositories</code>、<code>task</code>といったキーワードはすべてメソッドですね。</p>
 
-<table>
-<tbody>
-<tr>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B009X5KIFK" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=3864900492" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1617291307" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-</tr>
-</tbody>
-</table>
+<h2>結論：groovyではメソッドの引数部分の括弧を省略できる</h2>
 
-
-
+<p>…ん、gradleのことほとんど書かないと言ったな、あれは嘘だ。</p>
 ]]></content>
   </entry>
   

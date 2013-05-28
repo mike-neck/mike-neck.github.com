@@ -4,7 +4,7 @@
   <title><![CDATA[Category: java | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-27T12:18:46+09:00</updated>
+  <updated>2013-05-29T00:37:23+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -12,6 +12,129 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[AndroidがJavaだと思っている人のためのGroovy講座 - 1]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/05/27/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo/"/>
+    <updated>2013-05-27T12:29:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/05/27/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo</id>
+    <content type="html"><![CDATA[<p>タイトルが偉そうなこと書いていますが、</p>
+
+<p>大したことは書きません。</p>
+
+<p>みけです。</p>
+
+<h1>Android Studioが出てきてgradleとは何ぞと思っている方がいると思います</h1>
+
+<p>gradleはgroovyで記述できるビルドシステムです。</p>
+
+<p>antの自由なところと、mavenの依存性管理を組み合わせたイケてるところが売りです。</p>
+
+<p>さて、この記事では…</p>
+
+<h1>gradleのことはほとんど書きません</h1>
+
+<p>Android開発者でgradleとは何やねん？って思っている方には</p>
+
+<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00C7AMKTU" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>こちらに詳細が書かれていますので、読んでみて下さい。</p>
+
+<p>で、この記事は何を書いているの？というわけで、</p>
+
+<h1>簡単なgroovyの文法の説明を書きます</h1>
+
+<p>これを覚えると、gradleの記述で少し楽をできるかもしれません。</p>
+
+<p>でも、groovyのことを完璧に説明しているかというと、そうでもないので、</p>
+
+<p>詳しくは次の本を買って読んで下さい。</p>
+
+<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4774147273" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>では、以下、本題</p>
+
+<h2>メソッドの引数部分の括弧は省略できる</h2>
+
+<p>多分gradleを初めて見た人で何やねんこれと思う記述はこういうやつだと思います。</p>
+
+<p><code>groovy build.gradle
+task myTask
+</code></p>
+
+<p>この<code>task</code>というのは、<code>AbstractProject</code>という抽象クラスで定義されている<code>public Task task(Object task)</code>というメソッドです。このメソッドはタスクをプロジェクトに登録するメソッドです。</p>
+
+<p>したがって、上記の例では<code>task</code>メソッドによって<code>myTask.toString()</code>で得られる名前(<code>myTask</code>)のタスクが作成されます。</p>
+
+<p>gradleの中で同様な記述がたくさんあると思います。</p>
+
+<p>例えば</p>
+
+<p>```groovy build.gradle
+repositories {</p>
+
+<pre><code>// some repository configuration
+</code></pre>
+
+<p>}
+dependencies {</p>
+
+<pre><code>// some dependency configuration
+</code></pre>
+
+<p>}
+```</p>
+
+<p>これら<code>repositories</code>や、<code>dependencies</code>も、実はみんなメソッドです。</p>
+
+<h3>裏をとってみる</h3>
+
+<p>では、こっから先はちょっと混みいった話</p>
+
+<p>gradleのprojectの元になるクラスは<code>org.gradle.api.internal.project.AbstractProject</code>クラスです。</p>
+
+<p>このクラスの中を少し見てみましょう。</p>
+
+<p>```java AbstractProject.java
+public abstract class AbstractProject</p>
+
+<pre><code>    extends AbstractPluginAware
+    implements ProjectInternal, DynamicObjectAware {
+// some codes
+
+public void repositories(Closure configureClosure) {
+    ConfigureUtil.configure(configureClosure, getRepositories());
+}
+
+public void dependencies(Closure configureClosure) {
+    ConfigureUtil.configure(configureClosure, getDependencies());
+}
+
+// some codes
+
+public Task task(String task) {
+    return taskContainer.create(task);
+}
+
+public Task task(Object task) {
+    return taskContainer.create(task.toString());
+}
+
+// some codes
+</code></pre>
+
+<p>}
+```</p>
+
+<p>はい、<code>dependencies</code>や<code>repositories</code>、<code>task</code>といったキーワードはすべてメソッドですね。</p>
+
+<h2>結論：groovyではメソッドの引数部分の括弧を省略できる</h2>
+
+<p>…ん、gradleのことほとんど書かないと言ったな、あれは嘘だ。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[JavaではじめてSocketプログラムを書いてみた]]></title>
