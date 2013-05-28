@@ -121,3 +121,7 @@ public abstract class AbstractProject
 
 
 …ん、gradleのことほとんど書かないと言ったな、あれは嘘だ。
+
+
+
+{% render_partial _includes/post/post_footer.html %}
