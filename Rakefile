@@ -116,6 +116,10 @@ task :new_post, :title do |t, args|
     post.puts "comments: true"
     post.puts "categories: "
     post.puts "---"
+    post.puts "\n"
+    post.puts "\n"
+    post.puts "{% render_partial _includes/post/post_footer.html %}"
+    post.puts "\n"
   end
 end
 
