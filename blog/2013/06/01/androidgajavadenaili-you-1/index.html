@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>mike、mikeなるままに…Githubに移動しました。 - mike、mikeなるままに…</title>
+  <title>AndroidがJavaでない理由 - 1 - mike、mikeなるままに…</title>
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="どーも、みけです。
-Githubでブログを書くことにしました。 試しにgistのコードも載せてみます。 あまりマークダウン使いこなせてないんで、 良い感じの記事になるにはもうちょい時間かかると思う。 <!--
-google_ad_client = "ca-pub-4508687151223458 &hellip;">
+  <meta name="description" content="こんにちは。 みけです。 また仰々しいタイトルですみません。 Androidのsdkが5月16日近辺にrevision22に更新されたようです リリースノートを一部抜粋、翻訳(意訳)するとこんな感じです。 既存のplatfomr-toolsを元にSDKの構造を変更して、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@ google_ad_client = "ca-pub-4508687151223458 &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/05/08/first-post">
+  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/06/01/androidgajavadenaili-you-1">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="mike、mikeなるままに…" type="application/atom+xml">
@@ -83,7 +81,7 @@ google_ad_client = "ca-pub-4508687151223458 &hellip;">
   
   <header>
     
-      <h1 class="entry-title">mike、mikeなるままに…Githubに移動しました。</h1>
+      <h1 class="entry-title">AndroidがJavaでない理由 - 1</h1>
     
     
       <p class="meta">
@@ -99,25 +97,182 @@ google_ad_client = "ca-pub-4508687151223458 &hellip;">
   
 
 
-<time datetime="2013-05-08T20:31:00+09:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
+<time datetime="2013-06-01T02:22:00+09:00" pubdate data-updated="true">Jun 1<span>st</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>どーも、みけです。
-Githubでブログを書くことにしました。</p>
+<div class="entry-content"><p>こんにちは。</p>
 
-<p>試しにgistのコードも載せてみます。</p>
+<p>みけです。</p>
 
-<div><script src='https://gist.github.com/5524789.js'></script>
-<noscript><pre><code></code></pre></noscript></div>
+<p>また仰々しいタイトルですみません。</p>
+
+<h2>Androidのsdkが5月16日近辺にrevision22に更新されたようです</h2>
+
+<p>リリースノートを一部抜粋、翻訳(意訳)するとこんな感じです。</p>
+
+<ul>
+<li>既存の<code>platfomr-tools</code>を元にSDKの構造を変更して、新しいビルドツール等を追加しました。この変更により、ビルドツールのバージョンとIDEのバージョンを切り離すことが可能になります。その結果、IDEの更新なしにツールの更新が可能になりました。</li>
+</ul>
 
 
-<p>あまりマークダウン使いこなせてないんで、</p>
+<p>さて、僕はAndroidに関しては情弱なので、この変更が意味するところをあまり気にせず、</p>
 
-<p>良い感じの記事になるにはもうちょい時間かかると思う。</p>
+<p>本題である<strong>「JavaがAndroidでない理由」</strong>ことの実例コードを書こうとして</p>
+
+<p>サンプルプロジェクトを作って、実行しようとした時にそれは起こりました。</p>
+
+<h2>android-apt-compiler: Cannot run program &ldquo;/Users/name/Android/sdk/android-sdk-macosx/platform-tools/aapt&rdquo;: error=2, No such file or directory</h2>
+
+<p><img src="https://pbs.twimg.com/media/BLlghpZCAAA8qOp.png:large" style="width : 504px;"/></p>
+
+<p>うん？コンパイル用のツールが見つからない？</p>
+
+<p>というわけで、件のディレクトリーに移動、ファイル探してみると…</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>:~ mike$ cd ~/Android/sdk/android-sdk-macosx/platform-tools/
+</span><span class='line'>:platform-tools mike$ ll
+</span><span class='line'>total 3664
+</span><span class='line'>drwxr-xr-x   7 mike  staff   238B  5 31 19:05 .
+</span><span class='line'>drwxr-x---  14 mike  staff   476B  5 31 18:31 ..
+</span><span class='line'>-rw-r--r--   1 mike  staff   396K  5 31 18:30 NOTICE.txt
+</span><span class='line'>-rwxr-xr-x   1 mike  staff   1.2M  5 31 18:30 adb
+</span><span class='line'>drwxr-xr-x   3 mike  staff   102B  5 31 18:30 api
+</span><span class='line'>-rwxr-xr-x   1 mike  staff   185K  5 31 18:30 fastboot
+</span><span class='line'>-rw-r--r--   1 mike  staff    16K  5 31 18:30 source.properties</span></code></pre></td></tr></table></div></figure>
+
+
+<p>うむ、確かにそんなものはない…</p>
+
+<p>で、いろいろとディレクトリーを漁ってみると</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>:~ mike$ cd ~/Android/sdk/android-sdk-macosx/build-tools/17.0.0/
+</span><span class='line'>:17.0.0 mike$ ll
+</span><span class='line'>total 61624
+</span><span class='line'>drwxr-xr-x  11 mike  staff   374B  5 31 18:30 .
+</span><span class='line'>drwxr-xr-x   3 mike  staff   102B  5 31 18:30 ..
+</span><span class='line'>-rw-r--r--   1 mike  staff    11K  5 31 18:30 NOTICE.txt
+</span><span class='line'>-rwxr-xr-x   1 mike  staff   1.2M  5 31 18:30 aapt
+</span><span class='line'>-rwxr-xr-x   1 mike  staff   273K  5 31 18:30 aidl
+</span><span class='line'>-rwxr-xr-x   1 mike  staff   141K  5 31 18:30 dexdump
+</span><span class='line'>-rwxr-xr-x   1 mike  staff   2.5K  5 31 18:30 dx
+</span><span class='line'>drwxr-xr-x   3 mike  staff   102B  5 31 18:30 lib
+</span><span class='line'>-rwxr-xr-x   1 mike  staff    28M  5 31 18:30 llvm-rs-cc
+</span><span class='line'>drwxr-xr-x   4 mike  staff   136B  5 31 18:30 renderscript
+</span><span class='line'>-rw-r--r--   1 mike  staff    16K  5 31 18:30 source.properties</span></code></pre></td></tr></table></div></figure>
+
+
+<p>お、あった。</p>
+
+<p>…あったはいいよ。</p>
+
+<p>でも、このディレクトリーは何？</p>
+
+<p><strong><code>17.0.0</code></strong></p>
+
+<p>何、このディレクトリー。</p>
+
+<p>数字ディレクトリー。</p>
+
+<p><strong>どこのSIerの作業ですか？</strong></p>
+
+<p>え、じゃあ、君は新しいAPIバージョン(例えば18)が出たら、</p>
+
+<p><strong><code>18.0.0</code>ディレクトリーでも作ってくれるんです？</strong></p>
+
+<p>これ、ビルドスクリプトとか、ビルド関連のちょっとした作業とか</p>
+
+<p>ぶっ壊れるよね…え、ぶっ壊れない？なら、いいんだけど、</p>
+
+<p><strong>IntelliJ IDEA様</strong>を欺いているよね…</p>
+
+<p>これじゃ</p>
+
+<h2>Androidって<strong>write once, run once upon a time</strong>ってことだよね</h2>
+
+<p>Javaの最も貫徹したコンセプトである</p>
+
+<h2>write once run anywhere</h2>
+
+<p>を破っているよね。</p>
+
+<p>というわけで、結論</p>
+
+<h2>AndroidはJavaではなかった、決して</h2>
+
+<p><strong>p.s.</strong></p>
+
+<p>最初この問題にあたった時にStack Overflowを調べました。</p>
+
+<p>すでに、先駆者がいました。</p>
+
+<p><a href="http://stackoverflow.com/questions/16588969/android-hello-world-compile-error-intellij-cannot-find-aapt">Android Hello-World compile error: Intellij cannot find aapt</a></p>
+
+<p>で、解決方法のアドバイスとして</p>
+
+<ul>
+<li><strong>JetBrains様がIDEをアップデートしてくれるのを待つしかないんじゃない？</strong></li>
+<li>シンボリックリンクを貼ればいいんじゃない</li>
+<li>ツール類を<code>platform-tools</code>にコピペすればいいんじゃない</li>
+</ul>
+
+
+<p>と有りました。</p>
+
+<p>当面の解決策としては2番目が採択されそうですが、</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>:17.0.0 mike$ ln -s aapt ../../platform-tools/aapt
+</span><span class='line'>:17.0.0 mike$ ln -s aidl ../../platform-tools/aidl
+</span><span class='line'>:17.0.0 mike$ ln -s lib ../../platform-tools/lib</span></code></pre></td></tr></table></div></figure>
+
+
+<p>をやった後ですが、</p>
+
+<p><img src="https://googledrive.com/host/0B4hhdHWLP7RReVgzYzJvOHZJS2s" style="width : 488px;" /></p>
+
+<p>はい、コンパイルできません。</p>
+
+<p>というわけで、JetBrains様がIntelliJ IDEAを対応させるのを待つしかなさそうです。</p>
+
+<p>IntelliJガチ勢の僕としては、googleに一言もの申したい</p>
+
+<h2>googleさん、JetBrains様にごめんなさいしてください</h2>
+
+<p>つーか、ツールがバージョンアップしてもIDEのバージョンアップが必要ないと言ってた、</p>
+
+<p>あのリリースノート何だったんです？</p>
+
+<p>google 「ツールがバージョンアップしてもIDEのバージョンアップがいらないと言ったな、あれは、嘘だ」</p>
 
 <script type="text/javascript"><!--
 google_ad_client = "ca-pub-4508687151223458";
@@ -171,15 +326,21 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   
 
 
-<time datetime="2013-05-08T20:31:00+09:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
+<time datetime="2013-06-01T02:22:00+09:00" pubdate data-updated="true">Jun 1<span>st</span>, 2013</time>
       
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/java/'>java,</a>
+  
+</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/05/08/first-post/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/05/08/first-post/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/06/01/androidgajavadenaili-you-1/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/06/01/androidgajavadenaili-you-1/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -193,8 +354,8 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/blog/2013/05/30/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo-2/" title="Previous Post: AndroidがJavaだと思っている人のためのGroovy講座 - 2">&laquo; AndroidがJavaだと思っている人のためのGroovy講座 - 2</a>
       
-        <a class="basic-alignment right" href="/blog/2013/05/10/too-poor-fc2-blog-editor-make-me-write-a-new-entry-with-groovys-markupbuilder/" title="Next Post: FC2ブログのエディターがクソいのでGroovyのMarkupBuilderで記事を書いた件">FC2ブログのエディターがクソいのでGroovyのMarkupBuilderで記事を書いた件 &raquo;</a>
       
     </p>
   </footer>
