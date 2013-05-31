@@ -4,7 +4,7 @@
   <title><![CDATA[Category: java | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-05-29T00:39:37+09:00</updated>
+  <updated>2013-06-01T02:05:14+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -12,6 +12,769 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[AndroidがJavaだと思っている人のためのGroovy講座 - 2]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/05/30/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo-2/"/>
+    <updated>2013-05-30T10:48:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/05/30/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo-2</id>
+    <content type="html"><![CDATA[<p>こんいちわ。みけです。</p>
+
+<p>またも、タイトルが仰々しくてすみません。</p>
+
+<p>本当に大したこと書かないです。</p>
+
+<p>で、相変わらずAndroidまたもや出て来ません。</p>
+
+<p>gradleも出て来ません。</p>
+
+<p>でも、Android Studioの登場や、gradle-android-pluginで</p>
+
+<p>gradleに興味を持たれた方には読んで貰いたいと思います。</p>
+
+<p>以下、本題。</p>
+
+<h2><code>Closure&lt;V&gt;</code>とはなんぞや</h2>
+
+<p>Closureについて僕がなんか言うと、</p>
+
+<p>皆が混乱するので(それだけ僕もちゃんと説明できるほど理解していない…orz)</p>
+
+<p>とりあえず<a href="http://ja.wikipedia.org/wiki/%E3%82%AF%E3%83%AD%E3%83%BC%E3%82%B8%E3%83%A3">WikipediaのClosure</a>でも読んで下さい。</p>
+
+<p>Javaでいえば、<code>Callable&lt;V&gt;</code>みたいなものです。</p>
+
+<p>で、<code>Callable&lt;V&gt;</code>に比べて便利なのが</p>
+
+<p>```java</p>
+
+<pre><code>Callable&lt;String&gt; callable = new Callable&lt;String&gt;() {
+    @Override
+    public String call() {
+        // some codes
+        return result.toString();
+    }
+};
+</code></pre>
+
+<p>```</p>
+
+<p>みたいに書かなくてよいあたりです。</p>
+
+<p>ちなみに<code>Callable&lt;T&gt;</code>と異なるところもあります。</p>
+
+<p>それは、おいおい、説明します。</p>
+
+<h1>そろそろ<code>Closure&lt;V&gt;</code>のサンプル見せてくれよ</h1>
+
+<p>というわけで、適当にサンプルをみつくろってみました。</p>
+
+<h4>単純な値を返すだけのClosure</h4>
+
+<p>```groovy
+def closure = {</p>
+
+<pre><code>'Hello, Closure!'
+</code></pre>
+
+<p>}</p>
+
+<p>assert closure() == &lsquo;Hello, Closure!&rsquo;
+```</p>
+
+<p>そうそう、<strong>groovyでは<code>return</code>を省略することができます</strong>。</p>
+
+<p>その場合、最後に評価された式の値が<code>return</code>されます。</p>
+
+<p>上記のClosureではClosureの最終式<code>'Hello, Closure!'</code>が評価され、</p>
+
+<p>その値<code>'Hello, Closure!'</code>が返されます。</p>
+
+<h4>引数をとるClosure</h4>
+
+<p>```groovy
+def hello = {name &ndash;></p>
+
+<pre><code>'Hello, ' + name
+</code></pre>
+
+<p>}</p>
+
+<p>assert &lsquo;Hello, mike&rsquo; == hello(&lsquo;mike&rsquo;)
+assert &lsquo;Hello, null&rsquo; == hello()
+```</p>
+
+<p><code>Closure&lt;V&gt;</code>と<code>Callable&lt;V&gt;</code>との決定的な違いが、
+(大した違いではないが)</p>
+
+<p>引数を与えることができる点です。</p>
+
+<p>これを<code>Callable&lt;V&gt;</code>でやろうとすると次のようになります。</p>
+
+<p>```java
+public class HelloTest {</p>
+
+<pre><code>public class Hello implements Callable&lt;String&gt; {
+
+    private final String name;
+
+    public Hello(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String call() throws Exception {
+        return "Hello, " + name;
+    }
+}
+
+@Test
+public void testHello () throws Exception {
+    assertThat(new Hello("mike").call(), is("Hello, mike"));
+    assertThat(new Hello(null).call(), is("Hello, null"));
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<h4>Closureを返すClosure</h4>
+
+<p>```groovy
+def counter = {int offset &ndash;></p>
+
+<pre><code>return {
+    offset++
+}
+</code></pre>
+
+<p>}</p>
+
+<p>def closure = counter(0)</p>
+
+<p>(0..100).each {</p>
+
+<pre><code>assert it == closure()
+</code></pre>
+
+<p>}
+```</p>
+
+<p>初期値の0からカウントするカウンターのようなクロージャーが返ってきます。</p>
+
+<p>型としては<code>Closure&lt;Closure&lt;Integer&gt;&gt;</code>といったところでしょうか…</p>
+
+<p>で、これをみると一つ気持ち悪いところがありますね。</p>
+
+<p><strong>元の値ってどうなってしまうの？</strong></p>
+
+<p>```groovy
+def closure = {String hello &ndash;></p>
+
+<pre><code>return {String name -&gt;
+    hello += name
+}    
+</code></pre>
+
+<p>}</p>
+
+<p>def original = &lsquo;Hello, &rsquo;
+def message = closure(original)</p>
+
+<p>assert message(&lsquo;mike&rsquo;) == &lsquo;Hello, mike&rsquo;
+assert message(&lsquo;!&rsquo;) == &lsquo;Hello, mike!&rsquo;
+assert original == &lsquo;Hello, &rsquo;
+```</p>
+
+<p>というように、元の値は壊れませんが、</p>
+
+<p>返されるClosureが元々持っていた値は壊れていきます。</p>
+
+<p>ところで、イテレーターとして<code>Closure&lt;V&gt;</code>を使うときに出てくる</p>
+
+<h4><code>it</code>ってなんやねん？</h4>
+
+<p>gradleのプラグイン宣言などで、ときどきこんな記述が出てきますね</p>
+
+<p>```groovy
+[&lsquo;java&rsquo;, &lsquo;groovy&rsquo;].each {</p>
+
+<pre><code>apply plugin : it
+</code></pre>
+
+<p>}
+```</p>
+
+<p>で、この<code>it</code>ですが、コレクションの一つ一つの要素です。</p>
+
+<p>あ、そんなこと言われなくても知ってたって(´・ω・｀)</p>
+
+<p>まあ、そんなことは言わずに、すこし試してみましょう。</p>
+
+<p>```groovy
+(1..4).each {</p>
+
+<pre><code>println "it is ${it}."
+</code></pre>
+
+<p>}
+```</p>
+
+<p>実行結果はこんな感じです。</p>
+
+<p><code>txt
+it is 1.
+it is 2.
+it is 3.
+it is 4.
+</code></p>
+
+<p>これって、でもどういうふうに呼ばれているの？</p>
+
+<p>groovyの<code>DefaultGroovyMethods</code>クラスを介して呼ばれています。</p>
+
+<h5>自分でも<code>it</code>でアクセスできるイテレーター作ってみたい</h5>
+
+<p>というわけで、<code>Closure&lt;V&gt;</code>を引数にとるメソッドを書いてみました。</p>
+
+<p><code>it</code>で要素にアクセスできて、ちょっと嬉しいですね。</p>
+
+<p>```groovy
+Integer.metaClass.define {</p>
+
+<pre><code>collect = {Closure closure -&gt;
+    return new IntRange(0, delegate).collect {
+        closure(it)
+    }
+}
+</code></pre>
+
+<p>}</p>
+
+<p>assert 2.collect {</p>
+
+<pre><code>it * 2
+</code></pre>
+
+<p>} == [0, 2, 4]
+```</p>
+
+<p>というわけで、<code>it</code>は一つ一つの要素であることが事象として理解していただけたと思います。</p>
+
+<p>で、<code>it</code>っていつ割り当てられるの？ということで、ソースをざっと見ていたんですが、</p>
+
+<p>見つかりませんでした(´・ω・｀)</p>
+
+<p>なお調べている過程で僕も初めて知ったのですが、</p>
+
+<p><code>Closure&lt;V&gt;</code>は抽象クラスで、</p>
+
+<p>コンパイル時に実際のクラスが生成されているようです。</p>
+
+<p>まだまだ僕も勉強が足りませんね…</p>
+
+<p>で、このへんが気になりだすと、もっと気になるのが…</p>
+
+<h4>Closureのスコープってどうなのよ</h4>
+
+<p>```groovy
+def outside = &lsquo;This is outside&rsquo;
+def doSomething = {println &lsquo;do something&rsquo;}
+def closure = {</p>
+
+<pre><code>def inside = 'This is inside'
+doSomething()
+println outside
+println inside
+</code></pre>
+
+<p>}</p>
+
+<p>closure()</p>
+
+<p>doSomething()
+println outside
+println inside
+```</p>
+
+<p>これを実効すると次のような結果が得られます。</p>
+
+<p>```txt
+do something
+This is outside
+This is inside
+do something
+This is outside
+Exception thrown
+5 31, 2013 8:25:06 午後 org.codehaus.groovy.runtime.StackTraceUtils sanitize
+WARNING: Sanitizing stacktrace:
+groovy.lang.MissingPropertyException: No such property: inside for class: ConsoleScript83</p>
+
+<pre><code>at org.codehaus.groovy.runtime.ScriptBytecodeAdapter.unwrap(ScriptBytecodeAdapter.java:50)
+at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGroovyObjectGetProperty(AbstractCallSite.java:231)
+at ConsoleScript83.run(ConsoleScript83:14)
+</code></pre>
+
+<p>```</p>
+
+<p><code>Closure&lt;V&gt;</code>の<code>closure</code>の中からは、</p>
+
+<p>フィールド<code>outside</code>を参照することや、<code>doSomething</code>を実行することはできますが、</p>
+
+<p>スクリプト本体からは<code>closure</code>内部の<code>inside</code>にアクセスすることはできません。</p>
+
+<p>まあ、大体ご想像されていたとおりだと思います。</p>
+
+<h4>実は<code>Callable&lt;V&gt;</code>だった<code>Closure&lt;V&gt;</code></h4>
+
+<p>さて、ここまでは<code>Callable&lt;V&gt;</code>との対比で<code>Closure&lt;V&gt;</code>を見て来ましたが、</p>
+
+<p><code>Closure&lt;V&gt;</code>は実は<code>Callable&lt;V&gt;</code>を実装した抽象クラスです。</p>
+
+<p>まず、<code>Closure&lt;V&gt;</code>のクラスファイルを見てみましょう。</p>
+
+<p>```java Closure.java
+public abstract class Closure<V> extends GroovyObjectSupport implements Cloneable, Runnable, GroovyCallable<V>, Serializable {</p>
+
+<pre><code>// some codes
+</code></pre>
+
+<p>}
+```</p>
+
+<p><code>Closure&lt;V&gt;</code>はインターフェース<code>GroovyCallable&lt;V&gt;</code>を実装しています。</p>
+
+<p>で、この<code>GroovyCallable&lt;V&gt;</code>ってなんやねんというと…</p>
+
+<p><code>java GroovyCallable.java
+public interface GroovyCallable&lt;V&gt; extends Callable&lt;V&gt; { }
+</code></p>
+
+<p>ってことで、<code>Callable&lt;V&gt;</code>を継承しているインターフェースになります。</p>
+
+<p>まとめると<code>Closure&lt;V&gt;</code>は<code>Callable&lt;V&gt;</code>の実装クラスということになります。</p>
+
+<p>では試してみましょう。</p>
+
+<p>```groovy
+import java.util.concurrent.*</p>
+
+<p>def service = Executors.newFixedThreadPool(3)</p>
+
+<p>def callable = {int sec &ndash;></p>
+
+<pre><code>return {
+    println "${new Date().format('yyyy/MM/dd hh:mm:ss')} : Sleeping ${sec} seconds..."
+    Thread.sleep(sec * 1000)
+    "${new Date().format('yyyy/MM/dd hh:mm:ss')} : This is ${sec}" as String
+}
+</code></pre>
+
+<p>}</p>
+
+<p>assert service.invokeAll((10..1).collect {</p>
+
+<pre><code>callable(it) as Callable&lt;String&gt;
+</code></pre>
+
+<p>}).each {</p>
+
+<pre><code>println it.get()
+</code></pre>
+
+<p>}.size() == 10
+```</p>
+
+<p>この実行結果は次のようになります。</p>
+
+<p><code>txt
+2013/05/31 02:13:56 : Sleeping 10 seconds...
+2013/05/31 02:13:56 : Sleeping 8 seconds...
+2013/05/31 02:13:56 : Sleeping 9 seconds...
+2013/05/31 02:14:04 : Sleeping 7 seconds...
+2013/05/31 02:14:05 : Sleeping 6 seconds...
+2013/05/31 02:14:06 : Sleeping 5 seconds...
+2013/05/31 02:14:11 : Sleeping 4 seconds...
+2013/05/31 02:14:11 : Sleeping 2 seconds...
+2013/05/31 02:14:11 : Sleeping 3 seconds...
+2013/05/31 02:14:13 : Sleeping 1 seconds...
+2013/05/31 02:14:06 : This is 10
+2013/05/31 02:14:05 : This is 9
+2013/05/31 02:14:04 : This is 8
+2013/05/31 02:14:11 : This is 7
+2013/05/31 02:14:11 : This is 6
+2013/05/31 02:14:11 : This is 5
+2013/05/31 02:14:15 : This is 4
+2013/05/31 02:14:14 : This is 3
+2013/05/31 02:14:13 : This is 2
+2013/05/31 02:14:14 : This is 1
+</code></p>
+
+<p>全然、問題なく<code>Callable&lt;V&gt;</code>として動いているのが確認できると思います。</p>
+
+<p>で、別にここまではなんだjavaじゃん、というわけですが、</p>
+
+<p>ここからがほぼ本題です。</p>
+
+<h4>delegate</h4>
+
+<p>delegateがgroovyの<code>Closure&lt;V&gt;</code>の柔軟性をもたらしていることに疑いはありません。</p>
+
+<p>まずは使用例から…</p>
+
+<h5><code>groovy.xml.MarkupBuilder</code></h5>
+
+<p>```groovy
+import groovy.xml.*</p>
+
+<p>def w = new StringWriter()
+def doc = new MarkupBuilder(w)</p>
+
+<p>def border = &lsquo;border : solid 1px #ccc;&rsquo;
+def background = &lsquo;background-color : rgba(239, 239, 255, 0.7);&rsquo;
+def padding = &lsquo;padding : 5px;&rsquo;
+def radius = &lsquo;border-radius : 5px;&rsquo;</p>
+
+<p>doc.html(lang : &lsquo;ja&rsquo;) {</p>
+
+<pre><code>head {
+    title 'test page'
+}
+body {
+    h3 'Hello Groovy!'
+    p (style : "${border}${background}${padding}${radius}",
+            'This document is made by groovy.')
+}
+</code></pre>
+
+<p>}</p>
+
+<p>println w.toString()
+```</p>
+
+<p>これを実効すると、次のようなhtmlファイルができます。</p>
+
+<p>```html
+<html lang='ja'>
+  <head></p>
+
+<pre><code>&lt;title&gt;test page&lt;/title&gt;
+</code></pre>
+
+<p>  </head>
+  <body></p>
+
+<pre><code>&lt;h3&gt;Hello Groovy!&lt;/h3&gt;
+&lt;p style='border : solid 1px #ccc;background-color : rgba(239, 239, 255, 0.7);padding : 5px;border-radius : 5px;'&gt;This document is made by groovy.&lt;/p&gt;
+</code></pre>
+
+<p>  </body>
+</html>
+```</p>
+
+<p><code>MarkupBuilder</code>というクラスは<code>groovy.util.BuilderSupport</code>クラスを継承していて、</p>
+
+<p>存在しないようなメソッドを実行する際に、</p>
+
+<p><code>java
+protected Object doInvokeMethod(String methodName, Object name, Object args)
+</code></p>
+
+<p>を介して実行します。</p>
+
+<p>そして、このメソッドが内部で<code>Node</code>を作っていきます。</p>
+
+<p>そういうわけで、上記のコードの11行目の<code>html</code>メソッドが実行されて、</p>
+
+<p><code>"html"</code>というノードが作成されるのはわかるかと思います。</p>
+
+<p>問題は<code>html</code>というメソッドが引数として受け入れた<code>Closure&lt;V&gt;</code>が</p>
+
+<p><code>head</code>というメソッドや<code>body</code>メソッドを実行しています。</p>
+
+<p>さきほどの<code>Closure</code>のスコープに戻るとこの場合、</p>
+
+<p><code>head</code>や<code>body</code>というメソッドはないので、</p>
+
+<p>ここで<code>MissingMethodException</code>が発生しそうですが、</p>
+
+<p>発生しません。</p>
+
+<p>何故でしょうか？</p>
+
+<p><strong>これの謎を解く鍵がdelegateです。</strong></p>
+
+<h5><code>Closure#setDelegate</code>と<code>Closure#setResolveStrategy</code></h5>
+
+<p><code>Closure&lt;V&gt;</code>には変数名やメソッド名をどのオブジェクトから参照するのかを決定することができます。</p>
+
+<p>そのオブジェクトへの参照がdelegateになります。</p>
+
+<p>では、delegateをわざとらしいほど強調したスクリプトを見てみます。</p>
+
+<p>```groovy
+setProperty &lsquo;x&rsquo;, 1000
+setProperty &lsquo;y&rsquo;, 500
+setProperty &lsquo;exec&rsquo;, {println &ldquo;x : ${x}, y : ${y}&rdquo;}</p>
+
+<p>def map = [x : 10, y : 5, exec : {println &ldquo;x = ${x}, y = ${y}&rdquo;}]
+def closure = {</p>
+
+<pre><code>println "x -&gt; ${x}"
+println "y -&gt; ${y}"
+print 'delegate exec -&gt; '
+exec.call()
+print 'owner exec -&gt; '
+exec()
+</code></pre>
+
+<p>}
+closure.delegate = map
+closure.resolveStrategy = Closure.DELEGATE_FIRST
+closure()
+```</p>
+
+<p>では、実行してみましょう。</p>
+
+<p><code>txt
+x -&gt; 10
+y -&gt; 5
+delegate exec -&gt; x = 1000, y = 500
+owner exec -&gt; x : 1000, y : 500
+</code></p>
+
+<p>面白い結果が返ってきました。</p>
+
+<p><code>closure</code>内部で<code>x</code>と<code>y</code>の値は<code>map</code>から取得されたものになっています。</p>
+
+<p>一方、<code>exec</code>に関しては二つの結果が出てきています。</p>
+
+<p>これは、15行目と16行目で行われている<code>closure</code>のdelegateの設定によって説明出来ます。</p>
+
+<p><code>closure</code>がフィールド名を解決する仕組みは下記のようになっています。</p>
+
+<ul>
+<li><code>Closure.DELEGATE_FIRST</code>でdelegateされたオブジェクトから順番に解決していく</li>
+<li>delegateされたオブジェクト<code>map</code>から変数を解決する</li>
+</ul>
+
+
+<p>ここから、7行目、8行目の<code>x</code>と<code>y</code>は<code>map</code>由来のものであることがわかります。</p>
+
+<p>また10行目と12行目の<code>exec</code>が異なる結果となっているのは、</p>
+
+<p>10行目の<code>exec</code>はフィールド名としてまず解決された後に、</p>
+
+<p><code>Closure&lt;V&gt;</code>が実行されています。</p>
+
+<p>一方、12行目の<code>exec</code>ではメソッドとして(<code>map</code>(クラスは<code>java.util.Map</code>)にはメソッド<code>exec</code>がない)</p>
+
+<p>名前解決をします。そのため<code>closure</code>の<code>OWNER</code>であるスクリプトの方の<code>exec</code>が参照されます。</p>
+
+<p>また、10行目と12行目の<code>exec</code>が参照する<code>x</code>と<code>y</code>が1行目と2行目で設定されている<code>x</code>と<code>y</code>なのは</p>
+
+<p>次の理由からです。</p>
+
+<ul>
+<li><code>map.exec</code>のdelegateが設定されてない</li>
+<li><code>exec</code>のdelegateが設定されていない</li>
+</ul>
+
+
+<h5><code>MarkupBuilder</code>再び</h5>
+
+<p>さきほどの<code>MarkupBuilder</code>に戻ります。</p>
+
+<p><code>MarkupBuilder#doInvokeMethod(String, Object, Object)</code>メソッドでは</p>
+
+<p>どのような処理がされているのかというと…</p>
+
+<p>```java MarkupBuilder.java
+// this is partial codes
+protected Object doInvokeMethod(String methodName, Object name, Object args) {</p>
+
+<pre><code>Object node = null;
+Closure closure = null;
+
+// creating node and attach it to variable node.
+// getting closure from arg and attach it to variable closure.
+if (closure != null) {
+    // stack operation
+    setClosureDelegate(closure, node);
+    closure.call();
+    // stack operation
+}
+// node create completion and return it
+</code></pre>
+
+<p>}
+protected void setClosureDelegate(Closure closure, Object node) {</p>
+
+<pre><code>closure.setDelegate(this);
+</code></pre>
+
+<p>}
+```</p>
+
+<p>9行目で<code>setClosureDelegate</code>メソッドを呼び出し、</p>
+
+<p>15行目からの<code>setClosureDelegate</code>では、</p>
+
+<p><code>closure</code>のdelegateに<code>this</code>(つまり<code>MarkupBuilder</code>のインスタンス)を割り当てています。</p>
+
+<p>その結果10行目の<code>closure.call()</code>では、</p>
+
+<p>メソッドおよびフィールドの名前解決が<code>MarkupBuilder</code>のインスタンスから行われるます。</p>
+
+<p>その結果、<code>MarkupBuilder</code>の例で<code>head</code>とか<code>body</code>といったメソッドが、</p>
+
+<p><code>MarkupBuilder</code>のインスタンスに対して呼び出されるということになります。</p>
+
+<p>さて、翻って</p>
+
+<h1>gradleのtaskメソッド…</h1>
+
+<p>でも、<code>Closure&lt;V&gt;</code>が使われていますね。</p>
+
+<p>```groovy build.gradle
+task myTask {</p>
+
+<pre><code>description = 'this is myTask'.
+println 'this is not task, but configuration.'
+doLast {
+    println 'finished myTask'
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>gradleのandroidサポートが本格的になってからgradleを始めた人の中には</p>
+
+<p>上記のようなgradleの<code>Project</code>クラスのメソッド<code>task(Object, Closure)</code>の</p>
+
+<p><code>Closure</code>部分をタスクだと思っている人がかなりの割合でいると思いますが、</p>
+
+<p>この<code>Closure</code>部分は<strong>タスクではなく、設定です</strong>。</p>
+
+<p>こう書いた場合にタスクはgradleコマンドを書いた時に必ず実行されると</p>
+
+<p>言っていると、元からgroovyをやっている人とは話がかみあわなくなるので、</p>
+
+<p>気をつけて下さい。</p>
+
+<p>では、ちょっとソースコードを覗いてみます。</p>
+
+<p>```java AbstractProject.java
+// this is partial codes
+public Task task(String task, Closure configureClosure) {</p>
+
+<pre><code>return taskContainer.create(task).configure(configureClosure);
+</code></pre>
+
+<p>}
+```</p>
+
+<p><code>AbstractProject#task(String, Closure)</code>では、まず<code>Task</code>が作成された後に、</p>
+
+<p><code>Task#configure(Closure)</code>が呼び出されます。</p>
+
+<p>```java AbstractTask.java
+// this is partial codes
+public Task configure(Closure closure) {</p>
+
+<pre><code>return ConfigureUtil.configure(closure, this, false);
+</code></pre>
+
+<p>}
+```</p>
+
+<p><code>Task#configure(Closure)</code>では<code>ConfigureUtil#configure(Closure, Task, boolean)</code>が呼び出されます。</p>
+
+<p>```java ConfigureUtil.java
+// this is partial codes
+public static <T> T configure(Closure configureClosure,</p>
+
+<pre><code>    T delegate,
+    boolean configureableAware) {
+return configure(configureClosure,
+        delegate,
+        Closure.DELEGATE_FIRST,
+        configureableAware);
+</code></pre>
+
+<p>}
+private static <T> T configure(Closure configureClosure,</p>
+
+<pre><code>    T delegate,
+    int resolveStrategy,
+    boolean configureableAware) {
+ClosureBackedAction&lt;T&gt; action = new ClosureBackedAction&lt;T&gt;(
+        configureClosure,
+        resolveStrategy,
+        configureableAware); 
+action.execute(delegate);
+return delegate;
+</code></pre>
+
+<p>}
+```</p>
+
+<p>ここから、<code>org.gradle.api.internal.ClosureBackedAction&lt;T&gt;</code>により、</p>
+
+<p><code>Closure</code>が実行されます。</p>
+
+<p>```java ClosureBackedAction.java
+// this is partial codes
+public ClosureBackedAction(Closure closure,</p>
+
+<pre><code>    int resolveStrategy,
+    boolean configureableAware) {
+this.closure = closure;
+this.configureableAware = configureableAware;
+this.resolveStrategy = resolveStrategy;
+</code></pre>
+
+<p>}
+public void execute(T delegate) {</p>
+
+<pre><code>// check closure is not null
+// checking cinfgureableAware is false
+Closure copy = (Closure) closure.clone();
+copy.setResolveStrategy(resolveStrategy);
+copy.setDelegate(delegate);
+if (copy.getMaximumNumberOfParameters() == 0) {
+    copy.call();
+} else {
+    copy.call(delegate);
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>12〜14行目でdelegateの設定、16行目or17行目で<code>Closure</code>の実行がなされていますね。</p>
+
+<p>で、<code>Closure</code>のdelegateにはタスクが設定されています。</p>
+
+<p>したがって、少し前で説明した通り、</p>
+
+<p><code>Closure</code>の実行において変数名の解決は<code>Task</code>のインスタンスから順番に解決されていきます。</p>
+
+<p>で、これが最終的にタスクの設定になるわけです。</p>
+
+<p>(結構たらい回しにされていてイライライする方がいらっしゃるかもしれませんが、まあ、テスタビリティを上げるためにこうなっています。)</p>
+
+<p>というわけで、<strong>まとめ</strong></p>
+
+<h2><code>Closure&lt;V&gt;</code>の仕組みがわかると<a href="http://www.gradle.org/docs/current/dsl/">Gradle DSL</a>の理解が容易になります。</h2>
+
+<p>冒頭でgradleの話しませんって言ったな、あれは、嘘だ。</p>
+
+<p>{% render_partial _includes/post/post_footer.html %}</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[AndroidがJavaだと思っている人のためのGroovy講座 - 1]]></title>
@@ -134,30 +897,7 @@ public Task task(Object task) {
 
 <p>…ん、gradleのことほとんど書かないと言ったな、あれは嘘だ。</p>
 
-<p><script type="text/javascript"><!--
-google_ad_client = "ca-pub-4508687151223458";
-/* octopress */
-google_ad_slot = "1134799005";
-google_ad_width = 300;
-google_ad_height = 250;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-</p>
+<p>{% render_partial _includes/post/post_footer.html %}</p>
 ]]></content>
   </entry>
   
@@ -357,30 +1097,7 @@ at org.mikeneck.multithreads.SendManyMessages.send2times(SendManyMessages.java:3
 
 <p><a href="https://gist.github.com/mike-neck/5649095">こちらをどうぞ</a></p>
 
-<p><script type="text/javascript"><!--
-google_ad_client = "ca-pub-4508687151223458";
-/* octopress */
-google_ad_slot = "1134799005";
-google_ad_width = 300;
-google_ad_height = 250;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-</p>
+<p>{% render_partial _includes/post/post_footer.html %}</p>
 ]]></content>
   </entry>
   
