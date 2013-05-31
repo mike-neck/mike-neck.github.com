@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Account, | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/account/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-01T02:05:14+09:00</updated>
+  <updated>2013-06-01T02:07:16+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -20,7 +20,7 @@
     <id>http://mike-neck.github.io/blog/2013/05/18/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-2</id>
     <content type="html"><![CDATA[<h2>普通のエンタープライズ系プログラマーであれば、会計用語はちゃんと英語で覚えているものですよね(白目</h2>
 
-<p>{% img <a href="http://img5.blogs.yahoo.co.jp/ybi/1/9f/9a/fpdxw092/folder/1455483/img_1455483_52010810_1?1205033611">http://img5.blogs.yahoo.co.jp/ybi/1/9f/9a/fpdxw092/folder/1455483/img_1455483_52010810_1?1205033611</a> %}</p>
+<p><img class="<a" src="href="http://img5.blogs.yahoo.co.jp/ybi/1/9f/9a/fpdxw092/folder/1455483/img_1455483_52010810_1?1205033611">http://img5.blogs.yahoo.co.jp/ybi/1/9f/9a/fpdxw092/folder/1455483/img_1455483_52010810_1?1205033611</a>"></p>
 
 <p>僕は<a href="http://mike-neck.github.io/blog/2013/05/13/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-1/">前</a>にも言ったとおりに、</p>
 
@@ -232,7 +232,30 @@ AccountChart.EXPENSE</p>
 </ul>
 
 
-<p>{% render_partial _includes/post/post_footer.html %}</p>
+<p><script type="text/javascript"><!--
+google_ad_client = "ca-pub-4508687151223458";
+/* octopress */
+google_ad_slot = "1134799005";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+</p>
 ]]></content>
   </entry>
   
