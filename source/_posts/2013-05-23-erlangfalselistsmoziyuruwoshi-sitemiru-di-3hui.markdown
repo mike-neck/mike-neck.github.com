@@ -362,28 +362,32 @@ c
 
 #### Erlang Document
 
-> #### nthtail
+> #### nthtail(N, List) -> Tail
 > 
 > #### Types
 > 
-> + 
-> + 
+> + N = integer() >= 0
+> + List = [T, ...]
+> + Elem = T
+> + T = term()
 > 
-> 
+> Returns the Nth tail of List, that is, the sublist of List starting at N+1 and continuing up to the end of the list.
 > 
 > [参照先](http://erlang.org/doc/man/lists.html#nthtail-2)
 
 #### Explain
 
+`N+1`番から後ろの要素で作られるサブリストを返します。
 
 
 #### Example
 
 ```erlang
-1>
+1> lists:nthtail(3,[a,2,c,4,e,5]).
+[4,e,5]
 ```
 
-
+4番目から後ろの要素で構成されるリストが返されます。
 
 
 ### partition/2
