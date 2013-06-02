@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "プログラマーがGitHubでブログを更改するべき理由"
+title: "プログラマーがGitHubでブログを公開するべき理由"
 date: 2013-06-03 00:44
 comments: true
 categories: git
