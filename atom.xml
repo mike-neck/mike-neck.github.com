@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-02T16:55:30+09:00</updated>
+  <updated>2013-06-03T00:56:30+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -12,6 +12,92 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[プログラマーがGitHubでブログを公開するべき理由]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/06/03/puroguramagagithubdeburoguwogeng-gai-surubekili-you/"/>
+    <updated>2013-06-03T00:44:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/06/03/puroguramagagithubdeburoguwogeng-gai-surubekili-you</id>
+    <content type="html"><![CDATA[<p>こんにちわ。みけです。</p>
+
+<p>早いもので僕がブログをこちらに移動してから約1ヶ月経ちました。</p>
+
+<p>こちらのブログに移動してよかったと思う理由を挙げてみたいと思います。</p>
+
+<h2>(1)小さく記事を書いていくことができる</h2>
+
+<p>ブログに自分の考えなどをまとめるのには、</p>
+
+<p>それなりに時間が必要であったり、</p>
+
+<p>集中力が必要であったりします。</p>
+
+<p>これまでのブログサービスでも、</p>
+
+<p>一応下書きという形で保存することは出来ましたが、</p>
+
+<p>どうしても大きなものになってしまったりする場合、</p>
+
+<p>こまめに保存できなかったりすると痛いことが多々あります。</p>
+
+<p>GitHubでブログを書いている場合は、</p>
+
+<p>こまめに変更が管理できるので、</p>
+
+<p>ブログのように長いものを書くときに、</p>
+
+<p>非常に便利です。</p>
+
+<p>逆に間違えたなと思うところなどは、</p>
+
+<p>消せますし、</p>
+
+<p>消したところを間違えたという場合は復帰させることもできます。</p>
+
+<p>というわけで、僕のようにダラダラ記事を書く人でも、</p>
+
+<p>最終的に記事としてまとめられるので、</p>
+
+<p>Gitでバージョン管理しながらブログを書くのは非常に便利であると思います。</p>
+
+<h2>結論</h2>
+
+<p>Gitでバージョン管理しながら書くブログは書きやすいです。</p>
+
+<p>え、理由、そんなのこれしかないですお…(´・ω・｀)</p>
+
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4508687151223458";
+/* octopress */
+google_ad_slot = "1134799005";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+
+
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Windows(7)環境でgvmをインストールする]]></title>

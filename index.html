@@ -9,7 +9,7 @@
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="こんにちわ、みけです。 Windowsでのgroovyの環境構築といえば、 zipを落としてきて、解凍して、パスを通してといった作業をしなければならないのですが、 最近それが結構面倒くさいなと感じて、 Windowsから疎遠になっていました。 gvmをインストールすればいいんですが、 &hellip;">
+  <meta name="description" content="こんにちわ。みけです。 早いもので僕がブログをこちらに移動してから約1ヶ月経ちました。 こちらのブログに移動してよかったと思う理由を挙げてみたいと思います。 (1)小さく記事を書いていくことができる ブログに自分の考えなどをまとめるのには、 それなりに時間が必要であったり、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,119 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/03/puroguramagagithubdeburoguwogeng-gai-surubekili-you/">プログラマーがGitHubでブログを公開するべき理由</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-03T00:44:00+09:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>こんにちわ。みけです。</p>
+
+<p>早いもので僕がブログをこちらに移動してから約1ヶ月経ちました。</p>
+
+<p>こちらのブログに移動してよかったと思う理由を挙げてみたいと思います。</p>
+
+<h2>(1)小さく記事を書いていくことができる</h2>
+
+<p>ブログに自分の考えなどをまとめるのには、</p>
+
+<p>それなりに時間が必要であったり、</p>
+
+<p>集中力が必要であったりします。</p>
+
+<p>これまでのブログサービスでも、</p>
+
+<p>一応下書きという形で保存することは出来ましたが、</p>
+
+<p>どうしても大きなものになってしまったりする場合、</p>
+
+<p>こまめに保存できなかったりすると痛いことが多々あります。</p>
+
+<p>GitHubでブログを書いている場合は、</p>
+
+<p>こまめに変更が管理できるので、</p>
+
+<p>ブログのように長いものを書くときに、</p>
+
+<p>非常に便利です。</p>
+
+<p>逆に間違えたなと思うところなどは、</p>
+
+<p>消せますし、</p>
+
+<p>消したところを間違えたという場合は復帰させることもできます。</p>
+
+<p>というわけで、僕のようにダラダラ記事を書く人でも、</p>
+
+<p>最終的に記事としてまとめられるので、</p>
+
+<p>Gitでバージョン管理しながらブログを書くのは非常に便利であると思います。</p>
+
+<h2>結論</h2>
+
+<p>Gitでバージョン管理しながら書くブログは書きやすいです。</p>
+
+<p>え、理由、そんなのこれしかないですお…(´・ω・｀)</p>
+
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4508687151223458";
+/* octopress */
+google_ad_slot = "1134799005";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+
+
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -3459,124 +3572,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/22/gradle1-dot-6karagroovyfalseconfigurationhadeprecatedninatuteimasu/">gradle1.6からgroovyのconfigurationはdeprecatedになっています</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-22T20:08:00+09:00" pubdate data-updated="true">May 22<span>nd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>gradle1.6からgroovyのconfigurationは非推奨になっています</h2>
-
-<p>まあ今さらですが、さきほどbuild.gradleを書いた時に、</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ gradle idea
-</span><span class='line'>The groovy configuration has been deprecated and is scheduled to be removed in Gradle 2.0. Typically, usages of 'groovy' can simply be replaced with 'compile'. In some cases, it may be necessary to additionally configure the 'groovyClasspath' property of GroovyCompile and Groovydoc tasks.
-</span><span class='line'>:ideaModule
-</span><span class='line'>Download http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.pom
-</span><span class='line'>Download http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3-sources.jar
-</span><span class='line'>Download http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.jar
-</span><span class='line'>:ideaProject
-</span><span class='line'>:ideaWorkspace
-</span><span class='line'>:idea
-</span><span class='line'>
-</span><span class='line'>BUILD SUCCESSFUL
-</span><span class='line'>
-</span><span class='line'>Total time: 11.174 secs
-</span><span class='line'>$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p>と表示されたので、「うぉっ」と思ってドキュメントを読んでみました。</p>
-
-<p><a href="http://www.gradle.org/docs/current/release-notes#groovy-configuration-is-deprecated">groovy configuration is deprecated</a></p>
-
-<p>じゃあ、今後どうするのかというと、</p>
-
-<h1>compile configurationにgroovyのartifactを指定する</h1>
-
-<p>ということです。</p>
-
-<p>つまり、これまでは</p>
-
-<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">groovy</span> <span class="o">:</span> <span class="s1">&#39;org.codehaus:groovy:groovy-all:2.1.3&#39;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と書いていましたが、</p>
-
-<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">compile</span> <span class="o">:</span> <span class="s1">&#39;org.codehaus.groovy:groovy-all:2.1.3&#39;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と書けばよいようです。</p>
-
-<table>
-<tbody>
-<tr>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B009X5KIFK" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=3864900492" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1617291307" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-</tr>
-</tbody>
-</table>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -3592,6 +3587,10 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/06/03/puroguramagagithubdeburoguwogeng-gai-surubekili-you/">プログラマーがGitHubでブログを公開するべき理由</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/02/windows-7-huan-jing-dervmwoinsutorusuru/">Windows(7)環境でgvmをインストールする</a>
       </li>
     
@@ -3605,10 +3604,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     
       <li class="post">
         <a href="/blog/2013/05/27/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo/">AndroidがJavaだと思っている人のためのGroovy講座 - 1</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/26/blogfalsegeng-xin-pingwosong-reruyounirakefalsetasukuwoshu-itemita/">blogの更新pingを送れるようにrakeのタスクを書いてみた</a>
       </li>
     
   </ul>

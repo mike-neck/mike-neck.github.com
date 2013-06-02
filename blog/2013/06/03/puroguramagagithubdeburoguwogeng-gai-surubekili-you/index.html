@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>blogの更新pingを送れるようにrakeのタスクを書いてみた - mike、mikeなるままに…</title>
+  <title>プログラマーがGitHubでブログを公開するべき理由 - mike、mikeなるままに…</title>
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="こんにちわ、みけです。 お金がないので、ブログを読んでもらって、 google adsenseをみんなに押してもらわないと、 死んでしまいます。 さて、そんなことはどうでもよくて、 bloggerでブログをやっていたときは、 googleさんが勝手に検索エンジンに乗せてくれるので、 &hellip;">
+  <meta name="description" content="こんにちわ。みけです。 早いもので僕がブログをこちらに移動してから約1ヶ月経ちました。 こちらのブログに移動してよかったと思う理由を挙げてみたいと思います。 (1)小さく記事を書いていくことができる ブログに自分の考えなどをまとめるのには、 それなりに時間が必要であったり、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/05/26/blogfalsegeng-xin-pingwosong-reruyounirakefalsetasukuwoshu-itemita">
+  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/06/03/puroguramagagithubdeburoguwogeng-gai-surubekili-you">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="mike、mikeなるままに…" type="application/atom+xml">
@@ -81,7 +81,7 @@
   
   <header>
     
-      <h1 class="entry-title">Blogの更新pingを送れるようにrakeのタスクを書いてみた</h1>
+      <h1 class="entry-title">プログラマーがGitHubでブログを公開するべき理由</h1>
     
     
       <p class="meta">
@@ -97,119 +97,60 @@
   
 
 
-<time datetime="2013-05-26T21:38:00+09:00" pubdate data-updated="true">May 26<span>th</span>, 2013</time>
+<time datetime="2013-06-03T00:44:00+09:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>こんにちわ、みけです。</p>
+<div class="entry-content"><p>こんにちわ。みけです。</p>
 
-<p>お金がないので、ブログを読んでもらって、</p>
+<p>早いもので僕がブログをこちらに移動してから約1ヶ月経ちました。</p>
 
-<p>google adsenseをみんなに押してもらわないと、</p>
+<p>こちらのブログに移動してよかったと思う理由を挙げてみたいと思います。</p>
 
-<p>死んでしまいます。</p>
+<h2>(1)小さく記事を書いていくことができる</h2>
 
-<p>さて、そんなことはどうでもよくて、</p>
+<p>ブログに自分の考えなどをまとめるのには、</p>
 
-<p>bloggerでブログをやっていたときは、</p>
+<p>それなりに時間が必要であったり、</p>
 
-<p>googleさんが勝手に検索エンジンに乗せてくれるので、</p>
+<p>集中力が必要であったりします。</p>
 
-<p>検索しやすかったのですが、</p>
+<p>これまでのブログサービスでも、</p>
 
-<p>githubでブログを書くようになって、</p>
+<p>一応下書きという形で保存することは出来ましたが、</p>
 
-<p>検索で出にくくなっていたので、</p>
+<p>どうしても大きなものになってしまったりする場合、</p>
 
-<p>更新pingをrakeで送りつけるようにしました。</p>
+<p>こまめに保存できなかったりすると痛いことが多々あります。</p>
 
-<p>まあ、「更新ping ruby」でググった結果をrakeのタスクにしただけですが…</p>
+<p>GitHubでブログを書いている場合は、</p>
 
-<p>で、追加したのがこんな感じのタスクです。</p>
+<p>こまめに変更が管理できるので、</p>
 
-<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;yaml&quot;</span>
-</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;xmlrpc/client&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">#-- sending ping --#</span>
-</span><span class='line'><span class="n">desc</span> <span class="s2">&quot;Sedning ping to Web Search Engines&quot;</span>
-</span><span class='line'><span class="n">task</span> <span class="ss">:ping</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">site_config</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;_config.yml&#39;</span><span class="p">))</span>
-</span><span class='line'>  <span class="n">blog_title</span> <span class="o">=</span> <span class="n">site_config</span><span class="o">[</span><span class="s1">&#39;title&#39;</span><span class="o">]</span>
-</span><span class='line'>  <span class="n">blog_url</span> <span class="o">=</span> <span class="n">site_config</span><span class="o">[</span><span class="s1">&#39;url&#39;</span><span class="o">]</span>
-</span><span class='line'>  <span class="n">ping_url</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;ping.yml&#39;</span><span class="p">))</span>
-</span><span class='line'>  <span class="n">ping_url</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">url</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">ping</span> <span class="o">=</span> <span class="ss">XMLRPC</span><span class="p">:</span><span class="ss">:Client</span><span class="o">.</span><span class="n">new2</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">begin</span>
-</span><span class='line'>      <span class="n">result</span> <span class="o">=</span> <span class="n">ping</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;weblogUpdates.ping&#39;</span><span class="p">,</span> <span class="n">blog_title</span><span class="p">,</span> <span class="n">blog_url</span><span class="p">)</span>
-</span><span class='line'>      <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">url</span><span class="si">}</span><span class="s2"> : </span><span class="si">#{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>    <span class="k">rescue</span> <span class="o">=&gt;</span> <span class="n">e</span>
-</span><span class='line'>      <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">url</span><span class="si">}</span><span class="s2"> : </span><span class="si">#{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
+<p>ブログのように長いものを書くときに、</p>
 
+<p>非常に便利です。</p>
 
-<p>この新たに追加したタスクを後は、gen_deployタスクに追加します。</p>
+<p>逆に間違えたなと思うところなどは、</p>
 
-<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">desc</span> <span class="s2">&quot;Generate website and deploy&quot;</span>
-</span><span class='line'><span class="n">task</span> <span class="ss">:gen_deploy</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:integrate</span><span class="p">,</span> <span class="ss">:generate</span><span class="p">,</span> <span class="ss">:deploy</span><span class="p">,</span> <span class="ss">:ping</span><span class="o">]</span> <span class="k">do</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
+<p>消せますし、</p>
 
+<p>消したところを間違えたという場合は復帰させることもできます。</p>
 
-<p>あと、適当に<code>ping.yml</code>に更新pingを送りつけるサイトを記述すればおｋです。</p>
+<p>というわけで、僕のようにダラダラ記事を書く人でも、</p>
 
-<figure class='code'><figcaption><span>ping.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://blogsearch.google.com/ping/RPC2</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://api.my.yahoo.co.jp/RPC2</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://blog.goo.ne.jp/XMLRPC</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.bloggers.jp/rpc/</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.rss.drecom.jp/</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.fc2.com/</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://rpc.weblogs.com/RPC2</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://rpc.reader.livedoor.com/ping</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.blogranking.net/</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://www.blogpeople.net/ping/</span>
-</span></code></pre></td></tr></table></div></figure>
+<p>最終的に記事としてまとめられるので、</p>
 
+<p>Gitでバージョン管理しながらブログを書くのは非常に便利であると思います。</p>
 
+<h2>結論</h2>
 
+<p>Gitでバージョン管理しながら書くブログは書きやすいです。</p>
+
+<p>え、理由、そんなのこれしかないですお…(´・ω・｀)</p>
 
 <script type="text/javascript"><!--
 google_ad_client = "ca-pub-4508687151223458";
@@ -263,12 +204,12 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   
 
 
-<time datetime="2013-05-26T21:38:00+09:00" pubdate data-updated="true">May 26<span>th</span>, 2013</time>
+<time datetime="2013-06-03T00:44:00+09:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ruby/'>ruby</a>
+    <a class='category' href='/blog/categories/git/'>git</a>
   
 </span>
 
@@ -277,7 +218,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/05/26/blogfalsegeng-xin-pingwosong-reruyounirakefalsetasukuwoshu-itemita/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/05/26/blogfalsegeng-xin-pingwosong-reruyounirakefalsetasukuwoshu-itemita/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/06/03/puroguramagagithubdeburoguwogeng-gai-surubekili-you/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/06/03/puroguramagagithubdeburoguwogeng-gai-surubekili-you/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -291,10 +232,8 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/05/25/an-falseding-xian-nihamatutetaren-gaitagradletojunitfalseenclosedfalsehua/" title="Previous Post: gradleとJUnitのEnclosedの話">&laquo; gradleとJUnitのEnclosedの話</a>
+        <a class="basic-alignment left" href="/blog/2013/06/02/windows-7-huan-jing-dervmwoinsutorusuru/" title="Previous Post: Windows(7)環境でgvmをインストールする">&laquo; Windows(7)環境でgvmをインストールする</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/05/27/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo/" title="Next Post: AndroidがJavaだと思っている人のためのGroovy講座 - 1">AndroidがJavaだと思っている人のためのGroovy講座 - 1 &raquo;</a>
       
     </p>
   </footer>
