@@ -330,28 +330,32 @@ b
 
 #### Erlang Document
 
-> #### nth
+> #### nth(N, List) -> Elem
 > 
 > #### Types
 > 
-> + 
-> + 
+> + N = integer() >= 1
+> + List = [T, ...]
+> + Elem = T
+> + T = term()
 > 
-> 
+> Returns the Nth element of List.
 > 
 > [参照先](http://erlang.org/doc/man/lists.html#nth-2)
 
 #### Explain
 
+`N`番目の要素を返します。
 
 
 #### Example
 
 ```erlang
-1>
+1> lists:nth(3,[a,2,c,4,e,5]).
+c
 ```
 
-
+3番目の要素`c`が返されます。
 
 
 ### nthtail/2
