@@ -4,7 +4,7 @@
   <title><![CDATA[Category: erlang | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/erlang/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-01T03:45:33+09:00</updated>
+  <updated>2013-06-02T16:55:30+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -354,49 +354,67 @@ b
 
 <h4>Erlang Document</h4>
 
-<blockquote><h4>nth</h4>
+<blockquote><h4>nth(N, List) &ndash;> Elem</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>N = integer() >= 1</li>
+<li>List = [T, &hellip;]</li>
+<li>Elem = T</li>
+<li>T = term()</li>
 </ul>
 
+
+<p>Returns the Nth element of List.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#nth-2">参照先</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p><code>N</code>番目の要素を返します。</p>
+
 <h4>Example</h4>
 
 <p><code>erlang
-1&gt;
+1&gt; lists:nth(3,[a,2,c,4,e,5]).
+c
 </code></p>
+
+<p>3番目の要素<code>c</code>が返されます。</p>
 
 <h3>nthtail/2</h3>
 
 <h4>Erlang Document</h4>
 
-<blockquote><h4>nthtail</h4>
+<blockquote><h4>nthtail(N, List) &ndash;> Tail</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>N = integer() >= 0</li>
+<li>List = [T, &hellip;]</li>
+<li>Elem = T</li>
+<li>T = term()</li>
 </ul>
 
+
+<p>Returns the Nth tail of List, that is, the sublist of List starting at N+1 and continuing up to the end of the list.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#nthtail-2">参照先</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p><code>N+1</code>番から後ろの要素で作られるサブリストを返します。</p>
+
 <h4>Example</h4>
 
 <p><code>erlang
-1&gt;
+1&gt; lists:nthtail(3,[a,2,c,4,e,5]).
+[4,e,5]
 </code></p>
+
+<p>4番目から後ろの要素で構成されるリストが返されます。</p>
 
 <h3>partition/2</h3>
 

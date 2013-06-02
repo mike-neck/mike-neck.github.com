@@ -537,51 +537,71 @@ lists:sublist( lists:sort( lists:map( fun({F, A}) -&gt; atom_to_list(F &hellip;"
 
 <h4>Erlang Document</h4>
 
-<blockquote><h4>nth</h4>
+<blockquote><h4>nth(N, List) &ndash;> Elem</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>N = integer() >= 1</li>
+<li>List = [T, &hellip;]</li>
+<li>Elem = T</li>
+<li>T = term()</li>
 </ul>
 
+
+<p>Returns the Nth element of List.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#nth-2">参照先</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p><code>N</code>番目の要素を返します。</p>
+
 <h4>Example</h4>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">nth</span><span class="p">(</span><span class="mi">3</span><span class="p">,[</span><span class="n">a</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="mi">5</span><span class="p">]).</span>
+</span><span class='line'><span class="n">c</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p>3番目の要素<code>c</code>が返されます。</p>
 
 <h3>nthtail/2</h3>
 
 <h4>Erlang Document</h4>
 
-<blockquote><h4>nthtail</h4>
+<blockquote><h4>nthtail(N, List) &ndash;> Tail</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>N = integer() >= 0</li>
+<li>List = [T, &hellip;]</li>
+<li>Elem = T</li>
+<li>T = term()</li>
 </ul>
 
+
+<p>Returns the Nth tail of List, that is, the sublist of List starting at N+1 and continuing up to the end of the list.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#nthtail-2">参照先</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p><code>N+1</code>番から後ろの要素で作られるサブリストを返します。</p>
+
 <h4>Example</h4>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">nthtail</span><span class="p">(</span><span class="mi">3</span><span class="p">,[</span><span class="n">a</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="mi">5</span><span class="p">]).</span>
+</span><span class='line'><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p>4番目から後ろの要素で構成されるリストが返されます。</p>
 
 <h3>partition/2</h3>
 
@@ -858,6 +878,10 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/06/02/windows-7-huan-jing-dervmwoinsutorusuru/">Windows(7)環境でgvmをインストールする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/01/androidgajavadenaili-you-1/">AndroidがJavaでない理由 - 1</a>
       </li>
     
@@ -871,10 +895,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     
       <li class="post">
         <a href="/blog/2013/05/26/blogfalsegeng-xin-pingwosong-reruyounirakefalsetasukuwoshu-itemita/">blogの更新pingを送れるようにrakeのタスクを書いてみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/25/an-falseding-xian-nihamatutetaren-gaitagradletojunitfalseenclosedfalsehua/">gradleとJUnitのEnclosedの話</a>
       </li>
     
   </ul>
