@@ -426,28 +426,38 @@ c
 
 #### Erlang Document
 
-> #### prefix
+> #### prefix(List1, List2) -> boolean()
 > 
 > #### Types
 > 
-> + 
-> + 
+> + List1 = List2 = [T]
+> + T = term()
 > 
-> 
+> Returns true if List1 is a prefix of List2, otherwise false.
 > 
 > [参照先](http://erlang.org/doc/man/lists.html#prefix-2)
 
 #### Explain
 
+`List1`が`List2`の先頭部分である場合に`true`を、異なる場合には`false`を返します。
 
 
 #### Example
 
 ```erlang
-1>
+1> lists:prefix([1,2,3,4], [1,2,3,4,5,6,7]).
+true
+2> lists:prefix([a,b,c,d], [a,z,b,y,c,x]).
+false
+3> lists:prefix("co", "coexistence").
+true
 ```
 
+最初の例では、第一引数が第二引数の先頭部分と一致するので`true`が返されます。
 
+次の例では、第一引数が第二引数の先頭部分と異なるので`false`が返されます。
+
+最後の例では`"co"`は`"coexistence"`の最初の文字列部分と同じなので、`true`が返されます。
 
 
 ### reverse/1
