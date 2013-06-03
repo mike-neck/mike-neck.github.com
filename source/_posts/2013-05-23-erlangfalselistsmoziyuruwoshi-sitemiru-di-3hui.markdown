@@ -394,28 +394,32 @@ c
 
 #### Erlang Document
 
-> #### partition
+> #### partition(Pred, List) -> {Satisfying, NotSatisfying}
 > 
 > #### Types
 > 
-> + 
-> + 
+> + Pred = fun((Elem :: T) -> boolean())
+> + List = Satisfying = NotSatisfying = [T]
+> + T = term()
 > 
-> 
+> Partitions List into two lists, where the first list contains all elements for which Pred(Elem) returns true, and the second list contains all elements for which Pred(Elem) returns false.
 > 
 > [参照先](http://erlang.org/doc/man/lists.html#partition-2)
 
 #### Explain
 
+条件と分割対象リストを引数に取り、二つの新しいリストに分割します。最初のリストには条件を満たすものを、次のリストには条件を満たさないものを返します。
 
 
 #### Example
 
 ```erlang
-1>
+1> lists:partition(fun(X) -> X rem 2 =:= 0 end, [0,1,2,3,4,5,6,7]).
+{[0,2,4,6],[1,3,5,7]}
 ```
 
-
+偶数かどうか判定する条件とリストを与えています。
+先頭のリストには条件を満たすもの(偶数)のリスト、後ろ側のリストには条件を満たさないもの(奇数)のリストが返されます。
 
 
 ### prefix/2
