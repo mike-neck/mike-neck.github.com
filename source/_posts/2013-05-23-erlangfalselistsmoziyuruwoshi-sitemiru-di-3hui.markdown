@@ -464,28 +464,30 @@ true
 
 #### Erlang Document
 
-> #### reverse
+> #### reverse(List1) -> List2
 > 
 > #### Types
 > 
-> + 
-> + 
+> + List1 = List2 = [T]
+> + T = term()
 > 
-> 
+> Returns a list with the elements in List1 in reverse order.
 > 
 > [参照先](http://erlang.org/doc/man/lists.html#reverse-1)
 
 #### Explain
 
+リストを逆順にして返します。
 
 
 #### Example
 
 ```erlang
-1>
+1> lists:reverse([9,8,7,6,5]).
+[5,6,7,8,9]
 ```
 
-
+リストの順番が逆になって返されています。
 
 
 ### reverse/2
