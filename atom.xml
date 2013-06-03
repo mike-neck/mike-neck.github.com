@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-03T00:56:30+09:00</updated>
+  <updated>2013-06-04T02:40:01+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -2891,76 +2891,114 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <h4>Erlang Document</h4>
 
-<blockquote><h4>partition</h4>
+<blockquote><h4>partition(Pred, List) &ndash;> {Satisfying, NotSatisfying}</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>Pred = fun((Elem :: T) &ndash;> boolean())</li>
+<li>List = Satisfying = NotSatisfying = [T]</li>
+<li>T = term()</li>
 </ul>
 
+
+<p>Partitions List into two lists, where the first list contains all elements for which Pred(Elem) returns true, and the second list contains all elements for which Pred(Elem) returns false.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#partition-2">参照先</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p>条件と分割対象リストを引数に取り、二つの新しいリストに分割します。最初のリストには条件を満たすものを、次のリストには条件を満たさないものを返します。</p>
+
 <h4>Example</h4>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">partition</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">X</span> <span class="ow">rem</span> <span class="mi">2</span> <span class="o">=:=</span> <span class="mi">0</span> <span class="k">end</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]).</span>
+</span><span class='line'><span class="p">{[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]}</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p>偶数かどうか判定する条件とリストを与えています。
+先頭のリストには条件を満たすもの(偶数)のリスト、後ろ側のリストには条件を満たさないもの(奇数)のリストが返されます。</p>
 
 <h3>prefix/2</h3>
 
 <h4>Erlang Document</h4>
 
-<blockquote><h4>prefix</h4>
+<blockquote><h4>prefix(List1, List2) &ndash;> boolean()</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>List1 = List2 = [T]</li>
+<li>T = term()</li>
 </ul>
 
+
+<p>Returns true if List1 is a prefix of List2, otherwise false.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#prefix-2">参照先</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p><code>List1</code>が<code>List2</code>の先頭部分である場合に<code>true</code>を、異なる場合には<code>false</code>を返します。</p>
+
 <h4>Example</h4>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">prefix</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]).</span>
+</span><span class='line'><span class="n">true</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">prefix</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">],</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">x</span><span class="p">]).</span>
+</span><span class='line'><span class="n">false</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">prefix</span><span class="p">(</span><span class="s">&quot;co&quot;</span><span class="p">,</span> <span class="s">&quot;coexistence&quot;</span><span class="p">).</span>
+</span><span class='line'><span class="n">true</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p>最初の例では、第一引数が第二引数の先頭部分と一致するので<code>true</code>が返されます。</p>
+
+<p>次の例では、第一引数が第二引数の先頭部分と異なるので<code>false</code>が返されます。</p>
+
+<p>最後の例では<code>"co"</code>は<code>"coexistence"</code>の最初の文字列部分と同じなので、<code>true</code>が返されます。</p>
 
 <h3>reverse/1</h3>
 
 <h4>Erlang Document</h4>
 
-<blockquote><h4>reverse</h4>
+<blockquote><h4>reverse(List1) &ndash;> List2</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>List1 = List2 = [T]</li>
+<li>T = term()</li>
 </ul>
 
+
+<p>Returns a list with the elements in List1 in reverse order.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#reverse-1">参照先</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p>リストを逆順にして返します。</p>
+
 <h4>Example</h4>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">reverse</span><span class="p">([</span><span class="mi">9</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">]).</span>
+</span><span class='line'><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">]</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p>リストの順番が逆になって返されています。</p>
 
 <h3>reverse/2</h3>
 
