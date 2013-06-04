@@ -555,7 +555,19 @@ true
 
 #### Erlang Document
 
-なかった＼(^o^)／
+> #### rkeymerge
+> 
+> #### Types
+> 
+> + 
+> + 
+> 
+> 
+> 
+> [参照先](http://erlang.org/doc/man/lists.html#rkeymerge-3)
+
+#### Explain
+
 
 
 #### Example
@@ -611,19 +623,7 @@ true
 
 #### Erlang Document
 
-> #### rmerge
-> 
-> #### Types
-> 
-> + 
-> + 
-> 
-> 
-> 
-> [参照先](http://erlang.org/doc/man/lists.html#rmerge-3)
-
-#### Explain
-
+なかった＼(^o^)／
 
 
 #### Example
