@@ -555,19 +555,7 @@ true
 
 #### Erlang Document
 
-> #### rkeymerge
-> 
-> #### Types
-> 
-> + 
-> + 
-> 
-> 
-> 
-> [参照先](http://erlang.org/doc/man/lists.html#rkeymerge-3)
-
-#### Explain
-
+なかった＼(^o^)／
 
 
 #### Example
