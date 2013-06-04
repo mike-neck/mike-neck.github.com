@@ -515,75 +515,87 @@ true
 
 #### Erlang Document
 
-> #### reverse
+> #### reverse(List1, Tail) -> List2
 > 
 > #### Types
 > 
-> + 
-> + 
+> + List1 = [T]
+> + Tail = term()
+> + List2 = [T]
+> + T = term()
 > 
-> 
+> Returns a list with the elements in List1 in reverse order, with the tail Tail appended.
 > 
 > [参照先](http://erlang.org/doc/man/lists.html#reverse-2)
 
 #### Explain
 
+リストを逆順にした上で、第二引数を追加した新しいリストを返します。
 
 
 #### Example
 
 ```erlang
-1>
+1> lists:reverse([5,4,3,2,1],[0]).
+[1,2,3,4,5,0]
+2> lists:reverse([5,4,3,2,1],[a,b,c]).
+[1,2,3,4,5,a,b,c]
+3> lists:reverse([5,4,3,2,1],0).
+[1,2,3,4,5|0]
 ```
 
+最初の例、および二番目の例では最初のリストが逆順になされた上で、次のリストが連結された新しいリストが返ってきます。
 
+最後の例では、結果がリストでなくなります。
+
+公式ドキュメントが間違っているっぽいですね…
 
 
 ### rkeymerge/3
 
 #### Erlang Document
 
-> #### rkeymerge
-> 
-> #### Types
-> 
-> + 
-> + 
-> 
-> 
-> 
-> [参照先](http://erlang.org/doc/man/lists.html#rkeymerge-3)
-
-#### Explain
-
+なかった＼(^o^)／
 
 
 #### Example
 
 ```erlang
-1>
+1> lists:rkeymerge(2,          
+1>   [{a, 4}, {a, 3}, {a, 1}], 
+1>   [{b, 5}, {b, 2}, {b, 0}]).
+[{b,5},{a,4},{a,3},{b,2},{a,1},{b,0}]
+2> lists:rkeymerge(2, 
+2>   [{a, 1}, {a, 3}, {a, 4}],
+2>   [{b, 0}, {b, 2}, {b, 5}]).
+[{a,1},{a,3},{a,4},{b,0},{b,2},{b,5}]
+3> lists:rkeymerge(2,          
+3>   [{a, 4}, {a, 3}, {a, 2}, {a, 1}],
+3>   [{b, 5}, {b, 2}, {b, 0}]).       
+[{b,5},{a,4},{a,3},{b,2},{a,2},{a,1},{b,0}]
 ```
 
+`lists:keymerge/3`のreverse版のようです。
 
++ 引数のリストは逆順にソートされている必要があります。
++ 同一のキーを持つ場合、第二引数のリストの要素が優先されます。
+
+最初の例では、タプルの２番目の値をキーに逆順ソートされたリストが返されます。
+
+次の例では、逆順にソートされていないため、マージがうまくなされていません。
+
+最後の例では、同じキーがある場合の挙動を確認しています。
+
+同じキー値をもつ要素(ここでは、`{a,2}`と`{b,2}`)がありますが、
+
+`{b, 2}`の方が優先されているのがわかります。
 
 
 ### rmerge/2
 
 #### Erlang Document
 
-> #### rmerge
-> 
-> #### Types
-> 
-> + 
-> + 
-> 
-> 
-> 
-> [参照先](http://erlang.org/doc/man/lists.html#rmerge-2)
-
-#### Explain
-
+なかった＼(^o^)／
 
 
 #### Example
