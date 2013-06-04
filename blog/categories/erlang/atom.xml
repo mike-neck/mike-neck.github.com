@@ -4,7 +4,7 @@
   <title><![CDATA[Category: erlang | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/erlang/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-04T02:40:01+09:00</updated>
+  <updated>2013-06-04T20:09:06+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -59,6 +59,28 @@ lists:sublist(</p>
   "rmerge/3"
 ]
 </code></p>
+
+<table>
+<tbody>
+<tr>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4274067149" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4873114659" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1449309968" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+</tr>
+<tr>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00B634R04" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00AZOT4MG" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1933988789" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+</tr>
+</tbody>
+</table>
+
 
 <h3>merge/1</h3>
 
@@ -523,25 +545,42 @@ true
 
 <h4>Erlang Document</h4>
 
-<blockquote><h4>reverse</h4>
+<blockquote><h4>reverse(List1, Tail) &ndash;> List2</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>List1 = [T]</li>
+<li>Tail = term()</li>
+<li>List2 = [T]</li>
+<li>T = term()</li>
 </ul>
 
+
+<p>Returns a list with the elements in List1 in reverse order, with the tail Tail appended.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#reverse-2">参照先</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p>リストを逆順にした上で、第二引数を追加した新しいリストを返します。</p>
+
 <h4>Example</h4>
 
 <p><code>erlang
-1&gt;
+1&gt; lists:reverse([5,4,3,2,1],[0]).
+[1,2,3,4,5,0]
+2&gt; lists:reverse([5,4,3,2,1],[a,b,c]).
+[1,2,3,4,5,a,b,c]
+3&gt; lists:reverse([5,4,3,2,1],0).
+[1,2,3,4,5|0]
 </code></p>
+
+<p>最初の例、および二番目の例では最初のリストが逆順になされた上で、次のリストが連結された新しいリストが返ってきます。</p>
+
+<p>最後の例では、結果がリストでなくなります。</p>
+
+<p>公式ドキュメントが間違っているっぽいですね…</p>
 
 <h3>rkeymerge/3</h3>
 
@@ -564,26 +603,43 @@ true
 <h4>Example</h4>
 
 <p><code>erlang
-1&gt;
+1&gt; lists:rkeymerge(2,          
+1&gt;   [{a, 4}, {a, 3}, {a, 1}],
+1&gt;   [{b, 5}, {b, 2}, {b, 0}]).
+[{b,5},{a,4},{a,3},{b,2},{a,1},{b,0}]
+2&gt; lists:rkeymerge(2,
+2&gt;   [{a, 1}, {a, 3}, {a, 4}],
+2&gt;   [{b, 0}, {b, 2}, {b, 5}]).
+[{a,1},{a,3},{a,4},{b,0},{b,2},{b,5}]
+3&gt; lists:rkeymerge(2,          
+3&gt;   [{a, 4}, {a, 3}, {a, 2}, {a, 1}],
+3&gt;   [{b, 5}, {b, 2}, {b, 0}]).       
+[{b,5},{a,4},{a,3},{b,2},{a,2},{a,1},{b,0}]
 </code></p>
+
+<p><code>lists:keymerge/3</code>のreverse版のようです。</p>
+
+<ul>
+<li>引数のリストは逆順にソートされている必要があります。</li>
+<li>同一のキーを持つ場合、第二引数のリストの要素が優先されます。</li>
+</ul>
+
+
+<p>最初の例では、タプルの２番目の値をキーに逆順ソートされたリストが返されます。</p>
+
+<p>次の例では、逆順にソートされていないため、マージがうまくなされていません。</p>
+
+<p>最後の例では、同じキーがある場合の挙動を確認しています。</p>
+
+<p>同じキー値をもつ要素(ここでは、<code>{a,2}</code>と<code>{b,2}</code>)がありますが、</p>
+
+<p><code>{b, 2}</code>の方が優先されているのがわかります。</p>
 
 <h3>rmerge/2</h3>
 
 <h4>Erlang Document</h4>
 
-<blockquote><h4>rmerge</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li></li>
-<li></li>
-</ul>
-
-
-<p><a href="http://erlang.org/doc/man/lists.html#rmerge-2">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
+<p>なかった＼(^o^)／</p>
 
 <h4>Example</h4>
 
@@ -595,19 +651,7 @@ true
 
 <h4>Erlang Document</h4>
 
-<blockquote><h4>rmerge</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li></li>
-<li></li>
-</ul>
-
-
-<p><a href="http://erlang.org/doc/man/lists.html#rmerge-3">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
+<p>なかった＼(^o^)／</p>
 
 <h4>Example</h4>
 

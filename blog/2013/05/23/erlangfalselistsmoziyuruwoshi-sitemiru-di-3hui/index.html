@@ -183,6 +183,30 @@ lists:sublist( lists:sort( lists:map( fun({F, A}) -&gt; atom_to_list(F &hellip;"
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
+<table>
+<tbody>
+<tr>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4274067149" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4873114659" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1449309968" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+</tr>
+<tr>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00B634R04" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00AZOT4MG" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1933988789" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+</tr>
+</tbody>
+</table>
+
+
 <h3>merge/1</h3>
 
 <h4>Erlang Document</h4>
@@ -720,26 +744,48 @@ lists:sublist( lists:sort( lists:map( fun({F, A}) -&gt; atom_to_list(F &hellip;"
 
 <h4>Erlang Document</h4>
 
-<blockquote><h4>reverse</h4>
+<blockquote><h4>reverse(List1, Tail) &ndash;> List2</h4>
 
 <h4>Types</h4>
 
 <ul>
-<li></li>
-<li></li>
+<li>List1 = [T]</li>
+<li>Tail = term()</li>
+<li>List2 = [T]</li>
+<li>T = term()</li>
 </ul>
 
+
+<p>Returns a list with the elements in List1 in reverse order, with the tail Tail appended.</p>
 
 <p><a href="http://erlang.org/doc/man/lists.html#reverse-2">参照先</a></p></blockquote>
 
 <h4>Explain</h4>
 
+<p>リストを逆順にした上で、第二引数を追加した新しいリストを返します。</p>
+
 <h4>Example</h4>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">reverse</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">]).</span>
+</span><span class='line'><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">reverse</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">]).</span>
+</span><span class='line'><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">]</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">reverse</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="mi">0</span><span class="p">).</span>
+</span><span class='line'><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">|</span><span class="mi">0</span><span class="p">]</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p>最初の例、および二番目の例では最初のリストが逆順になされた上で、次のリストが連結された新しいリストが返ってきます。</p>
+
+<p>最後の例では、結果がリストでなくなります。</p>
+
+<p>公式ドキュメントが間違っているっぽいですね…</p>
 
 <h3>rkeymerge/3</h3>
 
@@ -762,27 +808,55 @@ lists:sublist( lists:sort( lists:map( fun({F, A}) -&gt; atom_to_list(F &hellip;"
 <h4>Example</h4>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">rkeymerge</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="mi">4</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">}],</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">b</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">}]).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">b</span><span class="p">,</span><span class="mi">5</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">4</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">3</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">0</span><span class="p">}]</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">rkeymerge</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">4</span><span class="p">}],</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">5</span><span class="p">}]).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">3</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">4</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">5</span><span class="p">}]</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">rkeymerge</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="mi">4</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">}],</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">b</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">}]).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">b</span><span class="p">,</span><span class="mi">5</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">4</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">3</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">0</span><span class="p">}]</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p><code>lists:keymerge/3</code>のreverse版のようです。</p>
+
+<ul>
+<li>引数のリストは逆順にソートされている必要があります。</li>
+<li>同一のキーを持つ場合、第二引数のリストの要素が優先されます。</li>
+</ul>
+
+
+<p>最初の例では、タプルの２番目の値をキーに逆順ソートされたリストが返されます。</p>
+
+<p>次の例では、逆順にソートされていないため、マージがうまくなされていません。</p>
+
+<p>最後の例では、同じキーがある場合の挙動を確認しています。</p>
+
+<p>同じキー値をもつ要素(ここでは、<code>{a,2}</code>と<code>{b,2}</code>)がありますが、</p>
+
+<p><code>{b, 2}</code>の方が優先されているのがわかります。</p>
 
 <h3>rmerge/2</h3>
 
 <h4>Erlang Document</h4>
 
-<blockquote><h4>rmerge</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li></li>
-<li></li>
-</ul>
-
-
-<p><a href="http://erlang.org/doc/man/lists.html#rmerge-2">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
+<p>なかった＼(^o^)／</p>
 
 <h4>Example</h4>
 
@@ -795,19 +869,7 @@ lists:sublist( lists:sort( lists:map( fun({F, A}) -&gt; atom_to_list(F &hellip;"
 
 <h4>Erlang Document</h4>
 
-<blockquote><h4>rmerge</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li></li>
-<li></li>
-</ul>
-
-
-<p><a href="http://erlang.org/doc/man/lists.html#rmerge-3">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
+<p>なかった＼(^o^)／</p>
 
 <h4>Example</h4>
 
