@@ -9,7 +9,8 @@
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="こんにちわ。みけです。 早いもので僕がブログをこちらに移動してから約1ヶ月経ちました。 こちらのブログに移動してよかったと思う理由を挙げてみたいと思います。 (1)小さく記事を書いていくことができる ブログに自分の考えなどをまとめるのには、 それなりに時間が必要であったり、 &hellip;">
+  <meta name="description" content="Can’t live withoutSmart Java and Groovy IDE with powerfull refactoring and code assistance. こんにちわ、みけです。 いや、もう表題の件に関しては、 いろんなブログで既出なんですけど、
+(と思ってググったら、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +79,211 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/06/intellij-ideafalsejetgradlefalseshi-ifang/">IntelliJ IDEAのJetGradleの使い方</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-06T02:55:00+09:00" pubdate data-updated="true">Jun 6<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://www.jetbrains.com/idea/features/javascript.html" style="display:block; background:#0d3a9e url(http://www.jetbrains.com/idea/opensource/img/all/banners/idea468x60_blue.gif) no-repeat 0 7px; border:solid 1px #0d3a9e; margin:0;padding:0;text-decoration:none;text-indent:0;letter-spacing:-0.001em; width:466px; height:58px" alt="Java IDE with advanced HTML/CSS/JS editor for hardcore web-developers" title="Java IDE with advanced HTML/CSS/JS editor for hardcore web-developers"><span style="margin: 5px 0 0 61px;padding: 0;float: left;font-size: 12px;cursor:pointer;  background-image:none;border:0;color: #acc4f9; font-family: trebuchet ms,arial,sans-serif;font-weight: normal;text-align:left;">Can’t live without</span><span style="margin:0 0 0 205px;padding:18px 0 2px 0; line-height:13px;font-size:11px;cursor:pointer;  background-image:none;border:0;display:block; width:255px; color: #acc4f9; font-family: trebuchet ms,arial,sans-serif;font-weight: normal;text-align:left;">Smart Java and Groovy IDE<br/> with powerfull refactoring and code assistance.</span></a></p>
+
+<p>こんにちわ、みけです。</p>
+
+<p>いや、もう表題の件に関しては、</p>
+
+<p>いろんなブログで既出なんですけど、
+(と思ってググったら、あまりなかった(´・ω・｀))</p>
+
+<p>僕もよくわかってなかったので、</p>
+
+<p>使ってみたときのメモを書いとくことにしました。</p>
+
+<h2>JetGradleってそもそも何よ？</h2>
+
+<p>IntelliJ IDEAに最初からバンドルされているgradleのサポートプラグインです。</p>
+
+<p>では使い方を見て行きましょう。</p>
+
+<h3>(1)JetGradleタブを開きます。</h3>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRdHRGZ3ZrZU90Q00" style="width : 420px;" /></p>
+
+<p>画面右下の方にちょこんとある、<strong>JetGradle</strong>タブをクリックして開きます。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRMEw3b0I1OEo0azA" style="width : 420px;"/></p>
+
+<h3>(2) Addアンカーをクリックして、build.gradleファイルを割り当てます。</h3>
+
+<p>ダイアログが出るので、今のプロジェクトのgradleファイルを割り当てます。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRS0xDejBZWmo4ekk" style="width : 280px;" /></p>
+
+<p>build.gradleファイルを選択するとこんなかんじになります。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRS1FjS0VhU3BKMTQ" style="width : 420px;" /></p>
+
+<h3>(3) Taskタブをクリックします。</h3>
+
+<p>残念ながらこの段階ではタスク一覧が表示されません。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRN0xMWnpkNVFOS1E" style="width : 420px;" /></p>
+
+<h3>(4) 更新ボタンをクリックします。</h3>
+
+<p>先ほどのタブの左上の方にある更新ボタンをクリックします。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRZ051S3NqcEJXQkU" style="width : 420px;" /></p>
+
+<p>するとIntelliJがgradle┏( ^o^)┓ﾄﾞｺﾄﾞｺﾄﾞｺﾄﾞｺ┗( ^o^)┛ﾄﾞｺﾄﾞｺﾄﾞｺﾄﾞｺと聞いてきます。
+(AA はテキトー)</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRcWI4dXkwTENHam8" style="width : 420px;" /></p>
+
+<p>右下の方にある、<code>Gradle settings</code>アンカーをクリックします。</p>
+
+<h3>(5) GRADLE_HOMEを設定します。</h3>
+
+<p>こんなダイアログが表示されます。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRVHpuOTl5S09XUFk" style="width : 280px;"/></p>
+
+<p>僕はgradleのインストールをgvmでやっているので、</p>
+
+<p>どこに<code>GRADLE_HOME</code>があるのかよくわからんので、
+(覚えろよjk)</p>
+
+<p>とりあえず、ターミナルで確認します。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRcVgtcU5JMmo3NlU" style="width : 280px;" /></p>
+
+<p><code>GRADLE_HOME</code>の値をコピペします。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRdFV5cDB0d2IyUzA" style="width : 280px;" /></p>
+
+<p>OKボタンをクリックすると、IntelliJがgradleファイルの読み込みを始めます。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRY19neTRiY2Njd2M" style="width : 450px;" /></p>
+
+<p>読み込みが完了すると、タスク一覧が表示されます。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRcU9JTnpHanlHNGM" style="width : 450px;" /></p>
+
+<h3>(6)JetGradleからタスクを実行してみる</h3>
+
+<p>とりあえず、テストを実行してみたいと思います。</p>
+
+<p>タスク一覧から実行したいタスクを選択します。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRbGNhODNIOWFBd1U" style="width : 450px;" /></p>
+
+<p>ここでは<code>test</code>タスクを実行したいので、</p>
+
+<p><code>test</code>タスクを選択しています。</p>
+
+<p>選択したタスクを長押し(Windowsの場合は右クリック)して、</p>
+
+<p>実行する方法(デバッグとかrunとか)を選択します。</p>
+
+<p>ここではRunを選択します。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRUFhIa2RhVDF0QlE" style="width : 450px;" /></p>
+
+<p>テストが実行されました。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRT0JoWjlKZXRyRWM" style="width : 450px;" /></p>
+
+<p>これで、一々IDEからターミナルに移動して</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ gradle test</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とか打たなくてもいいですね。</p>
+
+<h3>(7)JetGradleの成果物はどこにあるの？</h3>
+
+<p>これ、疑問に思ったので、</p>
+
+<p>あえてテストをこけさせてみました。
+(こうすることでテストレポートの位置を示してくれる)</p>
+
+<p>わざと落ちるテストを書いて、</p>
+
+<p>Recent Taskからtestをじっこうします。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRTGJOeEtoWDJBODQ" style="width : 450px;"/></p>
+
+<p>はい、落ちました。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRTnBXcndheThEV1k" style="width : 450px;" /></p>
+
+<p>で、テストレポートの場所を見ると、</p>
+
+<p>ターミナルからテストを実行した時と変わらない場所に出力されていることがわかります。</p>
+
+<p>以上、結論</p>
+
+<h3>JetGradle便利すなー</h3>
+
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4508687151223458";
+/* octopress */
+google_ad_slot = "1134799005";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+
+
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -3494,172 +3700,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/23/atlassianyuzagurupu-number-augjnixing-tutekita/">Atlassianユーザーグループ #augjに行ってきた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-23T12:28:00+09:00" pubdate data-updated="true">May 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>みけです。</p>
-
-<p><a href="http://www.zusaar.com/event/735003">Atlassianユーザーグループ@株式会社ロフトワーク(渋谷) #augj</a>に参加してきました。</p>
-
-<p>今回は<a href="https://www.hipchat.com/">HipChat</a>特集です。</p>
-
-<h1>HipChatとは</h1>
-
-<p>Atlassianが提供するグループチャットサービスです。</p>
-
-<p>ユーザー数が5名までは無料で使うことができます。</p>
-
-<p>主に次のような機能があります。</p>
-
-<ul>
-<li>参加人数無制限のグループチャット</li>
-<li>セキュリティ面が考慮されている</li>
-<li><a href="http://hipchat-emoticons.nyh.name/">emoticons</a>と呼ばれる顔文字機能が豊富。かつ自分で追加できる。</li>
-<li>ファイル共有機能(ファイル数無制限、ファイルサイズは50MBまで、画像ファイルの場合すぐに表示される)によって、迅速なコミュニケーションが可能</li>
-<li>メールや各種携帯(iPhone/Android)、SMSでnotificationを送ることができる</li>
-<li>Atlassianによって精力的に開発・運用されているので安心して利用できます</li>
-</ul>
-
-
-<h1>セッション内容まとめ</h1>
-
-<h4>HipChat以前以後</h4>
-
-<ul>
-<li>メールだとスパムメールとかいろんなプロジェクトのメールが来たりして、まずフィルタリングしないといけないのが面倒い</li>
-<li>HipChatにGitHubの情報やJenkinsの情報を連携させることによって、HipChatだけ見ればよいようになった</li>
-</ul>
-
-
-<h4>他のチャットツールとの比較</h4>
-
-<ul>
-<li>若者の深刻なIRC離れ(サーバ立てるの面倒い)</li>
-<li>Chatter(by Salesforce)はクソ思い、Apexとか何それ状態でbotを作りづらい、クライアントがAIRで面倒い</li>
-<li>Campfireは日本語検索がかなり辛い</li>
-</ul>
-
-
-<h4>そして突然のCrucible</h4>
-
-<ul>
-<li>Crucible単体での運用例</li>
-<li>Crucibleを使う前までは会議等で実施(つまり面倒い、時間がかかる)</li>
-<li>レビュー未実施・実施中・実施済みがファイル単位に管理できて、かなり便利</li>
-</ul>
-
-
-<h4>セッション内容などはConfluenceでみられます。</h4>
-
-<p><a href="http://confluence.atlassian.co.jp/pages/viewpage.action?pageId=42533669">こちらをどうぞ</a></p>
-
-<h1>HipChatいいですね</h1>
-
-<p><strong>え、Lingrでも無料で同じ事できるって？</strong></p>
-
-<p>そうですね。すみません。</p>
-
-<p>そういう方はLingr使えばいいと思います。</p>
-
-<script type="text/javascript"><!--
-google_ad_client = "ca-pub-4508687151223458";
-/* octopress */
-google_ad_slot = "1134799005";
-google_ad_width = 300;
-google_ad_height = 250;
-//-->
-</script>
-
-
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-
-
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-<h1>ノベルティグッズ</h1>
-
-<p>ブログを書くと宣言しておけばTシャツがもらえるということで</p>
-
-<p><strong>ちなみに、TシャツはM/S/Lの順番で希望です。</strong></p>
-
-<p>で、<span style="font-decoration : line-through;">なんか開催前にイケメンの人から</span>もらいました。</p>
-
-<script type="text/javascript"><!--
-google_ad_client = "ca-pub-4508687151223458";
-/* octopress */
-google_ad_slot = "1134799005";
-google_ad_width = 300;
-google_ad_height = 250;
-//-->
-</script>
-
-
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-
-
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -3675,6 +3715,10 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/06/06/intellij-ideafalsejetgradlefalseshi-ifang/">IntelliJ IDEAのJetGradleの使い方</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/03/puroguramagagithubdeburoguwogeng-gai-surubekili-you/">プログラマーがGitHubでブログを公開するべき理由</a>
       </li>
     
@@ -3688,10 +3732,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     
       <li class="post">
         <a href="/blog/2013/05/30/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo-2/">AndroidがJavaだと思っている人のためのGroovy講座 - 2</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/27/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo/">AndroidがJavaだと思っている人のためのGroovy講座 - 1</a>
       </li>
     
   </ul>
