@@ -9,8 +9,7 @@
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="Can’t live withoutSmart Java and Groovy IDE with powerfull refactoring and code assistance. こんにちわ、みけです。 いや、もう表題の件に関しては、 いろんなブログで既出なんですけど、
-(と思ってググったら、 &hellip;">
+  <meta name="description" content="こんにちわ、みけです。 このブログはOCTOPRESSで作っていますが、 どうしてもやりたい処理があったら、 rubyを勉強しないとアババな感じなので、 Javaでも同じようなものを作ってみたいと思っています。 OCTOPRESSっぽいツールに必要そうな機能 はこんな感じかなと思っています。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +78,325 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/07/groovydemarkdownjwosawatutemiru/">Groovyでmarkdownjをさわってみる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-07T21:10:00+09:00" pubdate data-updated="true">Jun 7<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="googledrive.com/host/0B4hhdHWLP7RRcURrSlZiNXlNVVk" style="width : 450px;"/></p>
+
+<p>こんにちわ、みけです。</p>
+
+<p>このブログはOCTOPRESSで作っていますが、</p>
+
+<p>どうしてもやりたい処理があったら、</p>
+
+<p>rubyを勉強しないとアババな感じなので、</p>
+
+<p>Javaでも同じようなものを作ってみたいと思っています。</p>
+
+<h1>OCTOPRESSっぽいツールに必要そうな機能</h1>
+
+<p>はこんな感じかなと思っています。</p>
+
+<ul>
+<li>タスクを指定して実行する</li>
+<li>git連携</li>
+<li>previewできる</li>
+<li>マークダウンをHTMLに変換する</li>
+</ul>
+
+
+<p>これらのうち、最初のタスクを指定して実行するはGradleでやればよさそうです。</p>
+
+<p>git連携はJGitを使えばできそうです。</p>
+
+<p>previewはJettyだか、nettyだか、glassfishを使えばできそうです。</p>
+
+<p>で、最後の</p>
+
+<h1>JavaでマークダウンをHTMLに変換する</h1>
+
+<p>はわからないので、</p>
+
+<p>ちょっと試して見ることにしました。</p>
+
+<p>まず、筆頭にくる <strong>markdownj</strong> を試してみることにしました</p>
+
+<figure class='code'><figcaption><span>markdown-sample.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="nd">@Grab</span><span class="o">(</span><span class="s1">&#39;com.madgag:markdownj-core:0.4.1&#39;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.petebevin.markdown.*</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">proc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MarkdownProcessor</span><span class="o">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">original</span> <span class="o">=</span> <span class="s">$/</span>
+</span><span class='line'><span class="s">This is Top Header</span>
+</span><span class='line'><span class="s">---</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">This is second Header</span>
+</span><span class='line'><span class="s">===</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">### This is topic</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">#### Lists Item</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">${(1..3).collect {&quot;+ item${it}&quot;}.join(&#39;\n&#39;)}</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">and</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">${(1..3).collect {&quot;1. item${it}&quot;}.join(&#39;\n&#39;)}</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">#### Links</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">+ [mike-neck&#39;s site](http://mike-neck.github.io/)</span>
+</span><span class='line'><span class="s">+ [mike-neck&#39;s dq site](http://mikeneckdq.blog.fc2.com/)</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">#### Html Tags</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;img src=&#39;//googledrive.com/host/0B4hhdHWLP7RRdHRGZ3ZrZU90Q00&#39; style=&#39;width : 400px;&#39;&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">#### Codes</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">function `lists:reverse/1` returns a List.</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">tag `&lt;em&gt;` means emphasis</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">#### emphasis</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">*em?*</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">**bold?**</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">#### Blockquotes</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&gt; This is a blockquotes</span>
+</span><span class='line'><span class="s">&gt; from here.</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">/$</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">proc</span><span class="o">.</span><span class="na">markdown</span><span class="o">(</span><span class="n">original</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これの結果は次のようになります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;p&gt;</span>This is Top Header
+</span><span class='line'><span class="nt">&lt;hr</span> <span class="nt">/&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>This is second Header
+</span><span class='line'>===<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h3&gt;</span>This is topic<span class="nt">&lt;/h3&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h4&gt;</span>Lists Item<span class="nt">&lt;/h4&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;</span>item1<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;</span>item2<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;</span>item3<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>and<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;ol&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;</span>item1<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;</span>item2<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;</span>item3<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;/ol&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h4&gt;</span>Links<span class="nt">&lt;/h4&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://mike-neck.github.io/&quot;</span><span class="nt">&gt;</span>mike-neck&#39;s site<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://mikeneckdq.blog.fc2.com/&quot;</span><span class="nt">&gt;</span>mike-neck&#39;s dq site<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h4&gt;</span>Html Tags<span class="nt">&lt;/h4&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;img</span> <span class="na">src=</span><span class="s">&#39;//googledrive.com/host/0B4hhdHWLP7RRdHRGZ3ZrZU90Q00&#39;</span> <span class="na">style=</span><span class="s">&#39;width : 400px;&#39;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h4&gt;</span>Codes<span class="nt">&lt;/h4&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>function <span class="nt">&lt;code&gt;</span>lists:reverse/1<span class="nt">&lt;/code&gt;</span> returns a List.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>tag <span class="nt">&lt;code&gt;</span><span class="ni">&amp;lt;</span>em<span class="ni">&amp;gt;</span><span class="nt">&lt;/code&gt;</span> means emphasis<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h4&gt;</span>emphasis<span class="nt">&lt;/h4&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;em&gt;</span>em?<span class="nt">&lt;/em&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;strong&gt;</span>bold?<span class="nt">&lt;/strong&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h4&gt;</span>Blockquotes<span class="nt">&lt;/h4&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;blockquote&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;p&gt;</span>This is a blockquotes
+</span><span class='line'>  from here.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'><span class="nt">&lt;/blockquote&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>今のところ、残念な点は</p>
+
+<ul>
+<li><code>===</code>がレンダーされない</li>
+<li>上の行にテキストがある状態で&#8217;&mdash;&ndash;&lsquo;がタグ<code>&lt;tr/&gt;</code>にレンダーされる</li>
+<li>当然ながら、GitHubっぽいコードスニペットはレンダーできない</li>
+</ul>
+
+
+<p>ちょっと残念なので、</p>
+
+<p>他のマークダウンパーサーも試してみようと思います。</p>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -2729,861 +3047,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/23/erlangfalselistsmoziyuruwoshi-sitemiru-di-3hui/">Erlangのlistsモジュールを試してみる - 第3回</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-23T13:01:00+09:00" pubdate data-updated="true">May 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Erlangのlistsモジュールを試してみるの第三回は次のコマンドの結果について試していきます。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="nn">lists</span><span class="p">:</span><span class="nf">sublist</span><span class="p">(</span>
-</span><span class='line'>    <span class="nn">lists</span><span class="p">:</span><span class="nf">sort</span><span class="p">(</span>
-</span><span class='line'>        <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span>
-</span><span class='line'>            <span class="k">fun</span><span class="p">({</span><span class="nv">F</span><span class="p">,</span> <span class="nv">A</span><span class="p">})</span> <span class="o">-&gt;</span>
-</span><span class='line'>                <span class="nb">atom_to_list</span><span class="p">(</span><span class="nv">F</span><span class="p">)</span> <span class="o">++</span>
-</span><span class='line'>                <span class="s">&quot;/&quot;</span> <span class="o">++</span>
-</span><span class='line'>                <span class="nb">integer_to_list</span><span class="p">(</span><span class="nv">A</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">end</span><span class="p">,</span>
-</span><span class='line'>            <span class="nn">lists</span><span class="p">:</span><span class="nf">module_info</span><span class="p">(</span><span class="n">exports</span><span class="p">))),</span>
-</span><span class='line'>    <span class="mi">33</span><span class="p">,</span>
-</span><span class='line'>    <span class="mi">16</span><span class="p">).</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>結果</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="p">[</span>
-</span><span class='line'>  <span class="s">&quot;merge/1&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;merge/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;merge/3&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;merge3/3&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;min/1&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;module_info/0&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;module_info/1&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;nth/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;nthtail/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;partition/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;prefix/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;reverse/1&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;reverse/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;rkeymerge/3&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;rmerge/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;rmerge/3&quot;</span>
-</span><span class='line'><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<table>
-<tbody>
-<tr>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4274067149" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4873114659" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1449309968" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-</tr>
-<tr>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00B634R04" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00AZOT4MG" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1933988789" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-</tr>
-</tbody>
-</table>
-
-
-<h3>merge/1</h3>
-
-<h4>Erlang Document</h4>
-
-<blockquote><h4>merge(ListOfLists) &ndash;> List1</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>ListOfLists = [List]</li>
-<li>List = List1 = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns the sorted list formed by merging all the sub-lists of ListOfLists. All sub-lists must be sorted prior to evaluating this function. When two elements compare equal, the element from the sub-list with the lowest position in ListOfLists is picked before the other element.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#merge-1">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>リスト内のリストをソートしてマージしたリストを返します。なお、リスト内のリストは事前にソートされている必要があります。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">merge</span><span class="p">([</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">9</span><span class="p">],</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>複数のリストがマージされて新しいリストが返されます。</p>
-
-<h3>merge/2</h3>
-
-<h4>Erlang Document</h4>
-
-<blockquote><h4>merge(List1, List2) &ndash;> List3</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>List1 = [X]</li>
-<li>List2 = [Y]</li>
-<li>List3 = [(X | Y)]</li>
-<li>X = Y = term()</li>
-</ul>
-
-
-<p>Returns the sorted list formed by merging List1 and List2. Both List1 and List2 must be sorted prior to evaluating this function. When two elements compare equal, the element from List1 is picked before the element from List2.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#merge-2">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>二つのリストをソートしてマージした新しいリストを返します。二つのリストは事前にソートされている必要があります。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">merge</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>二つのリストがマージされた新しいリストが返されます。</p>
-
-<h3>merge/3</h3>
-
-<h4>Erlang Document</h4>
-
-<blockquote><h4>merge(Fun, List1, List2) &ndash;> List3</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Fun = fun((A, B) &ndash;> boolean())</li>
-<li>List1 = [A]</li>
-<li>List2 = [B]</li>
-<li>List3 = [(A | B)]</li>
-<li>A = B = term()</li>
-</ul>
-
-
-<p>Returns the sorted list formed by merging List1 and List2. Both List1 and List2 must be sorted according to the <a href="http://www.erlang.org/doc/man/lists.html#ordering_function">ordering function</a> <code>Fun</code> prior to evaluating this function. <code>Fun(A, B)</code> should return <code>true</code> if <code>A</code> compares less than or equal to <code>B</code> in the ordering, <code>false</code> otherwise. When two elements compare equal, the element from List1 is picked before the element from List2.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#merge-3">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p><code>List1</code>と<code>List2</code>をソートしてマージした新しいリストを返します。引数のリストは事前にソートされている必要があります。<code>Fun(A, B)</code>はソートオーダーに関して<code>A</code>が先に来るべきである場合は<code>true</code>を、そうでない場合は<code>false</code>を返します。同じ値の要素がある場合は、<code>List1</code>のものが<code>List2</code>のものに優先されます。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">merge</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">A</span><span class="p">,</span> <span class="nv">B</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">A</span> <span class="o">&gt;</span> <span class="nv">B</span> <span class="k">end</span><span class="p">,[</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">7</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">merge</span><span class="p">(</span><span class="k">fun</span><span class="p">({</span><span class="nv">A</span><span class="p">,_},</span> <span class="p">{</span><span class="nv">B</span><span class="p">,_})</span> <span class="o">-&gt;</span> <span class="nv">A</span> <span class="o">=&lt;</span> <span class="nv">B</span> <span class="k">end</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[{</span><span class="mi">1</span><span class="p">,</span><span class="n">a</span><span class="p">},{</span><span class="mi">3</span><span class="p">,</span><span class="n">a</span><span class="p">},{</span><span class="mi">4</span><span class="p">,</span><span class="n">a</span><span class="p">},{</span><span class="mi">5</span><span class="p">,</span><span class="n">a</span><span class="p">}],</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[{</span><span class="mi">0</span><span class="p">,</span><span class="n">b</span><span class="p">},{</span><span class="mi">2</span><span class="p">,</span><span class="n">b</span><span class="p">},{</span><span class="mi">4</span><span class="p">,</span><span class="n">b</span><span class="p">},{</span><span class="mi">6</span><span class="p">,</span><span class="n">b</span><span class="p">}]).</span>
-</span><span class='line'><span class="p">[{</span><span class="mi">0</span><span class="p">,</span><span class="n">b</span><span class="p">},{</span><span class="mi">1</span><span class="p">,</span><span class="n">a</span><span class="p">},{</span><span class="mi">2</span><span class="p">,</span><span class="n">b</span><span class="p">},{</span><span class="mi">3</span><span class="p">,</span><span class="n">a</span><span class="p">},{</span><span class="mi">4</span><span class="p">,</span><span class="n">a</span><span class="p">},{</span><span class="mi">4</span><span class="p">,</span><span class="n">b</span><span class="p">},{</span><span class="mi">5</span><span class="p">,</span><span class="n">a</span><span class="p">},{</span><span class="mi">6</span><span class="p">,</span><span class="n">b</span><span class="p">}]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例では、降順にソートする関数で評価してリストをマージして新しいリストを返します。</p>
-
-<p>後者の例では、昇順ソートです。同一の値の場合に<code>List1</code>から要素が取得されています。</p>
-
-<h3>merge3/3</h3>
-
-<h4>Erlang Document</h4>
-
-<blockquote><h4>merge3(List1, List2, List3) &ndash;> List4</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>List1 = [X]</li>
-<li>List2 = [Y]</li>
-<li>List3 = [Z]</li>
-<li>List4 = [(X | Y | Z)]</li>
-<li>X = Y = Z = term()</li>
-</ul>
-
-
-<p>Returns the sorted list formed by merging List1, List2 and List3. All of List1, List2 and List3 must be sorted prior to evaluating this function. When two elements compare equal, the element from List1, if there is such an element, is picked before the other element, otherwise the element from List2 is picked before the element from List3.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#merge3-3">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>三つのリストをソートしてマージした新しいリストを返します。引数のリストは事前にソートされている必要があります。もし同じ値の要素があった場合は<code>List1</code>、<code>List2</code>、<code>List3</code>の順番で優先されます。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">50</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">merge3</span><span class="p">(</span>
-</span><span class='line'><span class="mi">50</span><span class="o">&gt;</span>   <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
-</span><span class='line'><span class="mi">50</span><span class="o">&gt;</span>   <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
-</span><span class='line'><span class="mi">50</span><span class="o">&gt;</span>   <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>min/1</h3>
-
-<h4>Erlang Document</h4>
-
-<blockquote><h4>min(List) &ndash;> Min</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>List = [T, …]</li>
-<li>Min = T</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns the first element of List that compares less than or equal to all other elements of List.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#min-1">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>リスト中、最初に現れた最も小さい要素を返します。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">min</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]).</span>
-</span><span class='line'><span class="mi">1</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">min</span><span class="p">([</span><span class="n">h</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">l</span><span class="p">]).</span>
-</span><span class='line'><span class="n">b</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">min</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">]).</span>
-</span><span class='line'><span class="mi">0</span>
-</span><span class='line'><span class="mi">4</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">min</span><span class="p">([</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]).</span>
-</span><span class='line'><span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
-</span><span class='line'><span class="mi">5</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">min</span><span class="p">([</span><span class="n">&#39;A&#39;</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="mi">123</span><span class="p">.</span><span class="mi">0</span><span class="p">]).</span>
-</span><span class='line'><span class="mi">123</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例では引数のリストの最小整数1が返されます。</p>
-
-<p>次の例では引数のリストの最小のatom<code>b</code>が返されます。</p>
-
-<p>三番目と四番目の例では整数と浮動小数点数の0を比較して最初に現れた要素が返されます。</p>
-
-<p>最後の例では整数と浮動小数点数とatomを比較しています。最初に現れた最小の要素(整数)が返されます。</p>
-
-<h3>module_info/0</h3>
-
-<h4>Erlang Document</h4>
-
-<blockquote><h4>module_info</h4>
-
-<p>The module_info/0 function in each module returns a list of {Key,Value} tuples with information about the module. Currently, the list contain tuples with the following Keys: attributes, compile, exports, and imports. The order and number of tuples may change without prior notice.</p>
-
-<h5>warning</h5>
-
-<p>The {imports,Value} tuple may be removed in a future release because Value is always an empty list. Do not write code that depends on it being present.</p>
-
-<p><a href="http://erlang.org/doc/reference_manual/modules.html#id74571">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>これはlistsモジュールでなく、すべてのモジュールに共通する関数ですな。
-モジュールに関する情報を<code>{Key, Value}</code>のタプルリストで返します。現在のところ、</p>
-
-<ul>
-<li>attributes</li>
-<li>compile</li>
-<li>exports</li>
-<li>imports</li>
-</ul>
-
-
-<p>といったキーです。なお、<code>{imports, Value}</code>タプルは常に空のリストしか返さないため、今後なくなる予定です。これに基づいたコードを記述しないで下さい。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">module_info</span><span class="p">().</span>
-</span><span class='line'><span class="p">[{</span><span class="n">exports</span><span class="p">,[{</span><span class="n">append</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">append</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">subtract</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">nth</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">nthtail</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">prefix</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">suffix</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">last</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">seq</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">seq</span><span class="p">,</span><span class="mi">3</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">sum</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">duplicate</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">min</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">max</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">sublist</span><span class="p">,</span><span class="mi">3</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">sublist</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">zip</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">unzip</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">zip3</span><span class="p">,</span><span class="mi">3</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">unzip3</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">zipwith</span><span class="p">,</span><span class="mi">3</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">zipwith3</span><span class="p">,</span><span class="mi">4</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">merge</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">merge3</span><span class="p">,</span><span class="mi">3</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">rmerge3</span><span class="p">,...},</span>
-</span><span class='line'>           <span class="p">{...}|...]},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">imports</span><span class="p">,[]},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">attributes</span><span class="p">,[{</span><span class="n">vsn</span><span class="p">,[</span><span class="mi">257948301539042745638557295194154171573</span><span class="p">]}]},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">compile</span><span class="p">,[{</span><span class="n">options</span><span class="p">,[{</span><span class="n">outdir</span><span class="p">,</span><span class="s">&quot;/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../ebin&quot;</span><span class="p">},</span>
-</span><span class='line'>                     <span class="p">{</span><span class="n">i</span><span class="p">,</span><span class="s">&quot;/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../include&quot;</span><span class="p">},</span>
-</span><span class='line'>                     <span class="p">{</span><span class="n">i</span><span class="p">,</span><span class="s">&quot;/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../../kernel/include&quot;</span><span class="p">},</span>
-</span><span class='line'>                     <span class="n">warnings_as_errors</span><span class="p">,</span><span class="n">debug_info</span><span class="p">]},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">version</span><span class="p">,</span><span class="s">&quot;4.9&quot;</span><span class="p">},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">time</span><span class="p">,{</span><span class="mi">2013</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">19</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="mi">47</span><span class="p">}},</span>
-</span><span class='line'>           <span class="p">{</span><span class="n">source</span><span class="p">,</span><span class="s">&quot;/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/lists.erl&quot;</span><span class="p">}]}]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>たくさん出てきた…</p>
-
-<h3>module_info/1</h3>
-
-<h4>Erlang Document</h4>
-
-<blockquote><h4>module_info</h4>
-
-<p>The call module_info(Key), where key is an atom, returns a single piece of information about the module.</p>
-
-<p><a href="http://erlang.org/doc/reference_manual/modules.html#id74571">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p><code>module_info</code>関数から<code>Key</code>を指定して取り出します。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">module_info</span><span class="p">(</span><span class="n">attributes</span><span class="p">).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">vsn</span><span class="p">,[</span><span class="mi">257948301539042745638557295194154171573</span><span class="p">]}]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>lists:module_info/0</code>の結果の一部が返ってきます。</p>
-
-<h3>nth/2</h3>
-
-<h4>Erlang Document</h4>
-
-<blockquote><h4>nth(N, List) &ndash;> Elem</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>N = integer() >= 1</li>
-<li>List = [T, &hellip;]</li>
-<li>Elem = T</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns the Nth element of List.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#nth-2">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p><code>N</code>番目の要素を返します。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">nth</span><span class="p">(</span><span class="mi">3</span><span class="p">,[</span><span class="n">a</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="mi">5</span><span class="p">]).</span>
-</span><span class='line'><span class="n">c</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>3番目の要素<code>c</code>が返されます。</p>
-
-<h3>nthtail/2</h3>
-
-<h4>Erlang Document</h4>
-
-<blockquote><h4>nthtail(N, List) &ndash;> Tail</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>N = integer() >= 0</li>
-<li>List = [T, &hellip;]</li>
-<li>Elem = T</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns the Nth tail of List, that is, the sublist of List starting at N+1 and continuing up to the end of the list.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#nthtail-2">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p><code>N+1</code>番から後ろの要素で作られるサブリストを返します。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">nthtail</span><span class="p">(</span><span class="mi">3</span><span class="p">,[</span><span class="n">a</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="mi">5</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>4番目から後ろの要素で構成されるリストが返されます。</p>
-
-<h3>partition/2</h3>
-
-<h4>Erlang Document</h4>
-
-<blockquote><h4>partition(Pred, List) &ndash;> {Satisfying, NotSatisfying}</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Pred = fun((Elem :: T) &ndash;> boolean())</li>
-<li>List = Satisfying = NotSatisfying = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Partitions List into two lists, where the first list contains all elements for which Pred(Elem) returns true, and the second list contains all elements for which Pred(Elem) returns false.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#partition-2">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>条件と分割対象リストを引数に取り、二つの新しいリストに分割します。最初のリストには条件を満たすものを、次のリストには条件を満たさないものを返します。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">partition</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">X</span> <span class="ow">rem</span> <span class="mi">2</span> <span class="o">=:=</span> <span class="mi">0</span> <span class="k">end</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]).</span>
-</span><span class='line'><span class="p">{[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>偶数かどうか判定する条件とリストを与えています。
-先頭のリストには条件を満たすもの(偶数)のリスト、後ろ側のリストには条件を満たさないもの(奇数)のリストが返されます。</p>
-
-<h3>prefix/2</h3>
-
-<h4>Erlang Document</h4>
-
-<blockquote><h4>prefix(List1, List2) &ndash;> boolean()</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>List1 = List2 = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns true if List1 is a prefix of List2, otherwise false.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#prefix-2">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p><code>List1</code>が<code>List2</code>の先頭部分である場合に<code>true</code>を、異なる場合には<code>false</code>を返します。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">prefix</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]).</span>
-</span><span class='line'><span class="n">true</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">prefix</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">],</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">x</span><span class="p">]).</span>
-</span><span class='line'><span class="n">false</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">prefix</span><span class="p">(</span><span class="s">&quot;co&quot;</span><span class="p">,</span> <span class="s">&quot;coexistence&quot;</span><span class="p">).</span>
-</span><span class='line'><span class="n">true</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例では、第一引数が第二引数の先頭部分と一致するので<code>true</code>が返されます。</p>
-
-<p>次の例では、第一引数が第二引数の先頭部分と異なるので<code>false</code>が返されます。</p>
-
-<p>最後の例では<code>"co"</code>は<code>"coexistence"</code>の最初の文字列部分と同じなので、<code>true</code>が返されます。</p>
-
-<h3>reverse/1</h3>
-
-<h4>Erlang Document</h4>
-
-<blockquote><h4>reverse(List1) &ndash;> List2</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>List1 = List2 = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns a list with the elements in List1 in reverse order.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#reverse-1">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>リストを逆順にして返します。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">reverse</span><span class="p">([</span><span class="mi">9</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>リストの順番が逆になって返されています。</p>
-
-<h3>reverse/2</h3>
-
-<h4>Erlang Document</h4>
-
-<blockquote><h4>reverse(List1, Tail) &ndash;> List2</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>List1 = [T]</li>
-<li>Tail = term()</li>
-<li>List2 = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns a list with the elements in List1 in reverse order, with the tail Tail appended.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#reverse-2">参照先</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>リストを逆順にした上で、第二引数を追加した新しいリストを返します。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">reverse</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">reverse</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">]</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">reverse</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="mi">0</span><span class="p">).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">|</span><span class="mi">0</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例、および二番目の例では最初のリストが逆順になされた上で、次のリストが連結された新しいリストが返ってきます。</p>
-
-<p>最後の例では、結果がリストでなくなります。</p>
-
-<p>公式ドキュメントが間違っているっぽいですね…</p>
-
-<h3>rkeymerge/3</h3>
-
-<h4>Erlang Document</h4>
-
-<p>なかった＼(^o^)／</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">rkeymerge</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="mi">4</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">}],</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">b</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">}]).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">b</span><span class="p">,</span><span class="mi">5</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">4</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">3</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">0</span><span class="p">}]</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">rkeymerge</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">4</span><span class="p">}],</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">5</span><span class="p">}]).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">3</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">4</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">5</span><span class="p">}]</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">rkeymerge</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="mi">4</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">}],</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">b</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">}]).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">b</span><span class="p">,</span><span class="mi">5</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">4</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">3</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">0</span><span class="p">}]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>lists:keymerge/3</code>のreverse版のようです。</p>
-
-<ul>
-<li>引数のリストは逆順にソートされている必要があります。</li>
-<li>同一のキーを持つ場合、第二引数のリストの要素が優先されます。</li>
-</ul>
-
-
-<p>最初の例では、タプルの２番目の値をキーに逆順ソートされたリストが返されます。</p>
-
-<p>次の例では、逆順にソートされていないため、マージがうまくなされていません。</p>
-
-<p>最後の例では、同じキーがある場合の挙動を確認しています。</p>
-
-<p>同じキー値をもつ要素(ここでは、<code>{a,2}</code>と<code>{b,2}</code>)がありますが、</p>
-
-<p><code>{b, 2}</code>の方が優先されているのがわかります。</p>
-
-<h3>rmerge/2</h3>
-
-<h4>Erlang Document</h4>
-
-<p>なかった＼(^o^)／</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">rmerge</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">rmerge</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>merge/2</code>のリバースバージョン。</p>
-
-<p>最初の例では逆順ソートされたリストを引数として渡して、</p>
-
-<p>逆順でマージされた新しいリストが返されます。</p>
-
-<p>次の例では事前に逆順マージされていないため、</p>
-
-<p>求める結果(逆順にマージされたリスト)が返ってきません。</p>
-
-<h3>rmerge/3</h3>
-
-<h4>Erlang Document</h4>
-
-<p>なかった＼(^o^)／</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">merge</span><span class="p">(</span><span class="k">fun</span><span class="p">({_,</span> <span class="nv">A</span><span class="p">},</span> <span class="p">{_,</span> <span class="nv">B</span><span class="p">})</span> <span class="o">-&gt;</span> <span class="nv">A</span> <span class="o">&gt;=</span> <span class="nv">B</span> <span class="k">end</span><span class="p">,</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="mi">9</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">5</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">}],</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">[{</span><span class="n">b</span><span class="p">,</span><span class="mi">7</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">5</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">3</span><span class="p">}]).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="mi">9</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">7</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">5</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">5</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">3</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">}]</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">merge</span><span class="p">(</span><span class="k">fun</span><span class="p">({_,</span> <span class="nv">A</span><span class="p">},</span> <span class="p">{_,</span> <span class="nv">B</span><span class="p">})</span> <span class="o">-&gt;</span> <span class="nv">A</span> <span class="o">&gt;</span> <span class="nv">B</span> <span class="k">end</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="mi">9</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">5</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">}],</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">[{</span><span class="n">b</span><span class="p">,</span><span class="mi">7</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">5</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">3</span><span class="p">}]).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="mi">9</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">7</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">5</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">5</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">3</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">}]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>merge/3</code>関数のリバースバージョン。</p>
-
-<p>引数は先頭から</p>
-
-<ul>
-<li>Fun = fun((A, B) &ndash;> boolean())</li>
-<li>List1 = [T]</li>
-<li>List2 = [T]</li>
-</ul>
-
-
-<p>です。</p>
-
-<p>なお、</p>
-
-<ul>
-<li>Funには結果として先にくるものに対してtrueが返すような関数を渡します。</li>
-<li>List1、List2ともにFunにて事前にソートされている必要があります。</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>となっています。</p>
-
-<p>また、同値なものがあった場合は、Funの実装に従います。</p>
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -3599,6 +3062,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/06/07/groovydemarkdownjwosawatutemiru/">Groovyでmarkdownjをさわってみる</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/06/intellij-ideafalsejetgradlefalseshi-ifang/">IntelliJ IDEAのJetGradleの使い方</a>
       </li>
     
@@ -3612,10 +3079,6 @@
     
       <li class="post">
         <a href="/blog/2013/06/01/androidgajavadenaili-you-1/">AndroidがJavaでない理由 - 1</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/30/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo-2/">AndroidがJavaだと思っている人のためのGroovy講座 - 2</a>
       </li>
     
   </ul>

@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Erlangのリスト系モジュールを試してみる - 第0回 - mike、mikeなるままに…</title>
+  <title>Groovyでmarkdownjをさわってみる - mike、mikeなるままに…</title>
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="こんにちわ、みけです。 Erlangの初心者・初級・初歩レベルの僕にとって、 まず色々とBIFだとか、基本的なモジュールを使いこなせるのが、 上達への近道かと思ったので、 listsモジュールについて、 すべての関数を試してみようと思います。 モジュール情報を表示する まず、 &hellip;">
+  <meta name="description" content="こんにちわ、みけです。 このブログはOCTOPRESSで作っていますが、 どうしてもやりたい処理があったら、 rubyを勉強しないとアババな感じなので、 Javaでも同じようなものを作ってみたいと思っています。 OCTOPRESSっぽいツールに必要そうな機能 はこんな感じかなと思っています。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/05/11/erlangfalserisutoguan-shu-woshi-sitemiru">
+  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/06/07/groovydemarkdownjwosawatutemiru">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="mike、mikeなるままに…" type="application/atom+xml">
@@ -81,7 +81,7 @@
   
   <header>
     
-      <h1 class="entry-title">Erlangのリスト系モジュールを試してみる - 第0回</h1>
+      <h1 class="entry-title">Groovyでmarkdownjをさわってみる</h1>
     
     
       <p class="meta">
@@ -97,34 +97,54 @@
   
 
 
-<time datetime="2013-05-11T01:50:00+09:00" pubdate data-updated="true">May 11<span>th</span>, 2013</time>
+<time datetime="2013-06-07T21:10:00+09:00" pubdate data-updated="true">Jun 7<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>こんにちわ、みけです。</p>
+<div class="entry-content"><p><img src="googledrive.com/host/0B4hhdHWLP7RRcURrSlZiNXlNVVk" style="width : 450px;"/></p>
 
-<p>Erlangの初心者・初級・初歩レベルの僕にとって、</p>
+<p>こんにちわ、みけです。</p>
 
-<p>まず色々とBIFだとか、基本的なモジュールを使いこなせるのが、</p>
+<p>このブログはOCTOPRESSで作っていますが、</p>
 
-<p>上達への近道かと思ったので、</p>
+<p>どうしてもやりたい処理があったら、</p>
 
-<p><code>lists</code>モジュールについて、</p>
+<p>rubyを勉強しないとアババな感じなので、</p>
 
-<p>すべての関数を試してみようと思います。</p>
+<p>Javaでも同じようなものを作ってみたいと思っています。</p>
 
-<h3>モジュール情報を表示する</h3>
+<h1>OCTOPRESSっぽいツールに必要そうな機能</h1>
 
-<p>まず、モジュールの情報を表示するモジュールcのコマンドは</p>
+<p>はこんな感じかなと思っています。</p>
 
-<p><code>m(Module)</code>関数です。</p>
+<ul>
+<li>タスクを指定して実行する</li>
+<li>git連携</li>
+<li>previewできる</li>
+<li>マークダウンをHTMLに変換する</li>
+</ul>
 
-<p>早速<code>lists</code>モジュールに試して見る。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p>これらのうち、最初のタスクを指定して実行するはGradleでやればよさそうです。</p>
+
+<p>git連携はJGitを使えばできそうです。</p>
+
+<p>previewはJettyだか、nettyだか、glassfishを使えばできそうです。</p>
+
+<p>で、最後の</p>
+
+<h1>JavaでマークダウンをHTMLに変換する</h1>
+
+<p>はわからないので、</p>
+
+<p>ちょっと試して見ることにしました。</p>
+
+<p>まず、筆頭にくる <strong>markdownj</strong> を試してみることにしました</p>
+
+<figure class='code'><figcaption><span>markdown-sample.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -173,65 +193,67 @@
 <span class='line-number'>47</span>
 <span class='line-number'>48</span>
 <span class='line-number'>49</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>1&gt; m(lists).
-</span><span class='line'>Module lists compiled: Date: February 25 2013, Time: 19.27
-</span><span class='line'>Compiler options:  [{outdir,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../ebin"},
-</span><span class='line'>                    {i,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../include"},
-</span><span class='line'>                    {i,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../../kernel/include"},
-</span><span class='line'>                    warnings_as_errors,debug_info]
-</span><span class='line'>Object file: /opt/local/lib/erlang/lib/stdlib-1.19.1/ebin/lists.beam
-</span><span class='line'>Exports: 
-</span><span class='line'>all/2                         nthtail/2
-</span><span class='line'>any/2                         partition/2
-</span><span class='line'>append/2                      prefix/2
-</span><span class='line'>append/1                      reverse/1
-</span><span class='line'>concat/1                      reverse/2
-</span><span class='line'>delete/2                      rkeymerge/3
-</span><span class='line'>dropwhile/2                   rmerge/2
-</span><span class='line'>duplicate/2                   rmerge/3
-</span><span class='line'>filter/2                      rmerge3/3
-</span><span class='line'>flatlength/1                  rukeymerge/3
-</span><span class='line'>flatmap/2                     rumerge/3
-</span><span class='line'>flatten/2                     rumerge/2
-</span><span class='line'>flatten/1                     rumerge3/3
-</span><span class='line'>foldl/3                       seq/2
-</span><span class='line'>foldr/3                       seq/3
-</span><span class='line'>foreach/2                     sort/2
-</span><span class='line'>keydelete/3                   sort/1
-</span><span class='line'>keyfind/3                     split/2
-</span><span class='line'>keymap/3                      splitwith/2
-</span><span class='line'>keymember/3                   sublist/3
-</span><span class='line'>keymerge/3                    sublist/2
-</span><span class='line'>keyreplace/4                  subtract/2
-</span><span class='line'>keysearch/3                   suffix/2
-</span><span class='line'>keysort/2                     sum/1
-</span><span class='line'>keystore/4                    takewhile/2
-</span><span class='line'>keytake/3                     ukeymerge/3
-</span><span class='line'>last/1                        ukeysort/2
-</span><span class='line'>map/2                         umerge/3
-</span><span class='line'>mapfoldl/3                    umerge/1
-</span><span class='line'>mapfoldr/3                    umerge/2
-</span><span class='line'>max/1                         umerge3/3
-</span><span class='line'>member/2                      unzip/1
-</span><span class='line'>merge/1                       unzip3/1
-</span><span class='line'>merge/2                       usort/2
-</span><span class='line'>merge/3                       usort/1
-</span><span class='line'>merge3/3                      zf/2
-</span><span class='line'>min/1                         zip/2
-</span><span class='line'>module_info/0                 zip3/3
-</span><span class='line'>module_info/1                 zipwith/3
-</span><span class='line'>nth/2                         zipwith3/4
-</span><span class='line'>ok
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="nd">@Grab</span><span class="o">(</span><span class="s1">&#39;com.madgag:markdownj-core:0.4.1&#39;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.petebevin.markdown.*</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">proc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MarkdownProcessor</span><span class="o">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">original</span> <span class="o">=</span> <span class="s">$/</span>
+</span><span class='line'><span class="s">This is Top Header</span>
+</span><span class='line'><span class="s">---</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">This is second Header</span>
+</span><span class='line'><span class="s">===</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">### This is topic</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">#### Lists Item</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">${(1..3).collect {&quot;+ item${it}&quot;}.join(&#39;\n&#39;)}</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">and</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">${(1..3).collect {&quot;1. item${it}&quot;}.join(&#39;\n&#39;)}</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">#### Links</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">+ [mike-neck&#39;s site](http://mike-neck.github.io/)</span>
+</span><span class='line'><span class="s">+ [mike-neck&#39;s dq site](http://mikeneckdq.blog.fc2.com/)</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">#### Html Tags</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;img src=&#39;//googledrive.com/host/0B4hhdHWLP7RRdHRGZ3ZrZU90Q00&#39; style=&#39;width : 400px;&#39;&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">#### Codes</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">function `lists:reverse/1` returns a List.</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">tag `&lt;em&gt;` means emphasis</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">#### emphasis</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">*em?*</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">**bold?**</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">#### Blockquotes</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&gt; This is a blockquotes</span>
+</span><span class='line'><span class="s">&gt; from here.</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">/$</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">proc</span><span class="o">.</span><span class="na">markdown</span><span class="o">(</span><span class="n">original</span><span class="o">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>関数がたくさんあって、数えるの面倒いな…</p>
+<p>これの結果は次のようになります。</p>
 
-<h3>詳細なモジュール情報を表示する</h3>
-
-<p><code>lists:module_info/0</code>関数でも同じようなものを調べられる。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -267,107 +289,91 @@
 <span class='line-number'>34</span>
 <span class='line-number'>35</span>
 <span class='line-number'>36</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>2&gt; lists:module_info().
-</span><span class='line'>[{exports,[{append,2},
-</span><span class='line'>           {append,1},
-</span><span class='line'>           {subtract,2},
-</span><span class='line'>           {nth,2},
-</span><span class='line'>           {nthtail,2},
-</span><span class='line'>           {prefix,2},
-</span><span class='line'>           {suffix,2},
-</span><span class='line'>           {last,1},
-</span><span class='line'>           {seq,2},
-</span><span class='line'>           {seq,3},
-</span><span class='line'>           {sum,1},
-</span><span class='line'>           {duplicate,2},
-</span><span class='line'>           {min,1},
-</span><span class='line'>           {max,1},
-</span><span class='line'>           {sublist,3},
-</span><span class='line'>           {sublist,2},
-</span><span class='line'>           {zip,2},
-</span><span class='line'>           {unzip,1},
-</span><span class='line'>           {zip3,3},
-</span><span class='line'>           {unzip3,1},
-</span><span class='line'>           {zipwith,3},
-</span><span class='line'>           {zipwith3,4},
-</span><span class='line'>           {merge,1},
-</span><span class='line'>           {merge3,3},
-</span><span class='line'>           {rmerge3,...},
-</span><span class='line'>           {...}|...]},
-</span><span class='line'> {imports,[]},
-</span><span class='line'> {attributes,[{vsn,[257948301539042745638557295194154171573]}]},
-</span><span class='line'> {compile,[{options,[{outdir,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../ebin"},
-</span><span class='line'>                     {i,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../include"},
-</span><span class='line'>                     {i,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/../../kernel/include"},
-</span><span class='line'>                     warnings_as_errors,debug_info]},
-</span><span class='line'>           {version,"4.9"},
-</span><span class='line'>           {time,{2013,2,25,19,27,47}},
-</span><span class='line'>           {source,"/net/isildur/ldisk/daily_build/r16b_prebuild_master-opu_o.2013-02-25_20/otp_src_R16B/lib/stdlib/src/lists.erl"}]}]</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;p&gt;</span>This is Top Header
+</span><span class='line'><span class="nt">&lt;hr</span> <span class="nt">/&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>This is second Header
+</span><span class='line'>===<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h3&gt;</span>This is topic<span class="nt">&lt;/h3&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h4&gt;</span>Lists Item<span class="nt">&lt;/h4&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;</span>item1<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;</span>item2<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;</span>item3<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>and<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;ol&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;</span>item1<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;</span>item2<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;</span>item3<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;/ol&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h4&gt;</span>Links<span class="nt">&lt;/h4&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://mike-neck.github.io/&quot;</span><span class="nt">&gt;</span>mike-neck&#39;s site<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://mikeneckdq.blog.fc2.com/&quot;</span><span class="nt">&gt;</span>mike-neck&#39;s dq site<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h4&gt;</span>Html Tags<span class="nt">&lt;/h4&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;img</span> <span class="na">src=</span><span class="s">&#39;//googledrive.com/host/0B4hhdHWLP7RRdHRGZ3ZrZU90Q00&#39;</span> <span class="na">style=</span><span class="s">&#39;width : 400px;&#39;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h4&gt;</span>Codes<span class="nt">&lt;/h4&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>function <span class="nt">&lt;code&gt;</span>lists:reverse/1<span class="nt">&lt;/code&gt;</span> returns a List.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>tag <span class="nt">&lt;code&gt;</span><span class="ni">&amp;lt;</span>em<span class="ni">&amp;gt;</span><span class="nt">&lt;/code&gt;</span> means emphasis<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h4&gt;</span>emphasis<span class="nt">&lt;/h4&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;em&gt;</span>em?<span class="nt">&lt;/em&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;strong&gt;</span>bold?<span class="nt">&lt;/strong&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h4&gt;</span>Blockquotes<span class="nt">&lt;/h4&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;blockquote&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;p&gt;</span>This is a blockquotes
+</span><span class='line'>  from here.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'><span class="nt">&lt;/blockquote&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p><code>exports</code>されている関数、</p>
-
-<p>途中で表示が切れてまんがな…</p>
-
-<h3>BIFとかリスト内包表記で頑張ってみる</h3>
-
-<p>今はエントリーの長さに影響をする関数の数を知りたいので、</p>
-
-<p>リストの内包表記で<code>lists:module_info/0</code>の</p>
-
-<p>結果を絞って、BIFの</p>
+<p>今のところ、残念な点は</p>
 
 <ul>
-<li><code>length/1</code> &ndash; リストの長さを取得する</li>
-<li><code>hd/1</code> &ndash; リストの先頭要素を取得する</li>
+<li><code>===</code>がレンダーされない</li>
+<li>上の行にテキストがある状態で&#8217;&mdash;&ndash;&lsquo;がタグ<code>&lt;tr/&gt;</code>にレンダーされる</li>
+<li>当然ながら、GitHubっぽいコードスニペットはレンダーできない</li>
 </ul>
 
 
-<p>を用いて<code>lists</code>モジュールの関数の数を数えてみる。</p>
+<p>ちょっと残念なので、</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>3&gt; length(hd([Items || {Atom, Items} &lt;- lists:module_info(), Atom =:= exports])).
-</span><span class='line'>80</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というわけで、80もあるので、</p>
-
-<p>16個ずつ調べていこうと思う。</p>
-
-<blockquote><p>追記 (2013/05/13 9:16)</p>
-
-<p>2013/05/12 21:19 頃に</p>
-
-<p><a href="https://github.com/voluntas">voluntasさん</a>(<a href="http://twitter.com/voluntas">@voluntas</a>)から
-メッセージをいただきました。</p>
-
-<p><code>length(lists:module_info(exports))</code></p>
-
-<p>で同じ事が取得できるとのこと。</p>
-
-<p>実際にやってみたら</p>
-
-<p><code>
-1&gt; length(lists:module_info(exports)).
-80
-</code></p>
-
-<p>あ、できた、ありがとうございます！</p>
-
-<p>ちなみにドキュメントにもありました。</p>
-
-<p><a href="http://erlang.org/doc/reference_manual/modules.html#id74571">The module_info/0 and module_info/1 functions</a></p>
-
-<p>ドキュメント読まんとイケませんね</p></blockquote>
-
-<h3>まとめ</h3>
-
-<p>まとめもクソもないのですが、</p>
-
-<p>次回から約5回にわたって、</p>
-
-<p><code>lists</code>モジュールの関数を試していきます。</p>
+<p>他のマークダウンパーサーも試してみようと思います。</p>
 
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -404,12 +410,12 @@
   
 
 
-<time datetime="2013-05-11T01:50:00+09:00" pubdate data-updated="true">May 11<span>th</span>, 2013</time>
+<time datetime="2013-06-07T21:10:00+09:00" pubdate data-updated="true">Jun 7<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/erlang/'>Erlang</a>
+    <a class='category' href='/blog/categories/groovy/'>groovy</a>, <a class='category' href='/blog/categories/java/'>java,</a>
   
 </span>
 
@@ -418,7 +424,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/05/11/erlangfalserisutoguan-shu-woshi-sitemiru/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/05/11/erlangfalserisutoguan-shu-woshi-sitemiru/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/06/07/groovydemarkdownjwosawatutemiru/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/06/07/groovydemarkdownjwosawatutemiru/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -432,10 +438,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/05/10/too-poor-fc2-blog-editor-make-me-write-a-new-entry-with-groovys-markupbuilder/" title="Previous Post: FC2ブログのエディターがクソいのでGroovyのMarkupBuilderで記事を書いた件">&laquo; FC2ブログのエディターがクソいのでGroovyのMarkupBuilderで記事を書いた件</a>
+        <a class="basic-alignment left" href="/blog/2013/06/06/intellij-ideafalsejetgradlefalseshi-ifang/" title="Previous Post: IntelliJ IDEAのJetGradleの使い方">&laquo; IntelliJ IDEAのJetGradleの使い方</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/05/12/jjug-ccc-2013-spring-nixing-tutekita/" title="Next Post: JJUG CCC 2013 Spring に行ってきた">JJUG CCC 2013 Spring に行ってきた &raquo;</a>
       
     </p>
   </footer>
