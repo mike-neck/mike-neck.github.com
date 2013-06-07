@@ -628,9 +628,35 @@ true
 #### Example
 
 ```erlang
-1>
+1> lists:merge(fun({_, A}, {_, B}) -> A >= B end,
+1>     [{a,9},{a,5},{a,1}],
+1>     [{b,7},{b,5},{b,3}]).
+[{a,9},{b,7},{a,5},{b,5},{b,3},{a,1}]
+2> lists:merge(fun({_, A}, {_, B}) -> A > B end, 
+2>     [{a,9},{a,5},{a,1}],                     
+2>     [{b,7},{b,5},{b,3}]).                    
+[{a,9},{b,7},{b,5},{a,5},{b,3},{a,1}]
 ```
 
+`merge/3`関数のリバースバージョン。
+
+引数は先頭から
+
++ Fun = fun((A, B) -> boolean())
++ List1 = [T]
++ List2 = [T]
+
+です。
+
+なお、
+
++ Funには結果として先にくるものに対してtrueが返すような関数を渡します。
++ List1、List2ともにFunにて事前にソートされている必要があります。
++ T = term()
+
+となっています。
+
+また、同値なものがあった場合は、Funの実装に従います。
 
 
 {% render_partial _includes/post/post_footer.html %}
