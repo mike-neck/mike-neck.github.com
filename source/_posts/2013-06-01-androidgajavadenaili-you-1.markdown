@@ -3,7 +3,7 @@ layout: post
 title: "AndroidがJavaでない理由 - 1"
 date: 2013-06-01 02:22
 comments: true
-categories: java, android
+categories: [java, android]
 ---
 
 こんにちは。

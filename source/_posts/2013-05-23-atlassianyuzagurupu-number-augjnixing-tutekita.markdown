@@ -3,7 +3,7 @@ layout: post
 title: "Atlassianユーザーグループ #augjに行ってきた"
 date: 2013-05-23 12:28
 comments: true
-categories: Atlassian
+categories: [atlassian, hackathon]
 ---
 
 

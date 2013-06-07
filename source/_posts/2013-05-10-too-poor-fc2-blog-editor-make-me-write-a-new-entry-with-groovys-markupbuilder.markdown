@@ -3,7 +3,7 @@ layout: post
 title: "FC2ブログのエディターがクソいのでGroovyのMarkupBuilderで記事を書いた件"
 date: 2013-05-10 20:00
 comments: false
-categories: Groovy
+categories: groovy
 ---
 
 こんにちわ、自虐的なみけです。

@@ -3,7 +3,7 @@ layout: post
 title: "Groovyでpegdownをさわってみる"
 date: 2013-06-08 05:25
 comments: true
-categories: groovy, java
+categories: [groovy, java]
 ---
 
 みけです。

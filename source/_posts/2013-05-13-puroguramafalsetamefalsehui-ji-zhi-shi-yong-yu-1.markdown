@@ -3,7 +3,7 @@ layout: post
 title: "プログラマーのための会計知識・用語 - (1)"
 date: 2013-05-13 10:17
 comments: true
-categories: Account
+categories: account
 ---
 
 こんにちわみけです。

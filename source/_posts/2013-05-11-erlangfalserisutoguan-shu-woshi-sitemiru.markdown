@@ -3,7 +3,7 @@ layout: post
 title: "Erlangのリスト系モジュールを試してみる - 第0回"
 date: 2013-05-11 01:50
 comments: true
-categories: Erlang
+categories: erlang
 ---
 
 こんにちわ、みけです。

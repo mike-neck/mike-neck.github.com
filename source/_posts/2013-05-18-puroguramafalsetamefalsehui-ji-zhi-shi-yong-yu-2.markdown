@@ -3,7 +3,7 @@ layout: post
 title: "プログラマーのための会計知識・用語 - (2)"
 date: 2013-05-18 15:04
 comments: true
-categories: Account, Groovy
+categories: [account, groovy]
 ---
 普通のエンタープライズ系プログラマーであれば、会計用語はちゃんと英語で覚えているものですよね(白目
 ---

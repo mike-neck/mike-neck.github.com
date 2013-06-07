@@ -3,7 +3,7 @@ layout: post
 title: "gradle1.6からgroovyのconfigurationはdeprecatedになっています"
 date: 2013-05-22 20:08
 comments: true
-categories: groovy
+categories: [groovy, gradle]
 ---
 
 gradle1.6からgroovyのconfigurationは非推奨になっています

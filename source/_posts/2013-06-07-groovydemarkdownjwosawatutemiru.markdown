@@ -3,7 +3,7 @@ layout: post
 title: "Groovyでmarkdownjをさわってみる"
 date: 2013-06-07 21:10
 comments: true
-categories: java, groovy
+categories: [java, groovy]
 ---
 
 <img src="//googledrive.com/host/0B4hhdHWLP7RRcURrSlZiNXlNVVk" style="width : 450px;"/>

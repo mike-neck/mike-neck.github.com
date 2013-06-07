@@ -3,7 +3,7 @@ layout: post
 title: "gradleとJUnitのEnclosedの話"
 date: 2013-05-25 23:19
 comments: true
-categories: java, gradle, groovy
+categories: [java, gradle, groovy]
 ---
 
 みけです。

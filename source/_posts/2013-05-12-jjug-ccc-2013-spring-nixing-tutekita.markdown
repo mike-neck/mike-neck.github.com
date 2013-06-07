@@ -3,7 +3,7 @@ layout: post
 title: "JJUG CCC 2013 Spring に行ってきた"
 date: 2013-05-12 16:47
 comments: true
-categories: Java
+categories: [java, hackathon]
 ---
 
 みけです。

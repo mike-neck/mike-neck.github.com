@@ -3,7 +3,7 @@ layout: post
 title: "AndroidがJavaだと思っている人のためのGroovy講座 - 1"
 date: 2013-05-27 12:29
 comments: true
-categories: groovy, java
+categories: [groovy, java]
 ---
 
 タイトルが偉そうなこと書いていますが、
