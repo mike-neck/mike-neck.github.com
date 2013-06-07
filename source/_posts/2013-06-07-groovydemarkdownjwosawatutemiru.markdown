@@ -6,6 +6,8 @@ comments: true
 categories: java, groovy
 ---
 
+<img src="googledrive.com/host/0B4hhdHWLP7RRcURrSlZiNXlNVVk" style="width : 450px;"/>
+
 こんにちわ、みけです。
 
 このブログはOCTOPRESSで作っていますが、
