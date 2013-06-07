@@ -59,9 +59,9 @@ function `lists:reverse/1` returns a List.
 
 tag `<em>` means emphasis
 
-```groovy
+``groovy
 def string = 'This is groovy code.'
-```
+``
 
 #### emphasis
 
