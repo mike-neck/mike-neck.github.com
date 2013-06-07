@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: gradle, | mike、mikeなるままに…]]></title>
+  <title><![CDATA[Category: gradle | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/gradle/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-08T05:39:18+09:00</updated>
+  <updated>2013-06-08T05:53:19+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -191,6 +191,84 @@ testCompile 'org.hamcrest:hamcrest-library:1.+'
 
 </script>
 </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[gradle1.6からgroovyのconfigurationはdeprecatedになっています]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/05/22/gradle1-dot-6karagroovyfalseconfigurationhadeprecatedninatuteimasu/"/>
+    <updated>2013-05-22T20:08:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/05/22/gradle1-dot-6karagroovyfalseconfigurationhadeprecatedninatuteimasu</id>
+    <content type="html"><![CDATA[<h2>gradle1.6からgroovyのconfigurationは非推奨になっています</h2>
+
+<p>まあ今さらですが、さきほどbuild.gradleを書いた時に、</p>
+
+<p>```
+$ gradle idea
+The groovy configuration has been deprecated and is scheduled to be removed in Gradle 2.0. Typically, usages of &lsquo;groovy&rsquo; can simply be replaced with &lsquo;compile&rsquo;. In some cases, it may be necessary to additionally configure the &lsquo;groovyClasspath&rsquo; property of GroovyCompile and Groovydoc tasks.
+:ideaModule
+Download <a href="http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.pom">http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.pom</a>
+Download <a href="http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3-sources.jar">http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3-sources.jar</a>
+Download <a href="http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.jar">http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.jar</a>
+:ideaProject
+:ideaWorkspace
+:idea</p>
+
+<p>BUILD SUCCESSFUL</p>
+
+<p>Total time: 11.174 secs
+$
+```</p>
+
+<p>と表示されたので、「うぉっ」と思ってドキュメントを読んでみました。</p>
+
+<p><a href="http://www.gradle.org/docs/current/release-notes#groovy-configuration-is-deprecated">groovy configuration is deprecated</a></p>
+
+<p>じゃあ、今後どうするのかというと、</p>
+
+<h1>compile configurationにgroovyのartifactを指定する</h1>
+
+<p>ということです。</p>
+
+<p>つまり、これまでは</p>
+
+<p>```groovy build.gradle
+dependencies {</p>
+
+<pre><code>groovy : 'org.codehaus:groovy:groovy-all:2.1.3'
+</code></pre>
+
+<p>}
+```</p>
+
+<p>と書いていましたが、</p>
+
+<p>```groovy build.gradle
+dependencies {</p>
+
+<pre><code>compile : 'org.codehaus.groovy:groovy-all:2.1.3'
+</code></pre>
+
+<p>}
+```</p>
+
+<p>と書けばよいようです。</p>
+
+<table>
+<tbody>
+<tr>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B009X5KIFK" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=3864900492" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1617291307" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+
 ]]></content>
   </entry>
   
