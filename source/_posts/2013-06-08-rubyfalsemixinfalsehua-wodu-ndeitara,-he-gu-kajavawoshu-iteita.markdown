@@ -122,7 +122,7 @@ Alt + Enter (mac の場合は option + enter)をすると、
 > Api note : Sum, min, max, and average are all special cases of reduction.
 > Summing a stream of numbers can be expressed as:
 > 
-> ```java
+> ```
 > long sum = integers.reduce(0, (a, b) -> a+b);
 > ```
 > 
