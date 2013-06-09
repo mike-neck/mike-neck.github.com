@@ -128,7 +128,7 @@ Alt + Enter (mac の場合は option + enter)をすると、
 > 
 > or more compactly:
 > 
-> ```java
+> ```
 > long sum = integers.reduce(0, Long::sum);
 > ```
 > 
@@ -136,7 +136,7 @@ Alt + Enter (mac の場合は option + enter)をすると、
 
 つまり、`java.util.function.LongBinaryOperator`の記述
 
-```java
+```
 (sum, item) -> sum + item
 ```
 
