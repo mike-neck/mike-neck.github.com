@@ -136,7 +136,7 @@ Alt + Enter (mac の場合は option + enter)をすると、
 
 つまり、`java.util.function.LongBinaryOperator`の記述
 
-```
+```java
 (sum, item) -> sum + item
 ```
 
