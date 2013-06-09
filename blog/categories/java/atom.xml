@@ -4,7 +4,7 @@
   <title><![CDATA[Category: java | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-09T10:31:50+09:00</updated>
+  <updated>2013-06-09T10:35:25+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -144,7 +144,7 @@ long sum = integers.reduce(0, (a, b) -&gt; a+b);
 
 <p>or more compactly:</p>
 
-<p><code>java
+<p><code>
 long sum = integers.reduce(0, Long::sum);
 </code></p>
 
@@ -152,7 +152,7 @@ long sum = integers.reduce(0, Long::sum);
 
 <p>つまり、<code>java.util.function.LongBinaryOperator</code>の記述</p>
 
-<p><code>java
+<p><code>
 (sum, item) -&gt; sum + item
 </code></p>
 

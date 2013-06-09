@@ -275,7 +275,7 @@ long sum = integers.reduce(0, (a, b) -&gt; a+b);
 
 <p>or more compactly:</p>
 
-<p><code>java
+<p><code>
 long sum = integers.reduce(0, Long::sum);
 </code></p>
 
@@ -283,7 +283,7 @@ long sum = integers.reduce(0, Long::sum);
 
 <p>つまり、<code>java.util.function.LongBinaryOperator</code>の記述</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Grade.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">(</span><span class="n">sum</span><span class="o">,</span> <span class="n">item</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">sum</span> <span class="o">+</span> <span class="n">item</span>
 </span></code></pre></td></tr></table></div></figure>
 
