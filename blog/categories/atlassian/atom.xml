@@ -4,7 +4,7 @@
   <title><![CDATA[Category: atlassian | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/atlassian/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-09T10:43:02+09:00</updated>
+  <updated>2013-06-10T16:00:56+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -12,6 +12,53 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[JIRA6のチケットで他のチケットへのリンクを張る方法]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/06/10/how-to-link-other-issues-on-jira6/"/>
+    <updated>2013-06-10T15:10:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/06/10/how-to-link-other-issues-on-jira6</id>
+    <content type="html"><![CDATA[<p>こんにちわ、みけです。</p>
+
+<p>微妙に表題の件に関して、30分くらいさまよったので、覚書き。</p>
+
+<p>公式のドキュメントはこちらです。</p>
+
+<p><a href="https://confluence.atlassian.com/display/JIRA/Linking+Issues">JIRA User&rsquo;s Guide > Working with an Issue > Linking Issues</a></p>
+
+<h2>JIRA6であるチケットから他のチケットへのリンクを張る方法</h2>
+
+<h3>JIRAのissueの上にあるメニューから<strong>More > Link</strong>を選択します</h3>
+
+<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRVjFGRmExVzhlMjQ" target="_blank"><img src="http://mike-neck.github.io//googledrive.com/host/0B4hhdHWLP7RRVjFGRmExVzhlMjQ" style="width : 501px;"/></a></p>
+
+<h3>当該チケットとの関係を選択して、関連するチケットを選択します</h3>
+
+<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRaExlSGJnMUJjejQ" target="_blank"><img src="http://mike-neck.github.io//googledrive.com/host/0B4hhdHWLP7RRaExlSGJnMUJjejQ" style="width : 334px;"/></a></p>
+
+<h3>チケットが関連付けられているか確認します</h3>
+
+<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRT2RfWklwbkExdGM" target="_blank"><img src="http://mike-neck.github.io//googledrive.com/host/0B4hhdHWLP7RRT2RfWklwbkExdGM" style="width : 501px;"/></a></p>
+
+<p>…</p>
+
+<p>えっ、Redmineならもっと簡単だって？</p>
+
+<p>そうですね。</p>
+
+<p><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Atlassianユーザーグループ #augjに行ってきた]]></title>
