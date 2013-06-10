@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-10T17:25:48+09:00</updated>
+  <updated>2013-06-11T02:30:42+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -12,6 +12,142 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[初めてRubyのモジュールを書いてみた]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/06/11/how-to-create-rubys-module/"/>
+    <updated>2013-06-11T02:04:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/06/11/how-to-create-rubys-module</id>
+    <content type="html"><![CDATA[<p>こんにちわ、みけです。</p>
+
+<p>前回の記事<a href="http://mike-neck.github.io/blog/2013/06/08/rubyfalsemixinfalsehua-wodu-ndeitara%2C-he-gu-kajavawoshu-iteita/">『Rubyのmixinの話を読んでいたら、何故かjavaを書いていた』</a>はあまりにも</p>
+
+<p>rubyに対して失礼なので、</p>
+
+<p>初心者らしく、ちゃんと<code>module</code>を作ってみました。</p>
+
+<p>ところで、僕の感心事は前回の記事でも書いたように、</p>
+
+<h2>rubyの<code>module</code>はインスタンス変数にアクセスすることができるのか？</h2>
+
+<p>ということです。</p>
+
+<p>で、結論から言えば、</p>
+
+<h2>rubyの<code>module</code>はインスタンス変数にアクセスできました</h2>
+
+<p>となります。</p>
+
+<h3><code>module</code>を作成</h3>
+
+<p>```ruby having_title.rb</p>
+
+<h1>&ndash;<em>&ndash; codig: utf-8 &ndash;</em>&ndash;</h1>
+
+<p>module HavingTitle
+  def title=(t)</p>
+
+<pre><code>@title = t 
+</code></pre>
+
+<p>  end
+  def title</p>
+
+<pre><code>@title
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p><code>module</code>の<code>HavingTitle</code>は単純にタイトルというものに</p>
+
+<p>アクセスすることができるモジュールです。</p>
+
+<p>先程も書きましたが、僕の疑問は<code>@title</code>フィールドに、</p>
+
+<p>インスタンス化することができない<code>module</code>がアクセすることができるのか</p>
+
+<p>ということです。</p>
+
+<h3><code>module</code>を<code>include</code>した<code>class</code>を作成</h3>
+
+<p>```ruby book.rb</p>
+
+<h1>&ndash;<em>&ndash; coding: utf-8 &ndash;</em>&ndash;</h1>
+
+<p>require &lsquo;./having_title&rsquo;</p>
+
+<p>class Book
+  include HavingTitle</p>
+
+<p>  attr_accessor :price</p>
+
+<p>  def initialize(title, price)</p>
+
+<pre><code>@price = price
+self.title = title
+</code></pre>
+
+<p>  end</p>
+
+<p>  def print_info</p>
+
+<pre><code>"Book[title : #{@title}, price : #{@price}]"
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>タイトルというものを持っていそうなクラスということで</p>
+
+<p><code>Book</code>というクラスをつくりました。</p>
+
+<p>後は<code>Book</code>クラスをインスタンス化して、</p>
+
+<p>フィールド<code>@title</code>にアクセスできるかどうか確認出来れば</p>
+
+<p>僕の疑問は解決出来ます。</p>
+
+<h3>irbで動作を確認</h3>
+
+<p>あ、まだrubyでのテストの書き方知らないので、</p>
+
+<p>ここはirbで勘弁して下さい。</p>
+
+<p><code>txt
+irb(main):001:0&gt; require './book'
+=&gt; true
+irb(main):002:0&gt; book = Book.new 'anti-oedipus', 4000
+=&gt; #&lt;Book:0x007f90890b6e38 @price=4000, @title="anti-oedipus"&gt;
+irb(main):003:0&gt; book.print_info
+=&gt; "Book[title : anti-oedipus, price : 4000]"
+</code></p>
+
+<p>というわけで、特に何のエラーも出ることなく、</p>
+
+<p>フィールド<code>@title</code>にアクセスできているようですね。</p>
+
+<h2>モジュールの機能の一つとしてのMix-in</h2>
+
+<p>まあ、<a href="http://www.amazon.co.jp/gp/product/4873113679/ref=as_li_ss_tl?ie=UTF8&amp;camp=247&amp;creative=7399&amp;creativeASIN=4873113679&amp;linkCode=as2&amp;tag=kkkjkrt-22">『初めてのRuby』</a>にはモジュールについて次のように書いてあります。</p>
+
+<blockquote><p><strong>モジュール</strong>はクラスに似ています。モジュールは「インスタンス化できないクラス」のようなものです。
+<code>Class</code>クラスは<code>Module</code>のサブクラスですから、「クラス = モジュール + インスタンス化能力」と言ってもよさそうです。
+(<a href="http://www.amazon.co.jp/gp/product/4873113679/ref=as_li_ss_tl?ie=UTF8&amp;camp=247&amp;creative=7399&amp;creativeASIN=4873113679&amp;linkCode=as2&amp;tag=kkkjkrt-22">Yugui著『初めてのRuby』</a>(オライリー・ジャパン、2008年、p.159))</p></blockquote>
+
+<p>Javaしかわからない(Javaも詳しくはわからない)僕には、</p>
+
+<p><code>abstract class</code>と考えておけばよさそうです。</p>
+
+<p>で、複数のモジュールを継承できるので、</p>
+
+<p>なんか、アレですね…</p>
+
+<p>{% render_partial _includes/post/post_footer.html %}</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[blogの更新pingを送れるようにrakeのタスクを書いてみた]]></title>
@@ -94,22 +230,7 @@ end
 - http://www.blogpeople.net/ping/
 </code></p>
 
-<p><!-- admax -->
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-<!-- admax -->
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-</p>
+<p>{% render_partial _includes/post/post_footer.html %}</p>
 ]]></content>
   </entry>
   
