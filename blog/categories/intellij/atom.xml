@@ -4,7 +4,7 @@
   <title><![CDATA[Category: intellij | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/intellij/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-10T16:00:56+09:00</updated>
+  <updated>2013-06-10T17:25:48+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -158,7 +158,12 @@ $ gradle test
 
 <h3>JetGradle便利すなー</h3>
 
-<p><script>
+<p><!-- admax -->
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+<!-- admax -->
+
+
+<script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
