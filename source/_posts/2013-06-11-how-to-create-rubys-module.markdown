@@ -96,7 +96,7 @@ end
 
 ここはirbで勘弁して下さい。
 
-```txt
+```
 irb(main):001:0> require './book'
 => true
 irb(main):002:0> book = Book.new 'anti-oedipus', 4000
