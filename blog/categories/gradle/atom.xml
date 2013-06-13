@@ -4,7 +4,7 @@
   <title><![CDATA[Category: gradle | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/gradle/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-11T02:34:54+09:00</updated>
+  <updated>2013-06-13T23:17:25+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -12,6 +12,227 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[gradleのjavadocタスクでjavadocを英語で出力する方法]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/06/13/how-to-generate-javadoc-in-english-on-japanese-environment/"/>
+    <updated>2013-06-13T22:39:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/06/13/how-to-generate-javadoc-in-english-on-japanese-environment</id>
+    <content type="html"><![CDATA[<p>こんにちわ、みけです。</p>
+
+<p>表題の件はこの記事の前半部分に書いています。</p>
+
+<p>なので、必要な人は前半部分だけ読んで下さい。</p>
+
+<hr />
+
+<p>大した話ではありませんが、</p>
+
+<h1>gradleのjavadocタスクで出力されるjavadocが日本語で出力される</h1>
+
+<p>のがちょっと残念な時があります。</p>
+
+<p><code>java</code>プラグインを入れていれば、<code>javadoc</code>タスクが自動で追加されます。</p>
+
+<p>僕のような日本語環境でやっている人だと、</p>
+
+<p>頑張ってjavadocを英語で書いても、</p>
+
+<p>テンプレートが日本語で出力されてしまいます。</p>
+
+<p>会社で日本語を使っていて、</p>
+
+<p>javadocが日本語でないと困る場合は、</p>
+
+<p>全然問題ないとおもいますが…</p>
+
+<p>オープンソースなソフトウェアを開発している場合、</p>
+
+<p>javadocが日本語だとなんか若干困ります。</p>
+
+<p>(まあ、だいたいjavadocのテンプレートなんで、何が出力されているかなんてわかりますけどね…)</p>
+
+<h1><code>javadoc</code>タスクの設定で<code>options.locale</code>に<code>en_US</code>を指定すればいいです</h1>
+
+<p>つまり、以下のとおりになります。</p>
+
+<p>```groovy build.gradle
+apply plugin : &lsquo;java&rsquo;</p>
+
+<p>javadoc {</p>
+
+<pre><code>options.locale = 'en_US'
+</code></pre>
+
+<p>}
+```</p>
+
+<p><strong>本題、終わり</strong></p>
+
+<hr />
+
+<p>ちなみに、僕の得意技はtypoなので、間違えてこんなビルドスクリプト書いてました。</p>
+
+<p><strong>(誤)</strong></p>
+
+<p>```groovy build.gradle
+apply plugin : &lsquo;java&rsquo;</p>
+
+<p>javadoc {</p>
+
+<pre><code>options.local = 'en_US'
+</code></pre>
+
+<p>}
+```</p>
+
+<p>これを実行したら、こんなエラーが出力されました。</p>
+
+<p>```
+$ gradle javadoc
+Picked up _JAVA_OPTIONS: -Dfile.encoding=UTF-8</p>
+
+<p>FAILURE: Build failed with an exception.</p>
+
+<ul>
+<li><p>Where:
+Script &lsquo;/Users/mike/myprojects/sample/build.gradle&rsquo; line: 4</p></li>
+<li><p>What went wrong:
+A problem occurred evaluating script.</p>
+
+<blockquote><p>No such property: local for class: org.gradle.external.javadoc.StandardJavadocDocletOptions
+Possible solutions: locale</p></blockquote></li>
+<li><p>Try:
+Run with &mdash;stacktrace option to get the stack trace. Run with &mdash;info or &mdash;debug option to get more log output.</p></li>
+</ul>
+
+
+<p>BUILD FAILED</p>
+
+<p>Total time: 8.941 secs
+```</p>
+
+<p>gradle曰く</p>
+
+<blockquote><p><code>local</code>なんてオプションないよ、<code>locale</code>じゃない？</p></blockquote>
+
+<p>というわけで、</p>
+
+<h1>gradleさん正しい答えを教えてくれたりと、親切ですね。</h1>
+
+<p>本当に親切なツールです。</p>
+
+<p>しかし、</p>
+
+<h1>本当に親切なのはgroovyの思想</h1>
+
+<p>です。</p>
+
+<p>例えば次のようなgroovyのスクリプトがあるとします。</p>
+
+<p>```groovy error.groovy
+def range = 1..10
+range.colect {</p>
+
+<pre><code>println (it * it)
+</code></pre>
+
+<p>}
+```</p>
+
+<p>これを実行するとこういうエラーが出力されます。</p>
+
+<p>```
+$ groovy error.groovy
+Caught: groovy.lang.MissingMethodException: No signature of method: groovy.lang.IntRange.colect() is applicable for argument types: (error$<em>run_closure1) values: [error$</em>run_closure1@639d564]
+Possible solutions: collect(), collect(), collect(groovy.lang.Closure), collect(groovy.lang.Closure), collect(java.util.Collection, groovy.lang.Closure), collect(java.util.Collection, groovy.lang.Closure)
+groovy.lang.MissingMethodException: No signature of method: groovy.lang.IntRange.colect() is applicable for argument types: (error$<em>run_closure1) values: [error$</em>run_closure1@639d564]
+Possible solutions: collect(), collect(), collect(groovy.lang.Closure), collect(groovy.lang.Closure), collect(java.util.Collection, groovy.lang.Closure), collect(java.util.Collection, groovy.lang.Closure)</p>
+
+<pre><code>at error.run(error.groovy:2)
+</code></pre>
+
+<p>```</p>
+
+<p>存在しないメソッドを呼び出した時に、</p>
+
+<p><strong>Possible solutions</strong>ということで、</p>
+
+<p>サジェストしてくれます。</p>
+
+<p>また、有名な例ですが、Power Assertもあります。</p>
+
+<p><code>groovy error.groovy
+def list = [1,1,2,3,4,5]
+assert list - [1,3,6] == [1,2,4,5]
+</code></p>
+
+<p>これを実行すると、このように表示されます。</p>
+
+<p>```
+$ groovy error.groovy
+Caught: Assertion failed:</p>
+
+<p>assert list &ndash; [1,3,6] == [1,2,4,5]</p>
+
+<pre><code>   |    |         |
+   |    [2, 4, 5] false
+   [1, 1, 2, 3, 4, 5]
+</code></pre>
+
+<p>Assertion failed:</p>
+
+<p>assert list &ndash; [1,3,6] == [1,2,4,5]</p>
+
+<pre><code>   |    |         |
+   |    [2, 4, 5] false
+   [1, 1, 2, 3, 4, 5]
+
+at error.run(error.groovy:2)
+</code></pre>
+
+<p>```</p>
+
+<p>ただ、求めている結果と実際の結果が<strong>違う</strong>という表示だけでなく、</p>
+
+<p>実際の値を示してくれます。</p>
+
+<p>つまり一言で言えば、</p>
+
+<h1>groovyの半分は優しさでできています</h1>
+
+<p>なお、この機能はもともとからgroovyにあったわけではなく、</p>
+
+<p>Spockというテスティングフレームワークから採用された機能です。</p>
+
+<p>groovyの思想では、こういった、(・∀・)ｲｲﾈ!!な機能を</p>
+
+<p>どんどん取り込んでいくというのがあると思っています。</p>
+
+<p>まあ、元々、javaを良い感じで書きたいといった思想から生まれている言語ですし、</p>
+
+<p>実際に、rubyなど他の言語のいいところを借りたりしているので、</p>
+
+<p>後発の優位性を遺憾なく発揮しているわけですが…</p>
+
+<p><!-- admax -->
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+<!-- admax -->
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[gradleとJUnitのEnclosedの話]]></title>

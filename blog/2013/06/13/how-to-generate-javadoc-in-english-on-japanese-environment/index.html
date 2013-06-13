@@ -1,0 +1,576 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>gradleのjavadocタスクでjavadocを英語で出力する方法 - mike、mikeなるままに…</title>
+  <meta name="author" content="mike-neck">
+
+  
+  <meta name="description" content="こんにちわ、みけです。 表題の件はこの記事の前半部分に書いています。 なので、必要な人は前半部分だけ読んで下さい。 大した話ではありませんが、 gradleのjavadocタスクで出力されるjavadocが日本語で出力される のがちょっと残念な時があります。 javaプラグインを入れていれば、 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/06/13/how-to-generate-javadoc-in-english-on-japanese-environment">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="mike、mikeなるままに…" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40855644-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">mike、mikeなるままに…</a></h1>
+  
+    <h2>プログラムに関してぬるま湯のような記事を書きます</h2>
+  
+  <valuecommerce   ptnOid="3060695" url="http://mike-neck.github.io/" />
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:mike-neck.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Gradleのjavadocタスクでjavadocを英語で出力する方法</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-13T22:39:00+09:00" pubdate data-updated="true">Jun 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>こんにちわ、みけです。</p>
+
+<p>表題の件はこの記事の前半部分に書いています。</p>
+
+<p>なので、必要な人は前半部分だけ読んで下さい。</p>
+
+<hr />
+
+<p>大した話ではありませんが、</p>
+
+<h1>gradleのjavadocタスクで出力されるjavadocが日本語で出力される</h1>
+
+<p>のがちょっと残念な時があります。</p>
+
+<p><code>java</code>プラグインを入れていれば、<code>javadoc</code>タスクが自動で追加されます。</p>
+
+<p>僕のような日本語環境でやっている人だと、</p>
+
+<p>頑張ってjavadocを英語で書いても、</p>
+
+<p>テンプレートが日本語で出力されてしまいます。</p>
+
+<p>会社で日本語を使っていて、</p>
+
+<p>javadocが日本語でないと困る場合は、</p>
+
+<p>全然問題ないとおもいますが…</p>
+
+<p>オープンソースなソフトウェアを開発している場合、</p>
+
+<p>javadocが日本語だとなんか若干困ります。</p>
+
+<p>(まあ、だいたいjavadocのテンプレートなんで、何が出力されているかなんてわかりますけどね…)</p>
+
+<h1><code>javadoc</code>タスクの設定で<code>options.locale</code>に<code>en_US</code>を指定すればいいです</h1>
+
+<p>つまり、以下のとおりになります。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="s1">&#39;java&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">javadoc</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">options</span><span class="o">.</span><span class="na">locale</span> <span class="o">=</span> <span class="s1">&#39;en_US&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>本題、終わり</strong></p>
+
+<hr />
+
+<p>ちなみに、僕の得意技はtypoなので、間違えてこんなビルドスクリプト書いてました。</p>
+
+<p><strong>(誤)</strong></p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="s1">&#39;java&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">javadoc</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">options</span><span class="o">.</span><span class="na">local</span> <span class="o">=</span> <span class="s1">&#39;en_US&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これを実行したら、こんなエラーが出力されました。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">gradle</span> <span class="n">javadoc</span>
+</span><span class='line'><span class="n">Picked</span> <span class="n">up</span> <span class="nl">_JAVA_OPTIONS:</span> <span class="o">-</span><span class="n">Dfile</span><span class="o">.</span><span class="na">encoding</span><span class="o">=</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
+</span><span class='line'>
+</span><span class='line'><span class="nl">FAILURE:</span> <span class="n">Build</span> <span class="n">failed</span> <span class="n">with</span> <span class="n">an</span> <span class="n">exception</span><span class="o">.</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">*</span> <span class="nl">Where:</span>
+</span><span class='line'><span class="n">Script</span> <span class="s1">&#39;/Users/mike/myprojects/sample/build.gradle&#39;</span> <span class="nl">line:</span> <span class="mi">4</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">*</span> <span class="n">What</span> <span class="n">went</span> <span class="nl">wrong:</span>
+</span><span class='line'><span class="n">A</span> <span class="n">problem</span> <span class="n">occurred</span> <span class="n">evaluating</span> <span class="n">script</span><span class="o">.</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="n">No</span> <span class="n">such</span> <span class="nl">property:</span> <span class="n">local</span> <span class="k">for</span> <span class="nl">class:</span> <span class="n">org</span><span class="o">.</span><span class="na">gradle</span><span class="o">.</span><span class="na">external</span><span class="o">.</span><span class="na">javadoc</span><span class="o">.</span><span class="na">StandardJavadocDocletOptions</span>
+</span><span class='line'>  <span class="n">Possible</span> <span class="nl">solutions:</span> <span class="n">locale</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">*</span> <span class="nl">Try:</span>
+</span><span class='line'><span class="n">Run</span> <span class="n">with</span> <span class="o">--</span><span class="n">stacktrace</span> <span class="n">option</span> <span class="n">to</span> <span class="n">get</span> <span class="n">the</span> <span class="n">stack</span> <span class="n">trace</span><span class="o">.</span> <span class="n">Run</span> <span class="n">with</span> <span class="o">--</span><span class="n">info</span> <span class="n">or</span> <span class="o">--</span><span class="n">debug</span> <span class="n">option</span> <span class="n">to</span> <span class="n">get</span> <span class="n">more</span> <span class="n">log</span> <span class="n">output</span><span class="o">.</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">BUILD</span> <span class="n">FAILED</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Total</span> <span class="nl">time:</span> <span class="mf">8.941</span> <span class="n">secs</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>gradle曰く</p>
+
+<blockquote><p><code>local</code>なんてオプションないよ、<code>locale</code>じゃない？</p></blockquote>
+
+<p>というわけで、</p>
+
+<h1>gradleさん正しい答えを教えてくれたりと、親切ですね。</h1>
+
+<p>本当に親切なツールです。</p>
+
+<p>しかし、</p>
+
+<h1>本当に親切なのはgroovyの思想</h1>
+
+<p>です。</p>
+
+<p>例えば次のようなgroovyのスクリプトがあるとします。</p>
+
+<figure class='code'><figcaption><span>error.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">range</span> <span class="o">=</span> <span class="mi">1</span><span class="o">..</span><span class="mi">10</span>
+</span><span class='line'><span class="n">range</span><span class="o">.</span><span class="na">colect</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">println</span> <span class="o">(</span><span class="n">it</span> <span class="o">*</span> <span class="n">it</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これを実行するとこういうエラーが出力されます。</p>
+
+<figure class='code'><figcaption><span>error.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">groovy</span> <span class="n">error</span><span class="o">.</span><span class="na">groovy</span>
+</span><span class='line'><span class="nl">Caught:</span> <span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">MissingMethodException</span><span class="o">:</span> <span class="n">No</span> <span class="n">signature</span> <span class="n">of</span> <span class="nl">method:</span> <span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">IntRange</span><span class="o">.</span><span class="na">colect</span><span class="o">()</span> <span class="n">is</span> <span class="n">applicable</span> <span class="k">for</span> <span class="n">argument</span> <span class="nl">types:</span> <span class="o">(</span><span class="n">error$_run_closure1</span><span class="o">)</span> <span class="nl">values:</span> <span class="o">[</span><span class="n">error$_run_closure1</span><span class="err">@</span><span class="mi">639</span><span class="n">d564</span><span class="o">]</span>
+</span><span class='line'><span class="n">Possible</span> <span class="nl">solutions:</span> <span class="n">collect</span><span class="o">(),</span> <span class="n">collect</span><span class="o">(),</span> <span class="n">collect</span><span class="o">(</span><span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">),</span> <span class="n">collect</span><span class="o">(</span><span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">),</span> <span class="n">collect</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Collection</span><span class="o">,</span> <span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">),</span> <span class="n">collect</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Collection</span><span class="o">,</span> <span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">)</span>
+</span><span class='line'><span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">MissingMethodException</span><span class="o">:</span> <span class="n">No</span> <span class="n">signature</span> <span class="n">of</span> <span class="nl">method:</span> <span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">IntRange</span><span class="o">.</span><span class="na">colect</span><span class="o">()</span> <span class="n">is</span> <span class="n">applicable</span> <span class="k">for</span> <span class="n">argument</span> <span class="nl">types:</span> <span class="o">(</span><span class="n">error$_run_closure1</span><span class="o">)</span> <span class="nl">values:</span> <span class="o">[</span><span class="n">error$_run_closure1</span><span class="err">@</span><span class="mi">639</span><span class="n">d564</span><span class="o">]</span>
+</span><span class='line'><span class="n">Possible</span> <span class="nl">solutions:</span> <span class="n">collect</span><span class="o">(),</span> <span class="n">collect</span><span class="o">(),</span> <span class="n">collect</span><span class="o">(</span><span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">),</span> <span class="n">collect</span><span class="o">(</span><span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">),</span> <span class="n">collect</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Collection</span><span class="o">,</span> <span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">),</span> <span class="n">collect</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Collection</span><span class="o">,</span> <span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">at</span> <span class="n">error</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">error</span><span class="o">.</span><span class="na">groovy</span><span class="o">:</span><span class="mi">2</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>存在しないメソッドを呼び出した時に、</p>
+
+<p><strong>Possible solutions</strong>ということで、</p>
+
+<p>サジェストしてくれます。</p>
+
+<p>また、有名な例ですが、Power Assertもあります。</p>
+
+<figure class='code'><figcaption><span>error.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">list</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">5</span><span class="o">]</span>
+</span><span class='line'><span class="k">assert</span> <span class="n">list</span> <span class="o">-</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">6</span><span class="o">]</span> <span class="o">==</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">5</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これを実行すると、このように表示されます。</p>
+
+<figure class='code'><figcaption><span>error.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">groovy</span> <span class="n">error</span><span class="o">.</span><span class="na">groovy</span>
+</span><span class='line'><span class="nl">Caught:</span> <span class="n">Assertion</span> <span class="nl">failed:</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">assert</span> <span class="n">list</span> <span class="o">-</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">6</span><span class="o">]</span> <span class="o">==</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">5</span><span class="o">]</span>
+</span><span class='line'>       <span class="o">|</span>    <span class="o">|</span>         <span class="o">|</span>
+</span><span class='line'>       <span class="o">|</span>    <span class="o">[</span><span class="mi">2</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">]</span> <span class="kc">false</span>
+</span><span class='line'>       <span class="o">[</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Assertion</span> <span class="nl">failed:</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">assert</span> <span class="n">list</span> <span class="o">-</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">6</span><span class="o">]</span> <span class="o">==</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">5</span><span class="o">]</span>
+</span><span class='line'>       <span class="o">|</span>    <span class="o">|</span>         <span class="o">|</span>
+</span><span class='line'>       <span class="o">|</span>    <span class="o">[</span><span class="mi">2</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">]</span> <span class="kc">false</span>
+</span><span class='line'>       <span class="o">[</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">at</span> <span class="n">error</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">error</span><span class="o">.</span><span class="na">groovy</span><span class="o">:</span><span class="mi">2</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ただ、求めている結果と実際の結果が<strong>違う</strong>という表示だけでなく、</p>
+
+<p>実際の値を示してくれます。</p>
+
+<p>つまり一言で言えば、</p>
+
+<h1>groovyの半分は優しさでできています</h1>
+
+<p>なお、この機能はもともとからgroovyにあったわけではなく、</p>
+
+<p>Spockというテスティングフレームワークから採用された機能です。</p>
+
+<p>groovyの思想では、こういった、(・∀・)ｲｲﾈ!!な機能を</p>
+
+<p>どんどん取り込んでいくというのがあると思っています。</p>
+
+<p>まあ、元々、javaを良い感じで書きたいといった思想から生まれている言語ですし、</p>
+
+<p>実際に、rubyなど他の言語のいいところを借りたりしているので、</p>
+
+<p>後発の優位性を遺憾なく発揮しているわけですが…</p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">mike-neck</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-13T22:39:00+09:00" pubdate data-updated="true">Jun 13<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gradle/'>gradle</a>, <a class='category' href='/blog/categories/groovy/'>groovy</a>, <a class='category' href='/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/06/13/how-to-generate-javadoc-in-english-on-japanese-environment/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/06/13/how-to-generate-javadoc-in-english-on-japanese-environment/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+  <br/>
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/06/11/how-to-create-rubys-module/" title="Previous Post: 初めてRubyのモジュールを書いてみた">&laquo; 初めてRubyのモジュールを書いてみた</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/13/how-to-generate-javadoc-in-english-on-japanese-environment/">gradleのjavadocタスクでjavadocを英語で出力する方法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/11/how-to-create-rubys-module/">初めてRubyのモジュールを書いてみた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/10/how-to-link-other-issues-on-jira6/">JIRA6のチケットで他のチケットへのリンクを張る方法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/08/rubyfalsemixinfalsehua-wodu-ndeitara%2C-he-gu-kajavawoshu-iteita/">rubyのmixinの話を読んでいたら、何故かjavaを書いていた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/08/groovydepegdownwosawatutemiru/">Groovyでpegdownをさわってみる</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/mike-neck">@mike-neck</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'mike-neck',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+<a href="https://twitter.com/mike_neck" class="twitter-follow-button" data-show-count="false" data-lang="ja">@mike_neckさんをフォロー</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/110183156583475779298?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<script type="text/javascript"><!--
+amazon_ad_tag = "kkkjkrt-22"; amazon_ad_width = "160"; amazon_ad_height = "600"; amazon_ad_logo = "hide"; amazon_ad_link_target = "new"; amazon_ad_price = "retail"; amazon_ad_border = "hide"; amazon_color_border = "303030"; amazon_color_background = "E0E0E0"; amazon_color_text = "4B4B4B"; amazon_color_link = "4B4B4B"; amazon_color_price = "4B4B4B"; amazon_color_logo = "E0E0E0";//--></script>
+<script type="text/javascript" src="http://www.assoc-amazon.jp/s/ads.js"></script>
+<h3>Manning Items</h3>
+<p>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_277_1_74" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Node.js_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_270_1_71" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Netherland_300x250.gif" width="300" height="250" alt="blog banner"></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_267_1_68" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/SpringBatch_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_266_1_66" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/SpringRoo_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_259_1_59" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/MachineLearning_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_249_1_48" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/MacRuby_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_238_1_47" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/ScalainDepth_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_211_1_49" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/ContIntegration_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_154_1_55" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Dependency_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_112_1_22" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Skeet.gif" width="217" height="55" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_59_1_54" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Groovy2E_300x250.gif" width="300" height="250" alt=""></a>
+<p>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - mike-neck -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
