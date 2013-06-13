@@ -6,6 +6,8 @@ comments: true
 categories: [java, gradle, groovy]
 ---
 
+<img src="http://www.gradle.org/img/gradle_logo.gif"/>
+
 こんにちわ、みけです。
 
 表題の件はこの記事の前半部分に書いています。
