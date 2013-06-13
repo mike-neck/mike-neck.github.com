@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-13T23:17:25+09:00</updated>
+  <updated>2013-06-13T23:33:35+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -18,7 +18,9 @@
     <link href="http://mike-neck.github.io/blog/2013/06/13/how-to-generate-javadoc-in-english-on-japanese-environment/"/>
     <updated>2013-06-13T22:39:00+09:00</updated>
     <id>http://mike-neck.github.io/blog/2013/06/13/how-to-generate-javadoc-in-english-on-japanese-environment</id>
-    <content type="html"><![CDATA[<p>こんにちわ、みけです。</p>
+    <content type="html"><![CDATA[<p><img src="http://www.gradle.org/img/gradle_logo.gif"/></p>
+
+<p>こんにちわ、みけです。</p>
 
 <p>表題の件はこの記事の前半部分に書いています。</p>
 
