@@ -144,17 +144,23 @@
     </url>
     <url>
         <loc>
+            http://mike-neck.github.io/blog/2013/06/13/opening-gradle-slash-gradle-with-gradle-will-fail-please-use-gradlew/
+        </loc>
+        <lastmod>2013-06-14T18:07:51+09:00</lastmod>
+    </url>
+    <url>
+        <loc>
             http://mike-neck.github.io/blog/2013/06/13/how-to-generate-javadoc-in-english-on-japanese-environment/
         </loc>
-        <lastmod>2013-06-13T23:32:57+09:00</lastmod>
+        <lastmod>2013-06-14T18:07:43+09:00</lastmod>
     </url>
     <url>
         <loc>http://mike-neck.github.io/blog/archives/</loc>
-        <lastmod>2013-06-13T23:32:57+09:00</lastmod>
+        <lastmod>2013-06-14T18:07:51+09:00</lastmod>
     </url>
     <url>
         <loc>http://mike-neck.github.io/</loc>
-        <lastmod>2013-06-13T23:32:57+09:00</lastmod>
+        <lastmod>2013-06-14T18:07:51+09:00</lastmod>
     </url>
     <url>
         <loc>http://mike-neck.github.io/robots.txt</loc>

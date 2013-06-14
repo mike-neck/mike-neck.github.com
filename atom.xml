@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-13T23:33:35+09:00</updated>
+  <updated>2013-06-14T18:09:00+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -254,6 +254,318 @@
 <p>実際に、rubyなど他の言語のいいところを借りたりしているので、</p>
 
 <p>後発の優位性を遺憾なく発揮しているわけですが…</p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[gradleプロジェクトは、gradleを使うよりも、gradlewを使うことがオススメです]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/06/13/opening-gradle-slash-gradle-with-gradle-will-fail-please-use-gradlew/"/>
+    <updated>2013-06-13T02:41:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/06/13/opening-gradle-slash-gradle-with-gradle-will-fail-please-use-gradlew</id>
+    <content type="html"><![CDATA[<p><img src="http://www.gradle.org/img/gradle_logo.gif"/></p>
+
+<p>みけです。</p>
+
+<p>最近、Java開発者のgradleへの注目には眼を見張るものがあります。</p>
+
+<p>gradle1.0-m2くらいから使っていた僕も、</p>
+
+<p>参考になるような記事がたくさんあります。</p>
+
+<p>みなさんありがとうございます。</p>
+
+<h1>gradleのすばらしさ</h1>
+
+<p>僕はgradleいいよという時に、いつも聞かれるのですが、</p>
+
+<h3>AntとMavenにくらべてgradleの何がいいの？</h3>
+
+<p>という質問があります。</p>
+
+<p>DSLで書けるとか、</p>
+
+<p>dependencyの指定が簡単とか、</p>
+
+<p>まあ、各種ツールに精通すれば、</p>
+
+<p>別にantでもmavenでも変わりません。</p>
+
+<p>あえてそれでもgradleを選ぶ理由を上げるなら、</p>
+
+<p><strong>gradle wrapper</strong>の存在です。</p>
+
+<p>チームで開発する場合、開発環境をチーム内で同じにしておくことが重要です。</p>
+
+<p>メンバーの開発マシンの</p>
+
+<p>antのバーション、mavenのバージョン、</p>
+
+<p>これらが違ったということでビルドに失敗して、</p>
+
+<p>その原因追求のために時間がかかるということも</p>
+
+<p>よくある話です。</p>
+
+<p>一方で、gradleでは</p>
+
+<p><strong>gradle wrapper</strong>を用いれば、</p>
+
+<p>ビルドツールのバージョンに振り回されることはありません。</p>
+
+<p>あまりピンとこないかもしれませんが、</p>
+
+<p>実例をあげてみます。</p>
+
+<h2>gradle本体をIntelliJ IDEAに取り込む</h2>
+
+<p>gradle DSLを読んでいて、どうしてもわからないことがある場合、</p>
+
+<p>gradle本体のソースを読むことがあります。</p>
+
+<p>最新(2013/06/12時点)のソースを落としてきて、</p>
+
+<p><code>gradle idea</code>タスクを実行してみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ gradle --version
+</span><span class='line'>
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>Gradle 1.6
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>
+</span><span class='line'>Gradle build time: 2013年5月7日 9時12分14秒 UTC
+</span><span class='line'>Groovy: 1.8.6
+</span><span class='line'>Ant: Apache Ant(TM) version 1.8.4 compiled on May 22 2012
+</span><span class='line'>Ivy: 2.2.0
+</span><span class='line'>JVM: 1.7.0_13 (Oracle Corporation 23.7-b01)
+</span><span class='line'>OS: Mac OS X 10.8.4 x86_64
+</span><span class='line'>
+</span><span class='line'>$ gradle idea
+</span><span class='line'>:buildSrc:clean
+</span><span class='line'>:buildSrc:compileJava UP-TO-DATE
+</span><span class='line'>:buildSrc:compileGroovy
+</span><span class='line'>:buildSrc:processResources
+</span><span class='line'>:buildSrc:classes
+</span><span class='line'>:buildSrc:jar
+</span><span class='line'>:buildSrc:assemble
+</span><span class='line'>:buildSrc:checkstyleMain
+</span><span class='line'>:buildSrc:compileTestJava UP-TO-DATE
+</span><span class='line'>:buildSrc:compileTestGroovy
+</span><span class='line'>:buildSrc:processTestResources
+</span><span class='line'>:buildSrc:testClasses
+</span><span class='line'>:buildSrc:checkstyleTest UP-TO-DATE
+</span><span class='line'>:buildSrc:codenarcMain
+</span><span class='line'>:buildSrc:codenarcTest
+</span><span class='line'>:buildSrc:test
+</span><span class='line'>:buildSrc:check
+</span><span class='line'>:buildSrc:build
+</span><span class='line'>
+</span><span class='line'>FAILURE: Build failed with an exception.
+</span><span class='line'>
+</span><span class='line'>* Where:
+</span><span class='line'>Script '/Users/mike/IdeaProjects/gradle/gradle/gradle/integTest.gradle' line: 32
+</span><span class='line'>
+</span><span class='line'>* What went wrong:
+</span><span class='line'>A problem occurred evaluating script.
+</span><span class='line'>&gt; Failed to notify action.
+</span><span class='line'>   &gt; Could not find property 'reports' on task ':announce:integTest'.
+</span><span class='line'>
+</span><span class='line'>* Try:
+</span><span class='line'>Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+</span><span class='line'>
+</span><span class='line'>BUILD FAILED
+</span><span class='line'>
+</span><span class='line'>Total time: 54.695 secs</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最新のgradle(バージョン1.6)でエラーが発生します。</p>
+
+<p>ビルドスクリプト:buildSrcプロジェクトのテスト中に落ちてしまいます。</p>
+
+<p>一方、プロジェクトに付属している<strong>wapper</strong>で実行してみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ./gradlew --version
+</span><span class='line'>
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>Gradle 1.7-20130519231153+0000
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>
+</span><span class='line'>Build time:   2013-05-19 23:11:53 UTC
+</span><span class='line'>Build number: none
+</span><span class='line'>Revision:     9a7199efaf72c620b33f9767874f0ebced135d83
+</span><span class='line'>
+</span><span class='line'>Groovy:       1.8.6
+</span><span class='line'>Ant:          Apache Ant(TM) version 1.8.4 compiled on May 22 2012
+</span><span class='line'>Ivy:          2.2.0
+</span><span class='line'>JVM:          1.7.0_13 (Oracle Corporation 23.7-b01)
+</span><span class='line'>OS:           Mac OS X 10.8.4 x86_64
+</span><span class='line'>
+</span><span class='line'>$ ./gradlew idea
+</span><span class='line'>Deleting directory /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee/gradle-1.7-20130519231153+0000
+</span><span class='line'>Unzipping /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee/gradle-1.7-20130519231153+0000-bin.zip to /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee
+</span><span class='line'>Set executable permissions for: /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee/gradle-1.7-20130519231153+0000/bin/gradle
+</span><span class='line'>:buildSrc:clean
+</span><span class='line'>:buildSrc:compileJava UP-TO-DATE
+</span><span class='line'>:buildSrc:compileGroovy
+</span><span class='line'>:buildSrc:processResources
+</span><span class='line'>:buildSrc:classes
+</span><span class='line'>:buildSrc:jar
+</span><span class='line'>:buildSrc:assemble
+</span><span class='line'>:buildSrc:checkstyleMain
+</span><span class='line'>:buildSrc:compileTestJava UP-TO-DATE
+</span><span class='line'>:buildSrc:compileTestGroovy
+</span><span class='line'>:buildSrc:processTestResources
+</span><span class='line'>:buildSrc:testClasses
+</span><span class='line'>:buildSrc:checkstyleTest UP-TO-DATE
+</span><span class='line'>:buildSrc:codenarcMain
+</span><span class='line'>:buildSrc:codenarcTest
+</span><span class='line'>:buildSrc:test
+</span><span class='line'>:buildSrc:check
+</span><span class='line'>:buildSrc:build
+</span><span class='line'>:ideaModule
+</span><span class='line'>
+</span><span class='line'>## 途中長いので略
+</span><span class='line'>
+</span><span class='line'>:ui:ideaModule
+</span><span class='line'>:ui:idea
+</span><span class='line'>:wrapper:buildReceiptResource
+</span><span class='line'>:wrapper:ideaModule
+</span><span class='line'>:wrapper:idea
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 2 mins 11.981 secs</span></code></pre></td></tr></table></div></figure>
+
+
+<p>という形で、</p>
+
+<p>マシンにインストールされているgradleのバージョンの如何にかかわらず、</p>
+
+<p>プロジェクトごとに最適化されたビルドを提供してくれます。</p>
 
 <!-- admax -->
 
@@ -5150,151 +5462,6 @@ long sum = integers.reduce(0, Long::sum);
 </script>
 
 
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SourceTreeで細かくコミットする]]></title>
-    <link href="http://mike-neck.github.io/blog/2013/05/18/sourcetreedexi-kakukomitutosuru/"/>
-    <updated>2013-05-18T12:58:00+09:00</updated>
-    <id>http://mike-neck.github.io/blog/2013/05/18/sourcetreedexi-kakukomitutosuru</id>
-    <content type="html"><![CDATA[<h1>gitのコミットの粒度はなるべく細かいほうがいいですよね</h1>
-
-<p>こんにちわ、みけです。</p>
-
-<p>今日はgitの話です。</p>
-
-<p>表題にあるようにgitは細かくコミットしたほうがよいです。</p>
-
-<p>なぜなら、</p>
-
-<ul>
-<li>mergeが簡単にできる</li>
-<li>やらかした時に細かいレベルで元に戻れる</li>
-<li>細かければpushするときにまとめればいいや的な</li>
-</ul>
-
-
-<p>といったメリットがあるからと思っています。</p>
-
-<p>詳細はこっちの記事読んだほうがいいです。</p>
-
-<ul>
-<li><a href="http://d.hatena.ne.jp/irof/20120905/p1">gitのcommitは軽く考えとく &ndash; 日々常々</a></li>
-<li><a href="http://d.hatena.ne.jp/kyon_mm/20120905/1346829171">「git commit するまえに考えるべき10のこと」がDVCS的じゃない件 &ndash; うさぎ組</a></li>
-<li><a href="http://forza.cocolog-nifty.com/blog/2012/09/post-fdab.html">コミットの粒度 &ndash; プログラマの思索</a></li>
-<li><a href="http://d.hatena.ne.jp/Yamashiro0217/20120903/1346640190">git flow でのチーム開発ワークショップ資料 &ndash; Yamashiro0217の日記</a></li>
-<li><a href="http://hiroki.jp/2012/09/05/5523/">git commit するまえに考えるべき10のこと &ndash; Act as Professional</a></li>
-</ul>
-
-
-<h3>いや、そんなこと言ったってコミット頻繁にしてないっすよ</h3>
-
-<p>これ、僕のことで、そもそもコミットを頻繁にしていないので、Work Treeに変更がたくさん溜まってしまいます。</p>
-
-<p>そうすると、僕のようなdullな人が<code>git add</code>する時は<code>git add -p</code>で小分けにしながらステージに載せていくのですが、Hunkのサイズを変えるのに一々<code>git add -p</code>の後に<code>s</code>をしているとわりと面倒い。(<a href="http://stackoverflow.com/questions/1122210/can-i-modify-git-adds-hunk-size">参考 &ndash; Can I modify git-add&rsquo;s hunk size?</a>)</p>
-
-<p>まあ、かといって、「gitできない奴はVSSでもやってろよ」とか言われると辛い…</p>
-
-<h3>そこでSourceTreeですよ</h3>
-
-<p>Atlassianの回し者ではありませんが、SourceTreeがそんな僕には便利です。</p>
-
-<h4>変更が溜まりに溜まったwork tree</h4>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRZ2hCam1Wa3BLVjA"><img src="https://googledrive.com/host/0B4hhdHWLP7RRZ2hCam1Wa3BLVjA" width="313" height="234"></a></p>
-
-<h4>hunkがでかすぎるので小さくします。</h4>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRdEN5VTRHVE5hNVU"><img src="https://googledrive.com/host/0B4hhdHWLP7RRdEN5VTRHVE5hNVU" width="364" height="304"></a></p>
-
-<h4>hunkが細かくなります。</h4>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRanRRZjA2VVh6eXc"><img src="https://googledrive.com/host/0B4hhdHWLP7RRanRRZjA2VVh6eXc" width="362" height="270"></a></p>
-
-<h4>さらに行単位で変更を選びます</h4>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRdTVodnZ6MDF1c1U"><img src="https://googledrive.com/host/0B4hhdHWLP7RRdTVodnZ6MDF1c1U" width="364" height="68"></a></p>
-
-<h4>意味のある単位にまとまったのでコミットします</h4>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRUEQ3bnkxTTVzQ0E"><img src="https://googledrive.com/host/0B4hhdHWLP7RRUEQ3bnkxTTVzQ0E" width="412" height="234"></a></p>
-
-<p>commitボタンを推します。</p>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRc1ZUQlV3akplUFU"><img src="https://googledrive.com/host/0B4hhdHWLP7RRc1ZUQlV3akplUFU" width="333" height="270"></a></p>
-
-<h4>適度な粒度でコミットしたのでプッシュします。</h4>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRcHI5NGt0aksyZVk"><img src="https://googledrive.com/host/0B4hhdHWLP7RRcHI5NGt0aksyZVk" width="310" height="175"></a></p>
-
-<p>pushボタンのところにプッシュされていないコミットの数が出ています。</p>
-
-<p>pushボタンを押してプッシュします。</p>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRdEJ2aGhZeGM2LVU"><img src="https://googledrive.com/host/0B4hhdHWLP7RRdEJ2aGhZeGM2LVU" width="446" height="180"></a></p>
-
-<p>プッシュ完了すると、ローカルとリモートが一致した状態になります。</p>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRd18wb2JRNWxFYkU"><img src="https://googledrive.com/host/0B4hhdHWLP7RRd18wb2JRNWxFYkU" width="471" height="90"></a></p>
-
-<h3>細かい粒度でコミット出来ましたね</h3>
-
-<ul>
-<li>SourceTree、マジ便利、マジ神、ハンパないです。</li>
-<li>いや、そもそもそんなにWork Treeに変更を溜め込むなという話ですね…</li>
-</ul>
-
-
-<table>
-<tr>
-<td style="padding : 2px;"><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4798023809" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td style="padding : 2px;"><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4798035009" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td style="padding : 2px;"><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=477415184X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-</tr>
-<tr>
-<td style="padding : 2px;"><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4274068641" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td style="padding : 2px;"><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4873114403" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td style="padding : 2px;"><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=427406767X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-</tr>
-</table>
-
-
-
-
-<!-- admax -->
-
-
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-
-
-<!-- admax -->
-
-
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-
-
-<br/>
 
 ]]></content>
   </entry>

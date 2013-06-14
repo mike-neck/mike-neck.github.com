@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>rubyのmixinの話を読んでいたら、何故かjavaを書いていた - mike、mikeなるままに…</title>
+  <title>gradleプロジェクトは、gradleを使うよりも、gradlewを使うことがオススメです - mike、mikeなるままに…</title>
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="こんにちわ、みけです。 @suginoyさんに 『楽しい開発スタートアップRuby』を買っていただいたので、 今日はそれを某社オフィスで読んでいました。 Rubyのmix-inについての読んだ後の会話 僕「mix-inよくわからん」
-イケメン「多重継承できるやつでしょう」
-僕「mix- &hellip;">
+  <meta name="description" content="みけです。 最近、Java開発者のgradleへの注目には眼を見張るものがあります。 gradle1.0-m2くらいから使っていた僕も、 参考になるような記事がたくさんあります。 みなさんありがとうございます。 gradleのすばらしさ 僕はgradleいいよという時に、いつも聞かれるのですが &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/06/08/rubyfalsemixinfalsehua-wodu-ndeitara%2C-he-gu-kajavawoshu-iteita">
+  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/06/13/opening-gradle-slash-gradle-with-gradle-will-fail-please-use-gradlew">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="mike、mikeなるままに…" type="application/atom+xml">
@@ -83,7 +81,7 @@
   
   <header>
     
-      <h1 class="entry-title">Rubyのmixinの話を読んでいたら、何故かjavaを書いていた</h1>
+      <h1 class="entry-title">Gradleプロジェクトは、gradleを使うよりも、gradlewを使うことがオススメです</h1>
     
     
       <p class="meta">
@@ -99,41 +97,78 @@
   
 
 
-<time datetime="2013-06-08T21:22:00+09:00" pubdate data-updated="true">Jun 8<span>th</span>, 2013</time>
+<time datetime="2013-06-13T02:41:00+09:00" pubdate data-updated="true">Jun 13<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>こんにちわ、みけです。</p>
+<div class="entry-content"><p><img src="http://www.gradle.org/img/gradle_logo.gif"/></p>
 
-<p><a href="https://twitter.com/suginoy">@suginoy</a>さんに</p>
+<p>みけです。</p>
 
-<p><a href="http://www.amazon.co.jp/gp/product/4774151661/ref=as_li_ss_tl?ie=UTF8&amp;camp=247&amp;creative=7399&amp;creativeASIN=4774151661&amp;linkCode=as2&amp;tag=kkkjkrt-22">『楽しい開発スタートアップRuby』</a>を買っていただいたので、</p>
+<p>最近、Java開発者のgradleへの注目には眼を見張るものがあります。</p>
 
-<p>今日はそれを某社オフィスで読んでいました。</p>
+<p>gradle1.0-m2くらいから使っていた僕も、</p>
 
-<h1>Rubyのmix-inについての読んだ後の会話</h1>
+<p>参考になるような記事がたくさんあります。</p>
 
-<ul>
-<li>僕「mix-inよくわからん」</li>
-<li>イケメン「多重継承できるやつでしょう」</li>
-<li>僕「mix-inってインスタンス変数とかにアクセスできるのかな？」</li>
-<li>イケメン「できそうじゃね」</li>
-<li>僕「あ〜、Java8のdefault実装でもmix-inと同じ事できそうじゃね」</li>
-<li>イケメン「いや、できないでしょう。default実装といっても、interfaceにフィールドを持つことができないわけだから」</li>
-<li>僕「え、できないのか、あー、そうかできないな。えっ、じゃあ、あれ、誰得なの？」</li>
-</ul>
+<p>みなさんありがとうございます。</p>
 
+<h1>gradleのすばらしさ</h1>
 
-<p>(多少脚色有り、あと会話内容忘れたので、結構適当)</p>
+<p>僕はgradleいいよという時に、いつも聞かれるのですが、</p>
 
-<p>で、</p>
+<h3>AntとMavenにくらべてgradleの何がいいの？</h3>
 
-<h1>書いていたのがJava8のコードでした</h1>
+<p>という質問があります。</p>
 
-<figure class='code'><figcaption><span>Score.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p>DSLで書けるとか、</p>
+
+<p>dependencyの指定が簡単とか、</p>
+
+<p>まあ、各種ツールに精通すれば、</p>
+
+<p>別にantでもmavenでも変わりません。</p>
+
+<p>あえてそれでもgradleを選ぶ理由を上げるなら、</p>
+
+<p><strong>gradle wrapper</strong>の存在です。</p>
+
+<p>チームで開発する場合、開発環境をチーム内で同じにしておくことが重要です。</p>
+
+<p>メンバーの開発マシンの</p>
+
+<p>antのバーション、mavenのバージョン、</p>
+
+<p>これらが違ったということでビルドに失敗して、</p>
+
+<p>その原因追求のために時間がかかるということも</p>
+
+<p>よくある話です。</p>
+
+<p>一方で、gradleでは</p>
+
+<p><strong>gradle wrapper</strong>を用いれば、</p>
+
+<p>ビルドツールのバージョンに振り回されることはありません。</p>
+
+<p>あまりピンとこないかもしれませんが、</p>
+
+<p>実例をあげてみます。</p>
+
+<h2>gradle本体をIntelliJ IDEAに取り込む</h2>
+
+<p>gradle DSLを読んでいて、どうしてもわからないことがある場合、</p>
+
+<p>gradle本体のソースを読むことがあります。</p>
+
+<p>最新(2013/06/12時点)のソースを落としてきて、</p>
+
+<p><code>gradle idea</code>タスクを実行してみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -157,36 +192,89 @@
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
 <span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">mikeneck</span><span class="o">.</span><span class="na">jdk8</span><span class="o">;</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ gradle --version
 </span><span class='line'>
-</span><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> * @author mike</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Score</span> <span class="o">{</span>
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>Gradle 1.6
+</span><span class='line'>------------------------------------------------------------
 </span><span class='line'>
-</span><span class='line'>    <span class="kd">final</span> <span class="kd">private</span> <span class="n">String</span> <span class="n">title</span><span class="o">;</span>
+</span><span class='line'>Gradle build time: 2013年5月7日 9時12分14秒 UTC
+</span><span class='line'>Groovy: 1.8.6
+</span><span class='line'>Ant: Apache Ant(TM) version 1.8.4 compiled on May 22 2012
+</span><span class='line'>Ivy: 2.2.0
+</span><span class='line'>JVM: 1.7.0_13 (Oracle Corporation 23.7-b01)
+</span><span class='line'>OS: Mac OS X 10.8.4 x86_64
 </span><span class='line'>
-</span><span class='line'>    <span class="kd">final</span> <span class="kd">private</span> <span class="kt">int</span> <span class="n">value</span><span class="o">;</span>
+</span><span class='line'>$ gradle idea
+</span><span class='line'>:buildSrc:clean
+</span><span class='line'>:buildSrc:compileJava UP-TO-DATE
+</span><span class='line'>:buildSrc:compileGroovy
+</span><span class='line'>:buildSrc:processResources
+</span><span class='line'>:buildSrc:classes
+</span><span class='line'>:buildSrc:jar
+</span><span class='line'>:buildSrc:assemble
+</span><span class='line'>:buildSrc:checkstyleMain
+</span><span class='line'>:buildSrc:compileTestJava UP-TO-DATE
+</span><span class='line'>:buildSrc:compileTestGroovy
+</span><span class='line'>:buildSrc:processTestResources
+</span><span class='line'>:buildSrc:testClasses
+</span><span class='line'>:buildSrc:checkstyleTest UP-TO-DATE
+</span><span class='line'>:buildSrc:codenarcMain
+</span><span class='line'>:buildSrc:codenarcTest
+</span><span class='line'>:buildSrc:test
+</span><span class='line'>:buildSrc:check
+</span><span class='line'>:buildSrc:build
 </span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">Score</span><span class="o">(</span><span class="n">String</span> <span class="n">title</span><span class="o">,</span> <span class="kt">int</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">title</span> <span class="o">=</span> <span class="n">title</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>FAILURE: Build failed with an exception.
 </span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getTitle</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">title</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>* Where:
+</span><span class='line'>Script '/Users/mike/IdeaProjects/gradle/gradle/gradle/integTest.gradle' line: 32
 </span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getValue</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">value</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>* What went wrong:
+</span><span class='line'>A problem occurred evaluating script.
+</span><span class='line'>&gt; Failed to notify action.
+</span><span class='line'>   &gt; Could not find property 'reports' on task ':announce:integTest'.
+</span><span class='line'>
+</span><span class='line'>* Try:
+</span><span class='line'>Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+</span><span class='line'>
+</span><span class='line'>BUILD FAILED
+</span><span class='line'>
+</span><span class='line'>Total time: 54.695 secs</span></code></pre></td></tr></table></div></figure>
 
 
+<p>最新のgradle(バージョン1.6)でエラーが発生します。</p>
 
+<p>ビルドスクリプト:buildSrcプロジェクトのテスト中に落ちてしまいます。</p>
 
-<figure class='code'><figcaption><span>Grade.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p>一方、プロジェクトに付属している<strong>wapper</strong>で実行してみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -204,118 +292,97 @@
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">mikeneck</span><span class="o">.</span><span class="na">jdk8</span><span class="o">;</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ./gradlew --version
 </span><span class='line'>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>Gradle 1.7-20130519231153+0000
+</span><span class='line'>------------------------------------------------------------
 </span><span class='line'>
-</span><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> * @author mike</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Grade</span> <span class="o">{</span>
+</span><span class='line'>Build time:   2013-05-19 23:11:53 UTC
+</span><span class='line'>Build number: none
+</span><span class='line'>Revision:     9a7199efaf72c620b33f9767874f0ebced135d83
 </span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Score</span><span class="o">&gt;</span> <span class="nf">scores</span><span class="o">();</span>
+</span><span class='line'>Groovy:       1.8.6
+</span><span class='line'>Ant:          Apache Ant(TM) version 1.8.4 compiled on May 22 2012
+</span><span class='line'>Ivy:          2.2.0
+</span><span class='line'>JVM:          1.7.0_13 (Oracle Corporation 23.7-b01)
+</span><span class='line'>OS:           Mac OS X 10.8.4 x86_64
 </span><span class='line'>
-</span><span class='line'>    <span class="k">default</span> <span class="kt">long</span> <span class="nf">getTotalScore</span> <span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="nf">scores</span><span class="o">()</span>
-</span><span class='line'>                <span class="o">.</span><span class="na">stream</span><span class="o">()</span>
-</span><span class='line'>                <span class="o">.</span><span class="na">mapToLong</span><span class="o">(</span><span class="nl">Score:</span><span class="o">:</span><span class="n">getValue</span><span class="o">)</span>
-</span><span class='line'>                <span class="o">.</span><span class="na">reduce</span><span class="o">(</span><span class="mi">0</span><span class="n">l</span><span class="o">,</span> <span class="nl">Long:</span><span class="o">:</span><span class="n">sum</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>$ ./gradlew idea
+</span><span class='line'>Deleting directory /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee/gradle-1.7-20130519231153+0000
+</span><span class='line'>Unzipping /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee/gradle-1.7-20130519231153+0000-bin.zip to /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee
+</span><span class='line'>Set executable permissions for: /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee/gradle-1.7-20130519231153+0000/bin/gradle
+</span><span class='line'>:buildSrc:clean
+</span><span class='line'>:buildSrc:compileJava UP-TO-DATE
+</span><span class='line'>:buildSrc:compileGroovy
+</span><span class='line'>:buildSrc:processResources
+</span><span class='line'>:buildSrc:classes
+</span><span class='line'>:buildSrc:jar
+</span><span class='line'>:buildSrc:assemble
+</span><span class='line'>:buildSrc:checkstyleMain
+</span><span class='line'>:buildSrc:compileTestJava UP-TO-DATE
+</span><span class='line'>:buildSrc:compileTestGroovy
+</span><span class='line'>:buildSrc:processTestResources
+</span><span class='line'>:buildSrc:testClasses
+</span><span class='line'>:buildSrc:checkstyleTest UP-TO-DATE
+</span><span class='line'>:buildSrc:codenarcMain
+</span><span class='line'>:buildSrc:codenarcTest
+</span><span class='line'>:buildSrc:test
+</span><span class='line'>:buildSrc:check
+</span><span class='line'>:buildSrc:build
+</span><span class='line'>:ideaModule
+</span><span class='line'>
+</span><span class='line'>## 途中長いので略
+</span><span class='line'>
+</span><span class='line'>:ui:ideaModule
+</span><span class='line'>:ui:idea
+</span><span class='line'>:wrapper:buildReceiptResource
+</span><span class='line'>:wrapper:ideaModule
+</span><span class='line'>:wrapper:idea
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 2 mins 11.981 secs</span></code></pre></td></tr></table></div></figure>
 
 
-<p>ところで、このdefaultメソッド、</p>
+<p>という形で、</p>
 
-<p>書いている途中はこんな感じでした。</p>
+<p>マシンにインストールされているgradleのバージョンの如何にかかわらず、</p>
 
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRYk5mVkd1RFFQYmc" style="width : 501px;" /></p>
-
-<p>IntelliJ IDEAではシンタックスをもっとよくできる場合は、</p>
-
-<p>こういう形で通知してくれます。</p>
-
-<p>紫の部分にカーソルをあてて、</p>
-
-<p>Alt + Enter (mac の場合は option + enter)をすると、</p>
-
-<p>操作の候補が表示されます。</p>
-
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRQzhXZnc0Z2lVc0k" style="width : 501px;"/></p>
-
-<p>ここでは<strong>Replace lambda with method reference</strong>を選択します。</p>
-
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRbnFGWmE1czJrRk0" style="width : 501px;"/></p>
-
-<p>すごいシンプルなコードになりました。</p>
-
-<p>続いて、mapした結果をreduceしていきます。</p>
-
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRa0s1ZldObzA0VzA" style="width : 501px;"/></p>
-
-<p>初期値<code>0l</code>で、結果を合計したいので、次のような演算を書きます。</p>
-
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRTVAxQUE0d0tQMU0" style="width : 501px;"/></p>
-
-<p>これはこれでまちがいでありません。</p>
-
-<p>ところで、<code>java.util.stream.Stream#mapToLong</code>の戻り値である、</p>
-
-<p><code>java.util.stream.LongStream</code>のjavadocを読むとこのように記述されています。</p>
-
-<blockquote><p>Api note : Sum, min, max, and average are all special cases of reduction.
-Summing a stream of numbers can be expressed as:</p>
-
-<p><code>
-long sum = integers.reduce(0, (a, b) -&gt; a+b);
-</code></p>
-
-<p>or more compactly:</p>
-
-<p><code>
-long sum = integers.reduce(0, Long::sum);
-</code></p>
-
-<p><em>引用元 : javadoc (build-89)</em></p></blockquote>
-
-<p>つまり、<code>java.util.function.LongBinaryOperator</code>の記述</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">(</span><span class="n">sum</span><span class="o">,</span> <span class="n">item</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">sum</span> <span class="o">+</span> <span class="n">item</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>は、<code>java.lang.Long</code>の<code>static</code>なメソッド<code>sum(long, long)</code>に</p>
-
-<p>置き換えることができるということです。</p>
-
-<p>その結果、先のコードは次のようになりました(既出)。</p>
-
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRS25qWnVZX2dHdW8" style="width : 501px;"/></p>
-
-<p>さて、ここらへんの<code>Stream</code>系の操作がエンタープライズな現場で使われるかどうかは</p>
-
-<p>微妙ですが…(というのも、値の集計をするというのであれば、DBにさせたほうが早いので)</p>
-
-<p>実際に現場で使うとなると、</p>
-
-<p>高機能なIDE(<code>Long::sum</code>の部分はIntelliJでも簡略化できなかった)と</p>
-
-<p><code>Stream</code>系のApiの書き方を覚えておかないと、</p>
-
-<p>相当効率悪くなるとおもいます。</p>
-
-<p>というわけで、Java8の勉強をしたい方は是非</p>
-
-<p>6月26日(水)の『Java8初心者勉強会』にご参加下さい。</p>
-
-<p>Java8初心者勉強会 &ndash; <a href="http://atnd.org/event/java8beginner20130626tokyo">http://atnd.org/event/java8beginner20130626tokyo</a></p>
-
-<p>結論</p>
-
-<h1>あれ、rubyのmix-inについての話はどこ行った…</h1>
-
-<p>vimでrubyのコード書くの辛いです…</p>
+<p>プロジェクトごとに最適化されたビルドを提供してくれます。</p>
 
 <!-- admax -->
 
@@ -363,12 +430,12 @@ long sum = integers.reduce(0, Long::sum);
   
 
 
-<time datetime="2013-06-08T21:22:00+09:00" pubdate data-updated="true">Jun 8<span>th</span>, 2013</time>
+<time datetime="2013-06-13T02:41:00+09:00" pubdate data-updated="true">Jun 13<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/java/'>java</a>
+    <a class='category' href='/blog/categories/groovy/'>groovy</a>, <a class='category' href='/blog/categories/java/'>java</a>
   
 </span>
 
@@ -377,7 +444,7 @@ long sum = integers.reduce(0, Long::sum);
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/06/08/rubyfalsemixinfalsehua-wodu-ndeitara%2C-he-gu-kajavawoshu-iteita/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/06/08/rubyfalsemixinfalsehua-wodu-ndeitara%2C-he-gu-kajavawoshu-iteita/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/06/13/opening-gradle-slash-gradle-with-gradle-will-fail-please-use-gradlew/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/06/13/opening-gradle-slash-gradle-with-gradle-will-fail-please-use-gradlew/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -391,10 +458,10 @@ long sum = integers.reduce(0, Long::sum);
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/06/08/groovydepegdownwosawatutemiru/" title="Previous Post: Groovyでpegdownをさわってみる">&laquo; Groovyでpegdownをさわってみる</a>
+        <a class="basic-alignment left" href="/blog/2013/06/11/how-to-create-rubys-module/" title="Previous Post: 初めてRubyのモジュールを書いてみた">&laquo; 初めてRubyのモジュールを書いてみた</a>
       
       
-        <a class="basic-alignment right" href="/blog/2013/06/10/how-to-link-other-issues-on-jira6/" title="Next Post: JIRA6のチケットで他のチケットへのリンクを張る方法">JIRA6のチケットで他のチケットへのリンクを張る方法 &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2013/06/13/how-to-generate-javadoc-in-english-on-japanese-environment/" title="Next Post: gradleのjavadocタスクでjavadocを英語で出力する方法">gradleのjavadocタスクでjavadocを英語で出力する方法 &raquo;</a>
       
     </p>
   </footer>
