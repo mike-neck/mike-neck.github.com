@@ -228,7 +228,7 @@ uploadArchives {
 
 また、よく使いまわす変数については`gradle.properties`に書いておきます。
 
-``` gradle.properties
+```bash gradle.properties
 jdkVersion=1.7
 projectUrl=https://github.com/mike-neck/mike-neck.github.com
 github=git@github.com:mike-neck/mike-neck.github.com.git
@@ -236,7 +236,7 @@ github=git@github.com:mike-neck/mike-neck.github.com.git
 
 また、署名関連の変数などについては`~/.gradle/gradle.properties`に書いておきます。
 
-``` gradle.properties
+```bash gradle.properties
 # siging information
 signing.keyId=ABCD1234
 signing.password=HOGEpassword00
