@@ -1,0 +1,1005 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>gradle 1.4以降から追加されているmaven-publishプラグインでは、まだmaven central レポジトリーに上げられないようです。 - mike、mikeなるままに…</title>
+  <meta name="author" content="mike-neck">
+
+  
+  <meta name="description" content="こんにちわ、みけです。 あ、また、例によって記事が長いので、 結論だけ見たい人は前半部分だけを見て下さい。 &ndash; 大体5分以内。 で、gradleでのmaven centralへのライブラリー登録方法を知りたい方は中盤部分まで読んで下さい。 &ndash; トータル15分。 で、 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/06/15/publishing-artifact-with-gradles-new-maven-publish-plugin-is-currently-unavailable">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="mike、mikeなるままに…" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40855644-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">mike、mikeなるままに…</a></h1>
+  
+    <h2>プログラムに関してぬるま湯のような記事を書きます</h2>
+  
+  <valuecommerce   ptnOid="3060695" url="http://mike-neck.github.io/" />
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:mike-neck.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Gradle 1.4以降から追加されているmaven-publishプラグインでは、まだmaven Central レポジトリーに上げられないようです。</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-15T15:53:00+09:00" pubdate data-updated="true">Jun 15<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="http://www.gradle.org/forum-assets/images/gradle_logo.gif"/></p>
+
+<p>こんにちわ、みけです。</p>
+
+<p>あ、また、例によって記事が長いので、</p>
+
+<p>結論だけ見たい人は前半部分だけを見て下さい。 &ndash; 大体5分以内。</p>
+
+<p>で、gradleでのmaven centralへのライブラリー登録方法を知りたい方は中盤部分まで読んで下さい。 &ndash; トータル15分。</p>
+
+<p>で、僕の強引なgradle遊びまで読みたい方は最後まで読むといいかもしれません。 &ndash; トータル30分。</p>
+
+<hr />
+
+<p><strong>前半部分</strong></p>
+
+<p>ここ数日gradle1.4以降についかされた<strong>maven-publish</strong>プラグインを使って</p>
+
+<p>maven centralへのライブラリー登録方法を調べていましたが、</p>
+
+<h1>maven-publishプラグインでのmaven central repoへの登録はまだサポートされてません</h1>
+
+<p>ようです。</p>
+
+<p>元記事はこちらです。</p>
+
+<ul>
+<li><a href="http://forums.gradle.org/gradle/topics/how_to_publish_artifacts_signatures_asc_files_using_maven_publish_plugin">How to publish artifacts signatures (.asc files) using maven-publish plugin?</a></li>
+</ul>
+
+
+<p>以下、簡単な意訳＋要約文</p>
+
+<blockquote><h3>質問</h3>
+
+<p>maven-publishプラグインを使ってレポジトリー情報の設定と、それと別個に、singningプラグインを使ってartifactsへのサインを行うことができますが、それらを連携させることができません。</p>
+
+<p>どのようにすればmaven-publishプラグインで、artifactsとサインファイル(.ascファイル)をアップロードするようにできますか？</p>
+
+<h3>回答</h3>
+
+<p>今のところmaven-publishプラグインを使ってartifactとsignatureをアップロードすることはサポートされていません。<strong>Gradle</strong>に「.asc」ファイル(サインしたファイル)が通常のartifactではなく、特別なartifactであることを伝える手段がないことが問題となっています。</p>
+
+<p><a href="https://github.com/gradle/gradle/blob/master/design-docs/publication-model.md">こちらのロードマップ</a>を参照下さい。なお、この機能に関する優先順位は高くありません。</p>
+
+<h3>再質問</h3>
+
+<p>現在、古い方法でのアップロードはサポートされていますか？それとも手作業でやらないと駄目ですか？</p>
+
+<h3>回答</h3>
+
+<p>古い方法でのアップロードは利用できます。</p>
+
+<h3>提案</h3>
+
+<p>ありがとうございました。</p>
+
+<p>ところで、ドキュメントの方で新しいプラグインではmaven centralにアップロード出来ないという記述がないので追加してもらえますか？</p></blockquote>
+
+<p>とのことで、maven-publishプラグインでのmaven central repoへのアップロードはまだ対応されていないようです。これはこれで従来のmavenプラグインよりも便利なので、maven centralへのアップロードも可能になって欲しいとろこです。</p>
+
+<hr />
+
+<p><strong>中盤部分</strong></p>
+
+<p>なお、日本語でも情報は入手出来ますが、念の為にこちらにも記述しておきます。</p>
+
+<h1>現状のgradleを用いたmaven centralへのアップロード方法</h1>
+
+<p>概要は、山本裕介氏のこちらの記事を参照して下さい。</p>
+
+<ul>
+<li><a href="http://samuraism.jp/diary/2012/05/03/1336047480000.html">【最新版】Maven Central Repository へのライブラリ登録方法 #maven</a></li>
+</ul>
+
+
+<p>また、gradleでの方法についてはこちらを参照して下さい。</p>
+
+<ul>
+<li><a href="http://jedicoder.blogspot.jp/2011/11/automated-gradle-project-deployment-to.html">Automated Gradle project deployment to Sonatype OSS Repository(英語)</a></li>
+<li><a href="http://d.hatena.ne.jp/int128/20130409/1365434513">GradleでMaven Central Repositoryに成果物をリリースする(日本語)</a></li>
+</ul>
+
+
+<p>両方の記事に共通していますが、Sonatypeからmaven centralにアップロードする場合は、</p>
+
+<ul>
+<li>PGPによる署名の作成</li>
+<li>求められた規約の順守</li>
+</ul>
+
+
+<p>が求められます。</p>
+
+<h3>なんでこんな面倒くさいのか？</h3>
+
+<p>maven centralにおいてあるライブラリーの品質や、pomなどの情報がバラバラで、一定の品質を保てなかったからのようです。</p>
+
+<p>詳しくはこちらをお読み下さい(英語)。</p>
+
+<ul>
+<li><a href="http://www.sonatype.com/people/2010/01/nexus-oss-ecosystem/">Improve The Central Repository and the Supporting the Maven Ecosystem</a></li>
+</ul>
+
+
+<p>central repositoryの品質向上のためにmaven central repoでは下記の規約を儲けています。</p>
+
+<h3>pom.xmlへの要求事項</h3>
+
+<ul>
+<li><code>&lt;modelVersion&gt;</code> &ndash; <code>4.0.0</code>を設定する</li>
+<li><code>&lt;groupId&gt;</code> &ndash; 申請するときにもgroupIdの申請が必要です。Sonatypeに申請するときはベースになるドメイン名で申請する必要があります。例えば、「<code>org.mikeneck</code>」は大丈夫ですが、「<code>mikeneck</code>」という<strong>groupId</strong>では駄目です。</li>
+<li><code>&lt;artifactId&gt;</code> &ndash; ライブラリーの名前ですね。</li>
+<li><code>&lt;version&gt;</code> &ndash; バージョン番号です。なお、<code>1.0.0-SNAPSHOT</code>というような<code>SNAPSHOT</code>というバージョンはSonatypeではmaven central repoには乗せてくれませんの、注意して下さい。</li>
+<li><code>&lt;packaging&gt;</code> &ndash; 基本的には<code>jar</code>です。</li>
+<li><code>&lt;name&gt;</code> &ndash; プロジェクトの名前です。</li>
+<li><code>&lt;description&gt;</code> &ndash; ライブラリーに関する情報です。何をしてくれるライブラリーであるかを記述します。</li>
+<li><code>&lt;url&gt;</code> &ndash; プロジェクトのurlを設定します。</li>
+<li><code>&lt;licenses&gt;</code> &ndash; ライセンスに関する情報を設定します。中には下記の情報が一つ以上入っていることが求められます。</li>
+<li><code>&lt;license&gt;&lt;name&gt;</code> &ndash; ライセンス名(ApacheライセンスとかLGPLとか)</li>
+<li><code>&lt;license&gt;&lt;url&gt;</code> &ndash; ライセンス条項のurlを記述します</li>
+<li><code>&lt;license&gt;&lt;distribution&gt;</code> &ndash; <code>repo</code>を設定します。</li>
+<li><code>&lt;scm&gt;&lt;url&gt;</code> &ndash; レポジトリーのurlを記述します。git-hubの場合はsshのアドレス設定します。bitbucketのMercurialの場合はレポジトリーをWebで見る場合のurlを記述します。</li>
+<li><code>&lt;scm&gt;&lt;connection&gt;</code> &ndash; git-hubであればsshのところで得られるurlの先頭に<code>scm:git:</code>を加えます。bitbucketのMercurialの場合はWebで見る場合のアドレスの先頭に<code>scm:hg:</code>を付与します。</li>
+<li><code>&lt;developers&gt;</code> &ndash; 開発者情報を記入します。その中の構成は次のとおりです。</li>
+<li><code>&lt;developer&gt;&lt;id&gt;</code> &ndash; 開発者のID。通名とかでも良いようです。僕の場合は<code>mike_neck</code>を記入します。</li>
+<li><code>&lt;developer&gt;&lt;name&gt;</code> &ndash; 開発者の名前です。僕の場合は<code>Shinya Mochida</code>になります。</li>
+<li><code>&lt;developer&gt;&lt;email&gt;</code> &ndash; 開発者のメールアドレスです。僕の場合は<code>mike &lt;at&gt; mikeneck.org</code>としています。</li>
+</ul>
+
+
+<h3>配布するファイルへの規約</h3>
+
+<ul>
+<li><code>&lt;packaging&gt;</code>が<code>jar</code>の場合にはjarファイルにはjavaクラスが入っていること</li>
+<li>名前が<code>projectname-version-javadoc.jar</code>というjavadocのjarが入っていること</li>
+<li>名前が<code>projectname-version-sources.jar</code>というソースのjarが入っていること</li>
+<li>すべてのartifact(<code>pom.xml</code>、<code>projectname-version.jar</code>、<code>projectname-version-javadoc.jar</code>、<code>projectname-version-sources.jar</code>)に対してPGPによる署名がなされていること</li>
+<li>公開鍵が公開鍵サーバーから取得可能になっていること</li>
+</ul>
+
+
+<p>となっています。</p>
+
+<p>また、何らかの理由でjavadocのjarやsourcesのjarが作られない場合でも、READMEというファイルを含んだjavadocのjarよsourcesのjarを作る必要があります。</p>
+
+<h3>gradleでmaven centralにアップロードするためのbuild.gradle</h3>
+
+<p>では、サンプルのbuild.gradleをここに上げておきます。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="o">[</span><span class="s1">&#39;groovy&#39;</span><span class="o">,</span> <span class="s1">&#39;signing&#39;</span><span class="o">,</span> <span class="s1">&#39;maven&#39;</span><span class="o">,</span> <span class="s1">&#39;idea&#39;</span><span class="o">].</span><span class="na">each</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="n">it</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// project information</span>
+</span><span class='line'><span class="n">sourceCompatibility</span> <span class="o">=</span> <span class="n">jdkVersion</span>
+</span><span class='line'><span class="n">targetCompatibility</span> <span class="o">=</span> <span class="n">jdkVersion</span>
+</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s1">&#39;org.jojo.sample&#39;</span>
+</span><span class='line'><span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;1.0&#39;</span>
+</span><span class='line'><span class="c1">// dependency management</span>
+</span><span class='line'><span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">mavenCentral</span> <span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">compile</span> <span class="s1">&#39;org.codehaus.groovy:groovy-all:2.1.3&#39;</span>
+</span><span class='line'>    <span class="n">testCompile</span> <span class="s1">&#39;org.spockframework:spock-core:0.7-groovy-2.0&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// compile options</span>
+</span><span class='line'><span class="n">tasks</span><span class="o">.</span><span class="na">withType</span><span class="o">(</span><span class="n">Compile</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">options</span><span class="o">.</span><span class="na">encoding</span> <span class="o">=</span> <span class="s1">&#39;UTF-8&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// javadoc settings (making template locale en_US)</span>
+</span><span class='line'><span class="n">javadoc</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">options</span><span class="o">.</span><span class="na">locale</span> <span class="o">=</span> <span class="s1">&#39;en_US&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// creating jars</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">sourcesJar</span> <span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Jar</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;sources&#39;</span>
+</span><span class='line'>    <span class="n">from</span> <span class="n">sourceSets</span><span class="o">.</span><span class="na">main</span><span class="o">.</span><span class="na">allSource</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">javadocJar</span> <span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Jar</span><span class="o">,</span> <span class="n">dependsOn</span> <span class="o">:</span> <span class="n">javadoc</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;javadoc&#39;</span>
+</span><span class='line'>    <span class="n">from</span> <span class="n">javadoc</span><span class="o">.</span><span class="na">destinationDir</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// collect artifacts to be signed</span>
+</span><span class='line'><span class="n">artifacts</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">archives</span> <span class="n">jar</span>
+</span><span class='line'>    <span class="n">archives</span> <span class="n">sourceJar</span>
+</span><span class='line'>    <span class="n">archives</span> <span class="n">javadocJar</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// sign artifacts</span>
+</span><span class='line'><span class="n">signing</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">sign</span> <span class="n">configurations</span><span class="o">.</span><span class="na">archives</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// uploading artifacts</span>
+</span><span class='line'><span class="n">uploadArchives</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">repositories</span><span class="o">.</span><span class="na">mavenDeployer</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">beforeDeployment</span> <span class="o">{</span><span class="n">MavenDeployment</span> <span class="n">deployment</span> <span class="o">-&gt;</span>
+</span><span class='line'>            <span class="n">signPom</span><span class="o">(</span><span class="n">deployment</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">repository</span> <span class="o">(</span><span class="n">url</span> <span class="o">:</span> <span class="n">sonatypeUrl</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">authentication</span> <span class="o">(</span>
+</span><span class='line'>                    <span class="n">userName</span> <span class="o">:</span> <span class="n">sonatypeUsername</span><span class="o">,</span>
+</span><span class='line'>                    <span class="n">password</span> <span class="o">:</span> <span class="n">sonatypePassword</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">pom</span><span class="o">.</span><span class="na">project</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">name</span> <span class="n">project</span><span class="o">.</span><span class="na">name</span>
+</span><span class='line'>            <span class="n">packaging</span> <span class="s1">&#39;jar&#39;</span>
+</span><span class='line'>            <span class="n">description</span> <span class="s1">&#39;sample project&#39;</span>
+</span><span class='line'>            <span class="n">url</span> <span class="n">projectUrl</span>
+</span><span class='line'>            <span class="n">licenses</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">license</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">name</span> <span class="s1">&#39;The Apache Software License, Version 2.0&#39;</span>
+</span><span class='line'>                    <span class="n">url</span> <span class="s1">&#39;http://www.apache.org/license/LICENSE-2.0.txt&#39;</span>
+</span><span class='line'>                    <span class="n">distribution</span> <span class="s1">&#39;repo&#39;</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">scm</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">url</span> <span class="n">githubUrl</span>
+</span><span class='line'>                <span class="n">connection</span> <span class="s2">&quot;scm:git:${githubUrl}&quot;</span>
+</span><span class='line'>                <span class="n">developerConnection</span> <span class="s2">&quot;scm:git:${githubUrl}&quot;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">developers</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">developer</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">id</span> <span class="s1">&#39;jojo&#39;</span>
+</span><span class='line'>                    <span class="n">name</span> <span class="s1">&#39;Jonathan Joester&#39;</span>
+</span><span class='line'>                    <span class="n">email</span> <span class="s1">&#39;mike &lt;at&gt; mikeneck.org&#39;</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>また、よく使いまわす変数については<code>gradle.properties</code>に書いておきます。</p>
+
+<figure class='code'><figcaption><span>gradle.properties</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">jdkVersion</span><span class="o">=</span>1.7
+</span><span class='line'><span class="nv">projectUrl</span><span class="o">=</span>https://github.com/mike-neck/mike-neck.github.com
+</span><span class='line'><span class="nv">github</span><span class="o">=</span>git@github.com:mike-neck/mike-neck.github.com.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>また、署名関連の変数などについては<code>~/.gradle/gradle.properties</code>に書いておきます。</p>
+
+<figure class='code'><figcaption><span>gradle.properties</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># siging information</span>
+</span><span class='line'>signing.keyId<span class="o">=</span>ABCD1234
+</span><span class='line'>signing.password<span class="o">=</span>HOGEpassword00
+</span><span class='line'>signing.secretKeyRingFile<span class="o">=</span>/Users/username/.gnupg/secring.gpg
+</span><span class='line'><span class="c"># sonatype information</span>
+</span><span class='line'><span class="nv">sonatypeUrl</span><span class="o">=</span>https://oss.sonatype.org/service/local/staging/deploy/maven2/
+</span><span class='line'><span class="nv">sonatypeUsername</span><span class="o">=</span>username
+</span><span class='line'><span class="nv">sonatypePassword</span><span class="o">=</span>password
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あとは、<code>gradle</code>コマンドで<code>uploadArchives</code>を記述すれば、</p>
+
+<p>Sonatypeの方にアップロードされます。</p>
+
+<figure class='code'><figcaption><span>gradle.properties</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>gradle uploadArchives
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>なお、事前にSonatypeでの<a href="http://goo.gl/XXfRl">JIRAでissueを登録しておくこと</a>や、</p>
+
+<p><a href="http://goo.gl/w9Exz">Nexus UIで最終的なステージング操作</a>をする必要があります。</p>
+
+<p>参考までに、僕が以前作ったissueのリンクを張っておきます。</p>
+
+<p><a href="https://issues.sonatype.org/browse/OSSRH-4119">OSSRH-4119 request for creating repository for Graffiti-mike</a></p>
+
+<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRN0diTW1CSGptaHM"><img src="//googledrive.com/host/0B4hhdHWLP7RRN0diTW1CSGptaHM" style="width : 520px;"/></a></p>
+
+<p>中盤終わり</p>
+
+<hr />
+
+<h3>gradleであそぶコーナー</h3>
+
+<p><strong>TBD</strong>と書きたいのですが…</p>
+
+<p>上記の古いgradleでのアーカイブアップロードの方法は、</p>
+
+<p>やや難点があります。</p>
+
+<figure class='code'><figcaption><span>gradle.properties</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>gradle tasks
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>All tasks runnable from root project
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>
+</span><span class='line'>Build tasks
+</span><span class='line'>-----------
+</span><span class='line'>assemble - Assembles the outputs of this project.
+</span><span class='line'>build - Assembles and tests this project.
+</span><span class='line'>buildDependents - Assembles and tests this project and all projects that depend on it.
+</span><span class='line'>buildNeeded - Assembles and tests this project and all projects it depends on.
+</span><span class='line'>clean - Deletes the build directory.
+</span><span class='line'>jar - Assembles a jar archive containing the main classes.
+</span><span class='line'>
+</span><span class='line'>Documentation tasks
+</span><span class='line'>-------------------
+</span><span class='line'>groovydoc - Generates Groovydoc API documentation <span class="k">for </span>the main <span class="nb">source </span>code.
+</span><span class='line'>javadoc - Generates Javadoc API documentation <span class="k">for </span>the main <span class="nb">source </span>code.
+</span><span class='line'>
+</span><span class='line'>Help tasks
+</span><span class='line'>----------
+</span><span class='line'>dependencies - Displays all dependencies declared in root project <span class="s1">&#39;properties-builder&#39;</span>.
+</span><span class='line'>dependencyInsight - Displays the insight into a specific dependency in root project <span class="s1">&#39;properties-builder&#39;</span>.
+</span><span class='line'><span class="nb">help</span> - Displays a <span class="nb">help </span>message
+</span><span class='line'>projects - Displays the sub-projects of root project <span class="s1">&#39;properties-builder&#39;</span>.
+</span><span class='line'>properties - Displays the properties of root project <span class="s1">&#39;properties-builder&#39;</span>.
+</span><span class='line'>tasks - Displays the tasks runnable from root project <span class="s1">&#39;properties-builder&#39;</span> <span class="o">(</span>some of the displayed tasks may belong to subprojects<span class="o">)</span>.
+</span><span class='line'>
+</span><span class='line'>IDE tasks
+</span><span class='line'>---------
+</span><span class='line'>cleanIdea - Cleans IDEA project files <span class="o">(</span>IML, IPR<span class="o">)</span>
+</span><span class='line'>idea - Generates IDEA project files <span class="o">(</span>IML, IPR, IWS<span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>Upload tasks
+</span><span class='line'>------------
+</span><span class='line'>uploadArchives - Uploads all artifacts belonging to configuration <span class="s1">&#39;:archives&#39;</span>
+</span><span class='line'>
+</span><span class='line'>Verification tasks
+</span><span class='line'>------------------
+</span><span class='line'>check - Runs all checks.
+</span><span class='line'><span class="nb">test</span> - Runs the unit tests.
+</span><span class='line'>
+</span><span class='line'>Other tasks
+</span><span class='line'>-----------
+</span><span class='line'>cleanIdeaWorkspace
+</span><span class='line'>install - Installs the <span class="s1">&#39;archives&#39;</span> artifacts into the <span class="nb">local </span>Maven repository.
+</span><span class='line'>wrapper
+</span><span class='line'>
+</span><span class='line'>Rules
+</span><span class='line'>-----
+</span><span class='line'>Pattern: build&lt;ConfigurationName&gt;: Assembles the artifacts of a configuration.
+</span><span class='line'>Pattern: upload&lt;ConfigurationName&gt;: Assembles and uploads the artifacts belonging to a configuration.
+</span><span class='line'>Pattern: clean&lt;TaskName&gt;: Cleans the output files of a task.
+</span><span class='line'>
+</span><span class='line'>To see all tasks and more detail, run with --all.
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total <span class="nb">time</span>: 10.478 secs
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>uploadArchivesのところを見ると、</p>
+
+<p><code>archives</code> configurationに登録されているすべてのartifactsをアップロードする</p>
+
+<p>と書かれています。</p>
+
+<p>ただ、これだと、ひとつのアップロードしか書いていくことができないので、</p>
+
+<p>非常に面倒です。</p>
+
+<p>たとえば、こういった局面があります。</p>
+
+<ul>
+<li>in-houseリポジトリーにも登録する</li>
+<li>maven centralにも登録する</li>
+<li>異なるartifactsをアップロードする</li>
+<li>dependenciesにトリッキーなことをしているので、dependenciesの記述を書き換えたい</li>
+</ul>
+
+
+<p>こういったケースでは、</p>
+
+<p>一つ一つ別々のタスクとして記述をしていかないとできない場合があります。</p>
+
+<p>gradleは柔軟性も求めるツールなので、</p>
+
+<p>これらの要望も吸収して</p>
+
+<p>簡単な記述でできるように常に進化を遂げています。</p>
+
+<p>それを満たす機能が、今回のテーマの<strong>maven-publish</strong>プラグインです。</p>
+
+<p><strong>maven-publish</strong>プラグインでは<code>archives</code> configuration以外の成果物も</p>
+
+<p>柔軟に発行できますし、依存性を書き換えることもできます。</p>
+
+<p>記述はこんな感じになります。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="o">[</span><span class="s1">&#39;groovy&#39;</span><span class="o">,</span> <span class="s1">&#39;maven-publish&#39;</span><span class="o">].</span><span class="na">each</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="n">it</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// 中略</span>
+</span><span class='line'><span class="n">publishing</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">publications</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">ourMavenServer</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">from</span> <span class="n">components</span><span class="o">.</span><span class="na">java</span>
+</span><span class='line'>            <span class="n">artifact</span> <span class="n">sourceJar</span>
+</span><span class='line'>            <span class="n">pom</span><span class="o">.</span><span class="na">withXml</span> <span class="o">{</span>
+</span><span class='line'>                <span class="kt">def</span> <span class="n">node</span> <span class="o">=</span> <span class="n">asNode</span><span class="o">()</span>
+</span><span class='line'>                <span class="n">node</span><span class="o">.</span><span class="na">removeNode</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">dependencies</span><span class="o">[</span><span class="mi">0</span><span class="o">])</span>
+</span><span class='line'>                <span class="n">asNode</span><span class="o">().</span><span class="na">children</span><span class="o">().</span><span class="na">last</span><span class="o">()</span> <span class="o">+</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">resolveStrategy</span> <span class="o">=</span> <span class="n">CLosure</span><span class="o">.</span><span class="na">DELEGATE_FIRST</span>
+</span><span class='line'>                    <span class="c1">// writing additional pom elements with builder style</span>
+</span><span class='line'>                    <span class="n">name</span> <span class="s1">&#39;our-subproject&#39;</span>
+</span><span class='line'>                    <span class="n">description</span> <span class="s1">&#39;our-subproject description&#39;</span>
+</span><span class='line'>                    <span class="n">url</span> <span class="s1">&#39;https://www.google.com&#39;</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>                <span class="c1">// overwrite dependencies</span>
+</span><span class='line'>                <span class="n">asNode</span><span class="o">().</span><span class="na">dependencies</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">replaceNode</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">resolveStrategy</span> <span class="o">=</span> <span class="n">Closure</span><span class="o">.</span><span class="na">DELEGATE_FIRST</span>
+</span><span class='line'>                    <span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="kt">def</span> <span class="n">dep</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="na">configurations</span><span class="o">.</span><span class="na">another</span><span class="o">.</span><span class="na">dependencies</span>
+</span><span class='line'>                        <span class="n">dep</span><span class="o">.</span><span class="na">each</span> <span class="o">{</span><span class="n">d</span> <span class="o">-&gt;</span>
+</span><span class='line'>                            <span class="n">dependency</span> <span class="o">{</span>
+</span><span class='line'>                                <span class="n">groupId</span> <span class="n">d</span><span class="o">.</span><span class="na">group</span>
+</span><span class='line'>                                <span class="n">artifactId</span> <span class="n">d</span><span class="o">.</span><span class="na">name</span>
+</span><span class='line'>                                <span class="n">version</span> <span class="n">d</span><span class="o">.</span><span class="na">version</span>
+</span><span class='line'>                                <span class="n">scope</span> <span class="s1">&#39;compile&#39;</span>
+</span><span class='line'>                            <span class="o">}</span>
+</span><span class='line'>                        <span class="o">}</span>
+</span><span class='line'>                    <span class="o">}</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">maven</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">name</span> <span class="s1">&#39;in-house&#39;</span>
+</span><span class='line'>            <span class="n">url</span> <span class="s1">&#39;https://repos.mycompany.com/nexus/service/local/staging/deploy/maven2/&#39;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上記の例でやっていることは</p>
+
+<ul>
+<li>ドキュメント読まないのでclassesとsourcesだけをアーカイブ化</li>
+<li>ちろっとpom.xmlに情報を追加</li>
+<li>dependenciesを書き換え</li>
+</ul>
+
+
+<p>一般常識的に考えれば、dependenciesの書き換えはマズイと思われますが…</p>
+
+<p>某有名なライブラリーのpom.xmlでありもしないartifactを参照しているライブラリーがあり、</p>
+
+<p><code>compile</code> configurationではプロジェクトのdependencyを指定するのではなく、</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">configurations</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">another</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と異なるconfigurationを設定して、</p>
+
+<p>プロジェクトのdependencyを設定する場合などがあります。</p>
+
+<p>某有名ライブラリーとは<strong>org.eclipse.jetty:jetty-server</strong>というんですけどね…</p>
+
+<hr />
+
+<p>さて、もう少し遊んでいるんですが、</p>
+
+<p>それは別の記事にしますね。</p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">mike-neck</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-15T15:53:00+09:00" pubdate data-updated="true">Jun 15<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gradle/'>gradle</a>, <a class='category' href='/blog/categories/groovy/'>groovy</a>, <a class='category' href='/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/06/15/publishing-artifact-with-gradles-new-maven-publish-plugin-is-currently-unavailable/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/06/15/publishing-artifact-with-gradles-new-maven-publish-plugin-is-currently-unavailable/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+  <br/>
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/06/13/how-to-generate-javadoc-in-english-on-japanese-environment/" title="Previous Post: gradleのjavadocタスクでjavadocを英語で出力する方法">&laquo; gradleのjavadocタスクでjavadocを英語で出力する方法</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/15/publishing-artifact-with-gradles-new-maven-publish-plugin-is-currently-unavailable/">gradle 1.4以降から追加されているmaven-publishプラグインでは、まだmaven central レポジトリーに上げられないようです。</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/13/how-to-generate-javadoc-in-english-on-japanese-environment/">gradleのjavadocタスクでjavadocを英語で出力する方法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/13/opening-gradle-slash-gradle-with-gradle-will-fail-please-use-gradlew/">gradleプロジェクトは、gradleを使うよりも、gradlewを使うことがオススメです</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/11/how-to-create-rubys-module/">初めてRubyのモジュールを書いてみた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/10/how-to-link-other-issues-on-jira6/">JIRA6のチケットで他のチケットへのリンクを張る方法</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/mike-neck">@mike-neck</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'mike-neck',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+<a href="https://twitter.com/mike_neck" class="twitter-follow-button" data-show-count="false" data-lang="ja">@mike_neckさんをフォロー</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/110183156583475779298?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<script type="text/javascript"><!--
+amazon_ad_tag = "kkkjkrt-22"; amazon_ad_width = "160"; amazon_ad_height = "600"; amazon_ad_logo = "hide"; amazon_ad_link_target = "new"; amazon_ad_price = "retail"; amazon_ad_border = "hide"; amazon_color_border = "303030"; amazon_color_background = "E0E0E0"; amazon_color_text = "4B4B4B"; amazon_color_link = "4B4B4B"; amazon_color_price = "4B4B4B"; amazon_color_logo = "E0E0E0";//--></script>
+<script type="text/javascript" src="http://www.assoc-amazon.jp/s/ads.js"></script>
+<h3>Manning Items</h3>
+<p>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_277_1_74" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Node.js_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_270_1_71" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Netherland_300x250.gif" width="300" height="250" alt="blog banner"></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_267_1_68" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/SpringBatch_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_266_1_66" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/SpringRoo_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_259_1_59" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/MachineLearning_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_249_1_48" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/MacRuby_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_238_1_47" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/ScalainDepth_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_211_1_49" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/ContIntegration_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_154_1_55" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Dependency_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_112_1_22" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Skeet.gif" width="217" height="55" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_59_1_54" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Groovy2E_300x250.gif" width="300" height="250" alt=""></a>
+<p>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - mike-neck -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
