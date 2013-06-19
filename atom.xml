@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-16T12:09:28+09:00</updated>
+  <updated>2013-06-20T03:31:25+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -12,6 +12,1403 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[gradleのmaven-publishプラグインでライブラリーを発行する方法 - 1]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/06/19/publish-maven-artifact-with-sign-files-1/"/>
+    <updated>2013-06-19T16:21:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/06/19/publish-maven-artifact-with-sign-files-1</id>
+    <content type="html"><![CDATA[<p><img src="http://www.gradle.org/forum-assets/images/gradle_logo.gif"/></p>
+
+<p>こんにちわ、みけです。</p>
+
+<p>ここ数日、gradleのmaven-publishプラグインにはまっていたので、</p>
+
+<p>そのメモです。</p>
+
+<h1>maven-publishプラグインについて</h1>
+
+<p>以下のとおりにメモしていきます。</p>
+
+<ul>
+<li>maven-publishプラグインの基礎</li>
+<li>javadoc、sourcesを発行する</li>
+<li>複数回、成果物を発行する</li>
+<li>pomを変更する</li>
+<li>PGP署名ファイルの発行</li>
+<li>課題</li>
+</ul>
+
+
+<h2>maven-publishプラグインの基礎</h2>
+
+<p>maven-publishプラグインは任意のファイルを</p>
+
+<p>任意のmavenレポジトリーにアップロードすることができるプラグインです。</p>
+
+<p>次のようなビルドスクリプトでは、以下のようなartifactを発行することができます。</p>
+
+<ul>
+<li>sample-project-1.0.jar</li>
+<li>sample-project-1.0.pom</li>
+<li>sample-project-1.0-doc.html</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="s1">&#39;java&#39;</span>
+</span><span class='line'><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="s1">&#39;maven-publish&#39;</span>
+</span><span class='line'><span class="c1">// project information</span>
+</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s1">&#39;org.mikeneck.sample&#39;</span>
+</span><span class='line'><span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;1.0&#39;</span>
+</span><span class='line'><span class="c1">// publishing description</span>
+</span><span class='line'><span class="n">publishing</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">publications</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">sample</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">from</span> <span class="n">components</span><span class="o">.</span><span class="na">java</span>
+</span><span class='line'>            <span class="nf">artifact</span> <span class="o">(</span><span class="s1">&#39;document.html&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;doc&#39;</span>
+</span><span class='line'>                <span class="n">extension</span>  <span class="o">=</span> <span class="s1">&#39;html&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">maven</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">url</span> <span class="s1">&#39;file://Users/mike/maven-sample-repo&#39;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>また、これらに付随して、それぞれのファイルのmd5ファイルとsha1ファイルも作成されます。</p>
+
+<p>実際に実行してみます。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">gradle</span> <span class="n">clean</span> <span class="n">test</span> <span class="n">publish</span>
+</span><span class='line'><span class="o">:</span><span class="n">clean</span> <span class="n">UP</span><span class="o">-</span><span class="n">TO</span><span class="o">-</span><span class="n">DATE</span>
+</span><span class='line'><span class="o">:</span><span class="n">compileJava</span>
+</span><span class='line'><span class="o">:</span><span class="n">processResources</span> <span class="n">UP</span><span class="o">-</span><span class="n">TO</span><span class="o">-</span><span class="n">DATE</span>
+</span><span class='line'><span class="o">:</span><span class="n">classes</span>
+</span><span class='line'><span class="o">:</span><span class="n">compileTestJava</span>
+</span><span class='line'><span class="o">:</span><span class="n">processTestResources</span> <span class="n">UP</span><span class="o">-</span><span class="n">TO</span><span class="o">-</span><span class="n">DATE</span>
+</span><span class='line'><span class="o">:</span><span class="n">testClasses</span>
+</span><span class='line'><span class="o">:</span><span class="n">test</span>
+</span><span class='line'><span class="o">:</span><span class="n">generatePomFileForSamplePublication</span>
+</span><span class='line'><span class="o">:</span><span class="n">jar</span>
+</span><span class='line'><span class="o">:</span><span class="n">publishSamplePublicationToMavenRepository</span>
+</span><span class='line'><span class="nl">Uploading:</span> <span class="n">org</span><span class="s">/mikeneck/</span><span class="n">sample</span><span class="s">/sample-project/</span><span class="mf">1.0</span><span class="s">/sample-project-1.0.jar to repository remote at file:/</span><span class="n">Users</span><span class="s">/mike/</span><span class="n">maven</span><span class="o">-</span><span class="n">sample</span><span class="o">-</span><span class="n">repo</span>
+</span><span class='line'><span class="n">Transferring</span> <span class="mi">1</span><span class="n">K</span> <span class="n">from</span> <span class="n">remote</span>
+</span><span class='line'><span class="n">Uploaded</span> <span class="mi">1</span><span class="n">K</span>
+</span><span class='line'><span class="nl">Uploading:</span> <span class="n">org</span><span class="s">/mikeneck/</span><span class="n">sample</span><span class="s">/sample-project/</span><span class="mf">1.0</span><span class="s">/sample-project-1.0-doc.html to repository remote at file:/</span><span class="n">Users</span><span class="s">/mike/</span><span class="n">maven</span><span class="o">-</span><span class="n">sample</span><span class="o">-</span><span class="n">repo</span>
+</span><span class='line'><span class="n">Transferring</span> <span class="mi">0</span><span class="n">K</span> <span class="n">from</span> <span class="n">remote</span>
+</span><span class='line'><span class="n">Uploaded</span> <span class="mi">0</span><span class="n">K</span>
+</span><span class='line'><span class="o">:</span><span class="n">publish</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">BUILD</span> <span class="n">SUCCESSFUL</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Total</span> <span class="nl">time:</span> <span class="mf">18.255</span> <span class="n">secs</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>pomファイルが発行されたのかどうかよくわかりませんが、</p>
+
+<p>実際に発行されたディレクトリーを見てみます。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">cd</span> <span class="s">/Users/</span><span class="n">mike</span><span class="s">/maven-sample-repo/</span><span class="n">org</span><span class="s">/mikeneck/</span><span class="n">sample</span>
+</span><span class='line'><span class="n">$</span> <span class="n">ls</span>
+</span><span class='line'><span class="n">sample</span><span class="o">-</span><span class="n">project</span>
+</span><span class='line'><span class="n">$</span> <span class="n">cd</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="s">/</span>
+</span><span class='line'><span class="s">$ ls</span>
+</span><span class='line'><span class="s">1.0    maven-metadata.xml    maven-metadata.xml.md5    maven-metadata.xml.sha1</span>
+</span><span class='line'><span class="s">$ cd 1.0/</span>
+</span><span class='line'><span class="n">$</span> <span class="n">ls</span>
+</span><span class='line'><span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">doc</span><span class="o">.</span><span class="na">html</span>       <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="na">jar</span>      <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="na">pom</span>
+</span><span class='line'><span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">doc</span><span class="o">.</span><span class="na">html</span><span class="o">.</span><span class="na">md5</span>  <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="na">jar</span><span class="o">.</span><span class="na">md5</span>  <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="na">pom</span><span class="o">.</span><span class="na">md5</span>
+</span><span class='line'><span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">doc</span><span class="o">.</span><span class="na">html</span><span class="o">.</span><span class="na">sha1</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="na">jar</span><span class="o">.</span><span class="na">sha1</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="na">pom</span><span class="o">.</span><span class="na">sha1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ということでコマンドを実行したあとの標準出力にはpomについての記述はありませんが、</p>
+
+<p>ちゃんと発行されています。</p>
+
+<h3>規約</h3>
+
+<p>maven-publishプラグインでは以下のようなルールがあります。</p>
+
+<ul>
+<li>基本的なartifact名はproject名(ディレクトリの名前) + version番号</li>
+<li><code>classifier</code>に指定された文字列は上記のファイル名の最後に付与される</li>
+<li><code>extension</code>で指定された文字列は拡張子として付与される</li>
+<li><code>classifier</code> + <code>extension</code>での一意性のチェックが行われる</li>
+</ul>
+
+
+<h2>javadoc、sourcesを発行する</h2>
+
+<p>では、先ほどのサンプルに、ソースとjavadocを付与してみます。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="s1">&#39;java&#39;</span>
+</span><span class='line'><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="s1">&#39;maven-publish&#39;</span>
+</span><span class='line'><span class="c1">// project information</span>
+</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s1">&#39;org.mikeneck.sample&#39;</span>
+</span><span class='line'><span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;1.0&#39;</span>
+</span><span class='line'><span class="c1">// zip sources</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">sourceJar</span><span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Jar</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">from</span> <span class="n">sourceSets</span><span class="o">.</span><span class="na">main</span><span class="o">.</span><span class="na">allJava</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// zip javadocs</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">javadocJar</span><span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Jar</span><span class="o">,</span> <span class="n">dependsOn</span> <span class="o">:</span> <span class="n">javadoc</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">from</span> <span class="n">javadoc</span><span class="o">.</span><span class="na">destinationDir</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// publishing description</span>
+</span><span class='line'><span class="n">publishing</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">publications</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">sample</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">from</span> <span class="n">components</span><span class="o">.</span><span class="na">java</span>
+</span><span class='line'>            <span class="nf">artifact</span> <span class="o">(</span><span class="s1">&#39;document.html&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;doc&#39;</span>
+</span><span class='line'>                <span class="n">extension</span>  <span class="o">=</span> <span class="s1">&#39;html&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">artifact</span> <span class="n">sourceJar</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;sources&#39;</span>
+</span><span class='line'>                <span class="n">extension</span>  <span class="o">=</span> <span class="s1">&#39;jar&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">artifact</span> <span class="n">javadocJar</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;javadoc&#39;</span>
+</span><span class='line'>                <span class="n">extension</span>  <span class="o">=</span> <span class="s1">&#39;jar&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">maven</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">url</span> <span class="s1">&#39;file://Users/mike/maven-sample-repo&#39;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>DSLによれば、メソッド<code>artifact</code>にはtaskを引数にとることができ、指定したtaskの成果物を発行することができます。</p>
+
+<p>上記の例では、<code>sourceJar</code>タスクによってjarファイルに固められたソースと、</p>
+
+<p><code>javadocJar</code>タスクに寄ってjarファイルに固められたjavadocが、</p>
+
+<p>発行されるようになります。</p>
+
+<p>では、実行してみましょう。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">gradle</span> <span class="n">clean</span> <span class="n">test</span> <span class="n">publish</span>
+</span><span class='line'><span class="o">:</span><span class="n">clean</span>
+</span><span class='line'><span class="o">:</span><span class="n">compileJava</span>
+</span><span class='line'><span class="o">:</span><span class="n">processResources</span> <span class="n">UP</span><span class="o">-</span><span class="n">TO</span><span class="o">-</span><span class="n">DATE</span>
+</span><span class='line'><span class="o">:</span><span class="n">classes</span>
+</span><span class='line'><span class="o">:</span><span class="n">compileTestJava</span>
+</span><span class='line'><span class="o">:</span><span class="n">processTestResources</span> <span class="n">UP</span><span class="o">-</span><span class="n">TO</span><span class="o">-</span><span class="n">DATE</span>
+</span><span class='line'><span class="o">:</span><span class="n">testClasses</span>
+</span><span class='line'><span class="o">:</span><span class="n">test</span>
+</span><span class='line'><span class="o">:</span><span class="n">generatePomFileForSamplePublication</span>
+</span><span class='line'><span class="o">:</span><span class="n">jar</span>
+</span><span class='line'><span class="o">:</span><span class="n">javadoc</span>
+</span><span class='line'><span class="o">:</span><span class="n">javadocJar</span>
+</span><span class='line'><span class="o">:</span><span class="n">sourceJar</span>
+</span><span class='line'><span class="o">:</span><span class="n">publishSamplePublicationToMavenRepository</span>
+</span><span class='line'><span class="nl">Uploading:</span> <span class="n">org</span><span class="s">/mikeneck/</span><span class="n">sample</span><span class="s">/sample-project/</span><span class="mf">1.0</span><span class="s">/sample-project-1.0.jar to repository remote at file:/</span><span class="n">Users</span><span class="s">/mike/</span><span class="n">maven</span><span class="o">-</span><span class="n">sample</span><span class="o">-</span><span class="n">repo</span><span class="s">/</span>
+</span><span class='line'><span class="s">Transferring 1K from remote</span>
+</span><span class='line'><span class="s">Uploaded 1K</span>
+</span><span class='line'><span class="s">Uploading: org/</span><span class="n">mikeneck</span><span class="s">/sample/</span><span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="s">/1.0/</span><span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">doc</span><span class="o">.</span><span class="na">html</span> <span class="n">to</span> <span class="n">repository</span> <span class="n">remote</span> <span class="n">at</span> <span class="nl">file:</span><span class="s">/Users/</span><span class="n">mike</span><span class="s">/maven-sample-repo/</span>
+</span><span class='line'><span class="n">Transferring</span> <span class="mi">0</span><span class="n">K</span> <span class="n">from</span> <span class="n">remote</span>
+</span><span class='line'><span class="n">Uploaded</span> <span class="mi">0</span><span class="n">K</span>
+</span><span class='line'><span class="nl">Uploading:</span> <span class="n">org</span><span class="s">/mikeneck/</span><span class="n">sample</span><span class="s">/sample-project/</span><span class="mf">1.0</span><span class="s">/sample-project-1.0-sources.jar to repository remote at file:/</span><span class="n">Users</span><span class="s">/mike/</span><span class="n">maven</span><span class="o">-</span><span class="n">sample</span><span class="o">-</span><span class="n">repo</span><span class="s">/</span>
+</span><span class='line'><span class="s">Transferring 1K from remote</span>
+</span><span class='line'><span class="s">Uploaded 1K</span>
+</span><span class='line'><span class="s">Uploading: org/</span><span class="n">mikeneck</span><span class="s">/sample/</span><span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="s">/1.0/</span><span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">javadoc</span><span class="o">.</span><span class="na">jar</span> <span class="n">to</span> <span class="n">repository</span> <span class="n">remote</span> <span class="n">at</span> <span class="nl">file:</span><span class="s">/Users/</span><span class="n">mike</span><span class="s">/maven-sample-repo/</span>
+</span><span class='line'><span class="n">Transferring</span> <span class="mi">33</span><span class="n">K</span> <span class="n">from</span> <span class="n">remote</span>
+</span><span class='line'><span class="n">Uploaded</span> <span class="mi">33</span><span class="n">K</span>
+</span><span class='line'><span class="o">:</span><span class="n">publish</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">BUILD</span> <span class="n">SUCCESSFUL</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Total</span> <span class="nl">time:</span> <span class="mf">25.84</span> <span class="n">secs</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上記の標準出力からソースとjavadocが出力されていることがわかります。</p>
+
+<p>実際に出力されたファイルを確認してみます。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">cd</span> <span class="s">/Users/</span><span class="n">mike</span><span class="s">/maven-sample-repo/</span><span class="n">org</span><span class="s">/mikeneck/</span><span class="n">sample</span><span class="s">/sample-project/</span><span class="mf">1.0</span>
+</span><span class='line'><span class="n">$</span> <span class="n">ls</span> <span class="o">-</span><span class="n">la</span>
+</span><span class='line'><span class="n">total</span> <span class="mi">184</span>
+</span><span class='line'><span class="n">drwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span>  <span class="mi">17</span> <span class="n">mike</span>  <span class="n">mike</span>   <span class="mi">578</span><span class="n">B</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="o">.</span>
+</span><span class='line'><span class="n">drwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span>   <span class="mi">6</span> <span class="n">mike</span>  <span class="n">mike</span>   <span class="mi">204</span><span class="n">B</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">05</span> <span class="o">..</span>
+</span><span class='line'><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">mike</span>  <span class="n">mike</span>   <span class="mi">346</span><span class="n">B</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">doc</span><span class="o">.</span><span class="na">html</span>
+</span><span class='line'><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">mike</span>  <span class="n">mike</span>    <span class="mi">32</span><span class="n">B</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">doc</span><span class="o">.</span><span class="na">html</span><span class="o">.</span><span class="na">md5</span>
+</span><span class='line'><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">mike</span>  <span class="n">mike</span>    <span class="mi">40</span><span class="n">B</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">doc</span><span class="o">.</span><span class="na">html</span><span class="o">.</span><span class="na">sha1</span>
+</span><span class='line'><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">mike</span>  <span class="n">mike</span>    <span class="mi">33</span><span class="n">K</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">javadoc</span><span class="o">.</span><span class="na">jar</span>
+</span><span class='line'><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">mike</span>  <span class="n">mike</span>    <span class="mi">32</span><span class="n">B</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">javadoc</span><span class="o">.</span><span class="na">jar</span><span class="o">.</span><span class="na">md5</span>
+</span><span class='line'><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">mike</span>  <span class="n">mike</span>    <span class="mi">40</span><span class="n">B</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">javadoc</span><span class="o">.</span><span class="na">jar</span><span class="o">.</span><span class="na">sha1</span>
+</span><span class='line'><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">mike</span>  <span class="n">mike</span>   <span class="mi">927</span><span class="n">B</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">sources</span><span class="o">.</span><span class="na">jar</span>
+</span><span class='line'><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">mike</span>  <span class="n">mike</span>    <span class="mi">32</span><span class="n">B</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">sources</span><span class="o">.</span><span class="na">jar</span><span class="o">.</span><span class="na">md5</span>
+</span><span class='line'><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">mike</span>  <span class="n">mike</span>    <span class="mi">40</span><span class="n">B</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">sources</span><span class="o">.</span><span class="na">jar</span><span class="o">.</span><span class="na">sha1</span>
+</span><span class='line'><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">mike</span>  <span class="n">mike</span>   <span class="mf">1.1</span><span class="n">K</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="na">jar</span>
+</span><span class='line'><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">mike</span>  <span class="n">mike</span>    <span class="mi">32</span><span class="n">B</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="na">jar</span><span class="o">.</span><span class="na">md5</span>
+</span><span class='line'><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">mike</span>  <span class="n">mike</span>    <span class="mi">40</span><span class="n">B</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="na">jar</span><span class="o">.</span><span class="na">sha1</span>
+</span><span class='line'><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">mike</span>  <span class="n">mike</span>   <span class="mi">404</span><span class="n">B</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="na">pom</span>
+</span><span class='line'><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">mike</span>  <span class="n">mike</span>    <span class="mi">32</span><span class="n">B</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="na">pom</span><span class="o">.</span><span class="na">md5</span>
+</span><span class='line'><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">mike</span>  <span class="n">mike</span>    <span class="mi">40</span><span class="n">B</span>  <span class="mi">6</span> <span class="mi">19</span> <span class="mi">17</span><span class="o">:</span><span class="mi">40</span> <span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="na">pom</span><span class="o">.</span><span class="na">sha1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>複数回、成果物を発行する</h2>
+
+<p>これまでの例では<code>sample</code>という発行タスクにいろいろなものを詰め込んでいました。</p>
+
+<p>たとえば、javadocだけとか、sourcesファイルだけとか発行したい場合、</p>
+
+<p>成果物の発行タスクを切り分けたいような場面があるかと思います。</p>
+
+<p>その場合、<code>publications</code>の下の記述を変えることで、成果物の発行タスクを分けることができます。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="s1">&#39;java&#39;</span>
+</span><span class='line'><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="s1">&#39;maven-publish&#39;</span>
+</span><span class='line'><span class="c1">// project information</span>
+</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s1">&#39;org.mikeneck.sample&#39;</span>
+</span><span class='line'><span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;1.0&#39;</span>
+</span><span class='line'><span class="c1">// zip sources</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">sourceJar</span><span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Jar</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">from</span> <span class="n">sourceSets</span><span class="o">.</span><span class="na">main</span><span class="o">.</span><span class="na">allJava</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// zip javadocs</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">javadocJar</span><span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Jar</span><span class="o">,</span> <span class="n">dependsOn</span> <span class="o">:</span> <span class="n">javadoc</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">from</span> <span class="n">javadoc</span><span class="o">.</span><span class="na">destinationDir</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// publishing description</span>
+</span><span class='line'><span class="n">publishing</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">publications</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// only java archives</span>
+</span><span class='line'>        <span class="n">sample</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">from</span> <span class="n">components</span><span class="o">.</span><span class="na">java</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="c1">// publish documents</span>
+</span><span class='line'>        <span class="n">documents</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">artifact</span> <span class="o">(</span><span class="s1">&#39;document.html&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;doc&#39;</span>
+</span><span class='line'>                <span class="n">extension</span>  <span class="o">=</span> <span class="s1">&#39;html&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">artifact</span> <span class="n">sourceJar</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;sources&#39;</span>
+</span><span class='line'>                <span class="n">extension</span>  <span class="o">=</span> <span class="s1">&#39;jar&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">artifact</span> <span class="n">javadocJar</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;javadoc&#39;</span>
+</span><span class='line'>                <span class="n">extension</span>  <span class="o">=</span> <span class="s1">&#39;jar&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">maven</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">url</span> <span class="s1">&#39;file://Users/mike/maven-sample-repo&#39;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで、メインのjarを発行するタスクと、</p>
+
+<p>ドキュメント類を発行するタスクを切り分けることができました。</p>
+
+<p>実際、タスクにはどのようなものがあるか確認します。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">gradle</span> <span class="n">tasks</span>
+</span><span class='line'><span class="o">:</span><span class="n">tasks</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">------------------------------------------------------------</span>
+</span><span class='line'><span class="n">All</span> <span class="n">tasks</span> <span class="n">runnable</span> <span class="n">from</span> <span class="n">root</span> <span class="n">project</span>
+</span><span class='line'><span class="o">------------------------------------------------------------</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Build</span> <span class="n">tasks</span>
+</span><span class='line'><span class="o">-----------</span>
+</span><span class='line'><span class="n">assemble</span> <span class="o">-</span> <span class="n">Assembles</span> <span class="n">the</span> <span class="n">outputs</span> <span class="n">of</span> <span class="k">this</span> <span class="n">project</span><span class="o">.</span>
+</span><span class='line'><span class="n">build</span> <span class="o">-</span> <span class="n">Assembles</span> <span class="n">and</span> <span class="n">tests</span> <span class="k">this</span> <span class="n">project</span><span class="o">.</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">…中略…</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Publishing</span> <span class="n">tasks</span>
+</span><span class='line'><span class="o">----------------</span>
+</span><span class='line'><span class="n">publish</span> <span class="o">-</span> <span class="n">Publishes</span> <span class="n">all</span> <span class="n">publications</span> <span class="n">produced</span> <span class="n">by</span> <span class="k">this</span> <span class="n">project</span><span class="o">.</span>
+</span><span class='line'><span class="n">publishDocumentsPublicationToMavenLocal</span> <span class="o">-</span> <span class="n">Publishes</span> <span class="n">Maven</span> <span class="n">publication</span> <span class="s1">&#39;documents&#39;</span> <span class="n">to</span> <span class="n">the</span> <span class="n">local</span> <span class="n">Maven</span> <span class="n">repository</span><span class="o">.</span>
+</span><span class='line'><span class="n">publishDocumentsPublicationToMavenRepository</span> <span class="o">-</span> <span class="n">Publishes</span> <span class="n">Maven</span> <span class="n">publication</span> <span class="s1">&#39;documents&#39;</span> <span class="n">to</span> <span class="n">Maven</span> <span class="n">repository</span> <span class="s1">&#39;maven&#39;</span><span class="o">.</span>
+</span><span class='line'><span class="n">publishSamplePublicationToMavenLocal</span> <span class="o">-</span> <span class="n">Publishes</span> <span class="n">Maven</span> <span class="n">publication</span> <span class="s1">&#39;sample&#39;</span> <span class="n">to</span> <span class="n">the</span> <span class="n">local</span> <span class="n">Maven</span> <span class="n">repository</span><span class="o">.</span>
+</span><span class='line'><span class="n">publishSamplePublicationToMavenRepository</span> <span class="o">-</span> <span class="n">Publishes</span> <span class="n">Maven</span> <span class="n">publication</span> <span class="s1">&#39;sample&#39;</span> <span class="n">to</span> <span class="n">Maven</span> <span class="n">repository</span> <span class="s1">&#39;maven&#39;</span><span class="o">.</span>
+</span><span class='line'><span class="n">publishToMavenLocal</span> <span class="o">-</span> <span class="n">Publishes</span> <span class="n">all</span> <span class="n">Maven</span> <span class="n">publications</span> <span class="n">produced</span> <span class="n">by</span> <span class="k">this</span> <span class="n">project</span> <span class="n">to</span> <span class="n">the</span> <span class="n">local</span> <span class="n">Maven</span> <span class="n">cache</span><span class="o">.</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">…中略…</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">BUILD</span> <span class="n">SUCCESSFUL</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Total</span> <span class="nl">time:</span> <span class="mf">21.853</span> <span class="n">secs</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Publishing tasksには次のようなエントリーが入っています。</p>
+
+<ul>
+<li><code>publish</code> すべてを指定したレポジトリーに発行する</li>
+<li><code>publicDocumentsPublication…</code> <code>documents</code>で指定したアーカイブを発行します。</li>
+<li><code>publishSamplePublication…</code> <code>sample</code>で指定したアーカイブを発行します。</li>
+<li><code>publishToMavenLocal</code> すべてをmaven localレポジトリーに発行します。</li>
+</ul>
+
+
+<p>という形で、<code>publishing/publications</code>で複数のアーカイブ発行を指定することで、タスクが生成されます。</p>
+
+<p>さて、ここでは、<code>publish</code>タスクを実行してみたいと思います。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">gradle</span> <span class="n">clean</span> <span class="n">test</span> <span class="n">publish</span>
+</span><span class='line'><span class="o">:</span><span class="n">clean</span>
+</span><span class='line'><span class="o">:</span><span class="n">compileJava</span>
+</span><span class='line'><span class="o">:</span><span class="n">processResources</span> <span class="n">UP</span><span class="o">-</span><span class="n">TO</span><span class="o">-</span><span class="n">DATE</span>
+</span><span class='line'><span class="o">:</span><span class="n">classes</span>
+</span><span class='line'><span class="o">:</span><span class="n">compileTestJava</span>
+</span><span class='line'><span class="o">:</span><span class="n">processTestResources</span> <span class="n">UP</span><span class="o">-</span><span class="n">TO</span><span class="o">-</span><span class="n">DATE</span>
+</span><span class='line'><span class="o">:</span><span class="n">testClasses</span>
+</span><span class='line'><span class="o">:</span><span class="n">test</span>
+</span><span class='line'><span class="o">:</span><span class="n">generatePomFileForDocumentsPublication</span>
+</span><span class='line'><span class="o">:</span><span class="n">javadoc</span>
+</span><span class='line'><span class="o">:</span><span class="n">javadocJar</span>
+</span><span class='line'><span class="o">:</span><span class="n">sourceJar</span>
+</span><span class='line'><span class="o">:</span><span class="n">publishDocumentsPublicationToMavenRepository</span>
+</span><span class='line'><span class="nl">Uploading:</span> <span class="n">org</span><span class="s">/mikeneck/</span><span class="n">sample</span><span class="s">/sample-project/</span><span class="mf">1.0</span><span class="s">/sample-project-1.0.pom to repository remote at file:/</span><span class="n">Users</span><span class="s">/mike/</span><span class="n">maven</span><span class="o">-</span><span class="n">sample</span><span class="o">-</span><span class="n">repo</span><span class="s">/</span>
+</span><span class='line'><span class="s">Transferring 0K from remote</span>
+</span><span class='line'><span class="s">Uploaded 0K</span>
+</span><span class='line'><span class="s">Uploading: org/</span><span class="n">mikeneck</span><span class="s">/sample/</span><span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="s">/1.0/</span><span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">doc</span><span class="o">.</span><span class="na">html</span> <span class="n">to</span> <span class="n">repository</span> <span class="n">remote</span> <span class="n">at</span> <span class="nl">file:</span><span class="s">/Users/</span><span class="n">mike</span><span class="s">/maven-sample-repo/</span>
+</span><span class='line'><span class="n">Transferring</span> <span class="mi">0</span><span class="n">K</span> <span class="n">from</span> <span class="n">remote</span>
+</span><span class='line'><span class="n">Uploaded</span> <span class="mi">0</span><span class="n">K</span>
+</span><span class='line'><span class="nl">Uploading:</span> <span class="n">org</span><span class="s">/mikeneck/</span><span class="n">sample</span><span class="s">/sample-project/</span><span class="mf">1.0</span><span class="s">/sample-project-1.0-sources.jar to repository remote at file:/</span><span class="n">Users</span><span class="s">/mike/</span><span class="n">maven</span><span class="o">-</span><span class="n">sample</span><span class="o">-</span><span class="n">repo</span><span class="s">/</span>
+</span><span class='line'><span class="s">Transferring 1K from remote</span>
+</span><span class='line'><span class="s">Uploaded 1K</span>
+</span><span class='line'><span class="s">Uploading: org/</span><span class="n">mikeneck</span><span class="s">/sample/</span><span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="s">/1.0/</span><span class="n">sample</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">javadoc</span><span class="o">.</span><span class="na">jar</span> <span class="n">to</span> <span class="n">repository</span> <span class="n">remote</span> <span class="n">at</span> <span class="nl">file:</span><span class="s">/Users/</span><span class="n">mike</span><span class="s">/maven-sample-repo/</span>
+</span><span class='line'><span class="n">Transferring</span> <span class="mi">33</span><span class="n">K</span> <span class="n">from</span> <span class="n">remote</span>
+</span><span class='line'><span class="n">Uploaded</span> <span class="mi">33</span><span class="n">K</span>
+</span><span class='line'><span class="o">:</span><span class="n">generatePomFileForSamplePublication</span>
+</span><span class='line'><span class="o">:</span><span class="n">jar</span>
+</span><span class='line'><span class="o">:</span><span class="n">publishSamplePublicationToMavenRepository</span>
+</span><span class='line'><span class="nl">Uploading:</span> <span class="n">org</span><span class="s">/mikeneck/</span><span class="n">sample</span><span class="s">/sample-project/</span><span class="mf">1.0</span><span class="s">/sample-project-1.0.jar to repository remote at file:/</span><span class="n">Users</span><span class="s">/mike/</span><span class="n">maven</span><span class="o">-</span><span class="n">sample</span><span class="o">-</span><span class="n">repo</span><span class="o">/</span>
+</span><span class='line'><span class="n">Transferring</span> <span class="mi">1</span><span class="n">K</span> <span class="n">from</span> <span class="n">remote</span>
+</span><span class='line'><span class="n">Uploaded</span> <span class="mi">1</span><span class="n">K</span>
+</span><span class='line'><span class="o">:</span><span class="n">publish</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">BUILD</span> <span class="n">SUCCESSFUL</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Total</span> <span class="nl">time:</span> <span class="mf">12.33</span> <span class="n">secs</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>標準出力を見るとわかりますが、<strong>アルファベット順</strong>にタスクが実行されます。</p>
+
+<p>そして、もう一つ気になるところがありますね。</p>
+
+<p>各タスクの前に、<code>generatePomFileFor[タスク名]</code>というタスクが実行されています。</p>
+
+<p>これらが発行するpomは何かを調べてみます。</p>
+
+<p>まず、すこしスクリプトを変更します。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="s1">&#39;java&#39;</span>
+</span><span class='line'><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="s1">&#39;maven-publish&#39;</span>
+</span><span class='line'><span class="c1">// project information</span>
+</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s1">&#39;org.mikeneck.sample&#39;</span>
+</span><span class='line'><span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;1.0&#39;</span>
+</span><span class='line'><span class="c1">// repositories</span>
+</span><span class='line'><span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">mavenCentral</span> <span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// dependencies</span>
+</span><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">compile</span> <span class="s1">&#39;org.jsoup:jsoup:1.6.3&#39;</span>
+</span><span class='line'>    <span class="n">testCompile</span> <span class="s1">&#39;junit:junit:4.11&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// zip sources</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">sourceJar</span><span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Jar</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">from</span> <span class="n">sourceSets</span><span class="o">.</span><span class="na">main</span><span class="o">.</span><span class="na">allJava</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// zip javadocs</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">javadocJar</span><span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Jar</span><span class="o">,</span> <span class="n">dependsOn</span> <span class="o">:</span> <span class="n">javadoc</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">from</span> <span class="n">javadoc</span><span class="o">.</span><span class="na">destinationDir</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// publishing description</span>
+</span><span class='line'><span class="n">publishing</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">publications</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">sample</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">from</span> <span class="n">components</span><span class="o">.</span><span class="na">java</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">documents</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">artifact</span> <span class="o">(</span><span class="s1">&#39;document.html&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;doc&#39;</span>
+</span><span class='line'>                <span class="n">extension</span>  <span class="o">=</span> <span class="s1">&#39;html&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">artifact</span> <span class="n">sourceJar</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;sources&#39;</span>
+</span><span class='line'>                <span class="n">extension</span>  <span class="o">=</span> <span class="s1">&#39;jar&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">artifact</span> <span class="n">javadocJar</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;javadoc&#39;</span>
+</span><span class='line'>                <span class="n">extension</span>  <span class="o">=</span> <span class="s1">&#39;jar&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">maven</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">url</span> <span class="s1">&#39;file://Users/mike/maven-sample-repo&#39;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>dependencies</code>を追加しました。</p>
+
+<p>この状態で、sampleの方を実行してみます。</p>
+
+<p>なお、このタスクの実行において、タスクの指定に省略名を使用しています。</p>
+
+<p>gradleでは<code>publishToMavenRepository</code>のような単語の頭文字が大文字になっているタスクを</p>
+
+<p>頭文字だけを選択して<code>pTMR</code>のように省略することができます。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">gradle</span> <span class="n">clean</span> <span class="n">pSPTMR</span>
+</span><span class='line'><span class="o">:</span><span class="n">clean</span>
+</span><span class='line'><span class="o">:</span><span class="n">generatePomFileForSamplePublication</span>
+</span><span class='line'><span class="o">:</span><span class="n">compileJava</span>
+</span><span class='line'><span class="o">:</span><span class="n">processResources</span> <span class="n">UP</span><span class="o">-</span><span class="n">TO</span><span class="o">-</span><span class="n">DATE</span>
+</span><span class='line'><span class="o">:</span><span class="n">classes</span>
+</span><span class='line'><span class="o">:</span><span class="n">jar</span>
+</span><span class='line'><span class="o">:</span><span class="n">publishSamplePublicationToMavenRepository</span>
+</span><span class='line'><span class="nl">Uploading:</span> <span class="n">org</span><span class="s">/mikeneck/</span><span class="n">sample</span><span class="s">/sample-project/</span><span class="mf">1.0</span><span class="s">/sample-project-1.0.jar to repository remote at file:/</span><span class="n">Users</span><span class="s">/mike/</span><span class="n">maven</span><span class="o">-</span><span class="n">sample</span><span class="o">-</span><span class="n">repo</span><span class="o">/</span>
+</span><span class='line'><span class="n">Transferring</span> <span class="mi">1</span><span class="n">K</span> <span class="n">from</span> <span class="n">remote</span>
+</span><span class='line'><span class="n">Uploaded</span> <span class="mi">1</span><span class="n">K</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">BUILD</span> <span class="n">SUCCESSFUL</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Total</span> <span class="nl">time:</span> <span class="mf">2.498</span> <span class="n">secs</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>さて、この結果出力されたpomは次のようになります。</p>
+
+<figure class='code'><figcaption><span>sample-project-1.0.pom</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="nt">&lt;project</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0&quot;</span>
+</span><span class='line'>    <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;groupId&gt;</span>org.mikeneck.sample<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;artifactId&gt;</span>sample-project<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;version&gt;</span>1.0<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;dependencies&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;groupId&gt;</span>org.jsoup<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>jsoup<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;version&gt;</span>1.6.3<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/dependencies&gt;</span>
+</span><span class='line'><span class="nt">&lt;/project&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>一方、documentの方を実行してみます。</p>
+
+<figure class='code'><figcaption><span>sample-project-1.0.pom</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>$ gradle clean pDPTMR
+</span><span class='line'>:clean
+</span><span class='line'>:generatePomFileForDocumentsPublication
+</span><span class='line'>:compileJava
+</span><span class='line'>:processResources UP-TO-DATE
+</span><span class='line'>:classes
+</span><span class='line'>:javadoc
+</span><span class='line'>:javadocJar
+</span><span class='line'>:sourceJar
+</span><span class='line'>:publishDocumentsPublicationToMavenRepository
+</span><span class='line'>Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0.pom to repository remote at file:/Users/mike/maven-sample-repo/
+</span><span class='line'>Transferring 0K from remote
+</span><span class='line'>Uploaded 0K
+</span><span class='line'>Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-doc.html to repository remote at file:/Users/mike/maven-sample-repo/
+</span><span class='line'>Transferring 0K from remote
+</span><span class='line'>Uploaded 0K
+</span><span class='line'>Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-sources.jar to repository remote at file:/Users/mike/maven-sample-repo/
+</span><span class='line'>Transferring 1K from remote
+</span><span class='line'>Uploaded 1K
+</span><span class='line'>Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-javadoc.jar to repository remote at file:/Users/mike/maven-sample-repo/
+</span><span class='line'>Transferring 33K from remote
+</span><span class='line'>Uploaded 33K
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 4.961 secs
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この結果出力されたpomは次のとおり、<code>&lt;dependencies&gt;</code>〜<code>&lt;/dependencies&gt;</code>の部分の記述がなくなります。</p>
+
+<figure class='code'><figcaption><span>sample-project-1.0.pom</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="nt">&lt;project</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0&quot;</span>
+</span><span class='line'>    <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;groupId&gt;</span>org.mikeneck.sample<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;artifactId&gt;</span>sample-project<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;version&gt;</span>1.0<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;packaging&gt;</span>pom<span class="nt">&lt;/packaging&gt;</span>
+</span><span class='line'><span class="nt">&lt;/project&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この違いは、前者のタスクにおいてdependenciesの情報を利用するのに対して、</p>
+
+<p>後者はdependenciesを使わないことにあると勝手に理解しています。</p>
+
+<p>したがって、複数回にわたって成果物を発行する場合は、</p>
+
+<p>pomの生成について気をつけなければなりません。</p>
+
+<h2>pomを変更する</h2>
+
+<p>前回のポストで記述した通り、maven centralに登録するライブラリーについては、</p>
+
+<p>発行するpomにいくつか追加情報を与えなければならない場合があります。</p>
+
+<p>また、Jettyのservletを用いる場合は、</p>
+
+<p>jetty-orbitという存在しないartifactを避けるために、</p>
+
+<p>直接dependencyを書けない場合などがあります。</p>
+
+<p>そのような場合に、pomを書き換える必要が生じます。</p>
+
+<h3>publicationコンテナのpomオブジェクトを用いる</h3>
+
+<p>maven-publishプラグインではpublicationコンテナにて</p>
+
+<p>pomオブジェクトを介して発行されるpomにアクセすることができます。</p>
+
+<p>先ほどのビルドスクリプトにpomを生成するタスクを追加します。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="s1">&#39;java&#39;</span>
+</span><span class='line'><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="s1">&#39;maven-publish&#39;</span>
+</span><span class='line'><span class="c1">// project information</span>
+</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s1">&#39;org.mikeneck.sample&#39;</span>
+</span><span class='line'><span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;1.0&#39;</span>
+</span><span class='line'><span class="c1">// repositories</span>
+</span><span class='line'><span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">mavenCentral</span> <span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// dependencies</span>
+</span><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">compile</span> <span class="s1">&#39;org.jsoup:jsoup:1.6.3&#39;</span>
+</span><span class='line'>    <span class="n">testCompile</span> <span class="s1">&#39;junit:junit:4.11&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// zip sources</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">sourceJar</span><span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Jar</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">from</span> <span class="n">sourceSets</span><span class="o">.</span><span class="na">main</span><span class="o">.</span><span class="na">allJava</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// zip javadocs</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">javadocJar</span><span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Jar</span><span class="o">,</span> <span class="n">dependsOn</span> <span class="o">:</span> <span class="n">javadoc</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">from</span> <span class="n">javadoc</span><span class="o">.</span><span class="na">destinationDir</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// publishing description</span>
+</span><span class='line'><span class="n">publishing</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">publications</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">sample</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">from</span> <span class="n">components</span><span class="o">.</span><span class="na">java</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">documents</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">artifact</span> <span class="o">(</span><span class="s1">&#39;document.html&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;doc&#39;</span>
+</span><span class='line'>                <span class="n">extension</span>  <span class="o">=</span> <span class="s1">&#39;html&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">artifact</span> <span class="n">sourceJar</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;sources&#39;</span>
+</span><span class='line'>                <span class="n">extension</span>  <span class="o">=</span> <span class="s1">&#39;jar&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">artifact</span> <span class="n">javadocJar</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;javadoc&#39;</span>
+</span><span class='line'>                <span class="n">extension</span>  <span class="o">=</span> <span class="s1">&#39;jar&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="c1">// editing pom file with builder style</span>
+</span><span class='line'>        <span class="n">pomOnly</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">pom</span><span class="o">.</span><span class="na">withXml</span> <span class="o">{</span>
+</span><span class='line'>                <span class="kt">def</span> <span class="n">node</span> <span class="o">=</span> <span class="n">asNode</span><span class="o">()</span>
+</span><span class='line'>                <span class="n">node</span><span class="o">.</span><span class="na">children</span><span class="o">().</span><span class="na">last</span><span class="o">()</span> <span class="o">+</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">resolveStrategy</span> <span class="o">=</span> <span class="n">Closure</span><span class="o">.</span><span class="na">DELEGATE_FIRST</span>
+</span><span class='line'>                    <span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="n">project</span><span class="o">.</span><span class="na">configurations</span><span class="o">.</span><span class="na">compile</span><span class="o">.</span><span class="na">dependencies</span><span class="o">.</span><span class="na">each</span> <span class="o">{</span><span class="n">dep</span> <span class="o">-&gt;</span>
+</span><span class='line'>                            <span class="n">dependency</span> <span class="o">{</span>
+</span><span class='line'>                                <span class="n">groupId</span> <span class="n">dep</span><span class="o">.</span><span class="na">group</span>
+</span><span class='line'>                                <span class="n">artifactId</span> <span class="n">dep</span><span class="o">.</span><span class="na">name</span>
+</span><span class='line'>                                <span class="n">version</span> <span class="n">dep</span><span class="o">.</span><span class="na">version</span>
+</span><span class='line'>                            <span class="o">}</span>
+</span><span class='line'>                        <span class="o">}</span>
+</span><span class='line'>                    <span class="o">}</span>
+</span><span class='line'>                    <span class="n">licenses</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="n">license</span> <span class="o">{</span>
+</span><span class='line'>                            <span class="n">name</span> <span class="s1">&#39;The Apache Software License, Version 2.0&#39;</span>
+</span><span class='line'>                            <span class="n">url</span> <span class="s1">&#39;http://www.apache.org/license/LICENSE-2.0.txt&#39;</span>
+</span><span class='line'>                            <span class="n">distribution</span> <span class="s1">&#39;repo&#39;</span>
+</span><span class='line'>                        <span class="o">}</span>
+</span><span class='line'>                    <span class="o">}</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">maven</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">url</span> <span class="s1">&#39;file://Users/mike/maven-sample-repo&#39;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>pomの編集部分で<code>asNode()</code>メソッドを呼び出します。</p>
+
+<p>このメソッドにより、pomファイルを<code>groovy.util.Node</code>の形で取得出来ます。</p>
+
+<p><code>asNode()</code>で返ってくる<code>Node</code>の一番トップの部分は<code>&lt;project&gt;</code>要素です。</p>
+
+<p>この要素の子要素を取得し、最後の要素に<code>plus</code>メソッドで要素を追加します。</p>
+
+<p>追加する<code>Closure</code>は、<code>groovy.util.NodeBuilder</code>と同等のDSLによって、</p>
+
+<p>pomに要素を追加していくことができます。</p>
+
+<p>では、このタスクを実行してみます。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">gradle</span> <span class="n">clean</span> <span class="n">pPOPTMR</span>
+</span><span class='line'><span class="o">:</span><span class="n">clean</span>
+</span><span class='line'><span class="o">:</span><span class="n">generatePomFileForPomOnlyPublication</span>
+</span><span class='line'><span class="o">:</span><span class="n">publishPomOnlyPublicationToMavenRepository</span>
+</span><span class='line'><span class="nl">Uploading:</span> <span class="n">org</span><span class="s">/mikeneck/</span><span class="n">sample</span><span class="s">/sample-project/</span><span class="mf">1.0</span><span class="s">/sample-project-1.0.pom to repository remote at file:/</span><span class="n">Users</span><span class="s">/mike/</span><span class="n">maven</span><span class="o">-</span><span class="n">sample</span><span class="o">-</span><span class="n">repo</span><span class="o">/</span>
+</span><span class='line'><span class="n">Transferring</span> <span class="mi">1</span><span class="n">K</span> <span class="n">from</span> <span class="n">remote</span>
+</span><span class='line'><span class="n">Uploaded</span> <span class="mi">1</span><span class="n">K</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">BUILD</span> <span class="n">SUCCESSFUL</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Total</span> <span class="nl">time:</span> <span class="mf">5.813</span> <span class="n">secs</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>発行されたpomファイルは次のようになります。</p>
+
+<figure class='code'><figcaption><span>sample-project-1.0.pom</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="nt">&lt;project</span> <span class="na">xmlns=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;groupId&gt;</span>org.mikeneck.sample<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;artifactId&gt;</span>sample-project<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;version&gt;</span>1.0<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;packaging&gt;</span>pom<span class="nt">&lt;/packaging&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;dependencies&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;groupId&gt;</span>org.jsoup<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>jsoup<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;version&gt;</span>1.6.3<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/dependencies&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;licenses&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;license&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;name&gt;</span>The Apache Software License, Version 2.0<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;url&gt;</span>http://www.apache.org/license/LICENSE-2.0.txt<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;distribution&gt;</span>repo<span class="nt">&lt;/distribution&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/license&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/licenses&gt;</span>
+</span><span class='line'><span class="nt">&lt;/project&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>PGP署名ファイルの発行 &mdash; 書きかけ…</h2>
+
+<p>少し話題が飛びますが、</p>
+
+<p>maven central repositoryにライブラリーを発行する場合、</p>
+
+<p>各アーカイブファイルとpomファイルに対してPGP(Pretty Good Privacy)署名が必要となります。</p>
+
+<h3>PGP署名って…？</h3>
+
+<p>PGP署名を簡単に説明すると以下のようになります。</p>
+
+<ul>
+<li>配布物を元に、配布元で非公開鍵で暗号化して署名を作る</li>
+<li>受け取り側で署名に対して公開鍵で復号化したものと、配布物とを比較する</li>
+<li>一致していれば配布物が正しいもの(改ざんされていない)と判定される</li>
+</ul>
+
+
+<p>というファイルの信頼性を確認する仕組みです。</p>
+
+<p>なお、PGPツールとしては、PGPの仕様RFC4880に準拠した、</p>
+
+<p><a href="http://www.gnupg.org">GnuPG(Gnu Privacy Guard)</a>を使うのが一般的なようです。</p>
+
+<p>なお、GnuPGの現在のバージョンは2.0です。</p>
+
+<p>また、Javaでの実装ではBCPGが有名です。</p>
+
+<p>また、gradle本題も<code>bcpg-jdk15-1.46</code>を利用しています。</p>
+
+<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRNzktQnBvNjBnZE0"><img src="https://googledrive.com/host/0B4hhdHWLP7RRNzktQnBvNjBnZE0" style="width : 300px;"/></a></p>
+
+<h3>署名タスクを作成する</h3>
+
+<p>mavenプラグイン + signプラグインであれば、以下の様な記述で署名を作成することが可能です。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="o">[</span><span class="s1">&#39;maven&#39;</span><span class="o">,</span> <span class="s1">&#39;signing&#39;</span><span class="o">].</span><span class="na">each</span> <span class="o">{</span><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="n">it</span><span class="o">}</span>
+</span><span class='line'><span class="n">artifacts</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">archives</span> <span class="n">jar</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">signing</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">sign</span> <span class="n">configurations</span><span class="o">.</span><span class="na">archives</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>しかし、maven-publishプラグインでは、明示的に署名ファイルも取り扱いたいので、</p>
+
+<p>一工夫が必要になります。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="c1">// plugins</span>
+</span><span class='line'><span class="o">[</span><span class="s1">&#39;maven-publish&#39;</span><span class="o">,</span> <span class="s1">&#39;signing&#39;</span><span class="o">].</span><span class="na">each</span> <span class="o">{</span><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="n">it</span><span class="o">}</span>
+</span><span class='line'><span class="c1">// zip sources</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">sourceJar</span><span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Jar</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">from</span> <span class="n">sourceSets</span><span class="o">.</span><span class="na">main</span><span class="o">.</span><span class="na">allJava</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// zip javadocs</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">javadocJar</span><span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Jar</span><span class="o">,</span> <span class="n">dependsOn</span> <span class="o">:</span> <span class="n">javadoc</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">from</span> <span class="n">javadoc</span><span class="o">.</span><span class="na">destinationDir</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// collect artifacts</span>
+</span><span class='line'><span class="n">artifacts</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">archives</span> <span class="n">jar</span>
+</span><span class='line'>    <span class="n">archives</span> <span class="n">sourceJar</span>
+</span><span class='line'>    <span class="n">archives</span> <span class="n">javadocJar</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// sign task</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">signArchives</span> <span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Sign</span><span class="o">,</span> <span class="n">dependsOn</span> <span class="o">:</span> <span class="o">[</span><span class="n">jar</span><span class="o">,</span> <span class="n">sourceJar</span><span class="o">,</span> <span class="n">javadocJar</span><span class="o">])</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">sign</span> <span class="n">configurations</span><span class="o">.</span><span class="na">archives</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// execute sign task</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">preparePublication</span> <span class="o">(</span><span class="n">dependsOn</span> <span class="o">:</span> <span class="n">signArchives</span><span class="o">)</span>
+</span><span class='line'><span class="c1">// extract signature files with classifier and extension</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">getSignatureFiles</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">allFiles</span> <span class="o">=</span> <span class="n">tasks</span><span class="o">.</span><span class="na">signArchives</span><span class="o">.</span><span class="na">signatureFiles</span><span class="o">.</span><span class="na">collect</span><span class="o">{</span><span class="n">it</span><span class="o">}</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">signedSources</span> <span class="o">=</span> <span class="n">allFiles</span><span class="o">.</span><span class="na">find</span> <span class="o">{</span> <span class="n">it</span><span class="o">.</span><span class="na">name</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s1">&#39;-sources&#39;</span><span class="o">)</span> <span class="o">}</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">signedJavadoc</span> <span class="o">=</span> <span class="n">allFiles</span><span class="o">.</span><span class="na">find</span> <span class="o">{</span> <span class="n">it</span><span class="o">.</span><span class="na">name</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s1">&#39;-javadoc&#39;</span><span class="o">)</span> <span class="o">}</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">signedJar</span> <span class="o">=</span> <span class="o">(</span><span class="n">allFiles</span> <span class="o">-</span> <span class="o">[</span><span class="n">signedSources</span><span class="o">,</span> <span class="n">signedJavadoc</span><span class="o">])[</span><span class="mi">0</span><span class="o">]</span>
+</span><span class='line'>    <span class="k">return</span> <span class="o">[</span>
+</span><span class='line'>            <span class="o">[</span><span class="nl">archive:</span> <span class="n">signedSources</span><span class="o">,</span> <span class="nl">classifier:</span> <span class="s1">&#39;sources&#39;</span><span class="o">,</span> <span class="nl">extension:</span> <span class="s1">&#39;jar.asc&#39;</span><span class="o">],</span>
+</span><span class='line'>            <span class="o">[</span><span class="nl">archive:</span> <span class="n">signedJavadoc</span><span class="o">,</span> <span class="nl">classifier:</span> <span class="s1">&#39;javadoc&#39;</span><span class="o">,</span> <span class="nl">extension:</span> <span class="s1">&#39;jar.asc&#39;</span><span class="o">],</span>
+</span><span class='line'>            <span class="o">[</span><span class="nl">archive:</span> <span class="n">signedJar</span><span class="o">,</span>     <span class="nl">classifier:</span> <span class="kc">null</span><span class="o">,</span>      <span class="nl">extension:</span> <span class="s1">&#39;jar.asc&#39;</span><span class="o">]</span>
+</span><span class='line'>    <span class="o">]</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">publishing</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">publications</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">jars</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">from</span> <span class="n">components</span><span class="o">.</span><span class="na">java</span>
+</span><span class='line'>            <span class="o">[</span>
+</span><span class='line'>                    <span class="o">[</span><span class="n">jarTask</span> <span class="o">:</span> <span class="n">tasks</span><span class="o">.</span><span class="na">sourceJar</span><span class="o">,</span>  <span class="n">classifier</span> <span class="o">:</span> <span class="s1">&#39;sources&#39;</span><span class="o">,</span> <span class="n">extension</span> <span class="o">:</span> <span class="s1">&#39;jar&#39;</span><span class="o">],</span>
+</span><span class='line'>                    <span class="o">[</span><span class="n">jarTask</span> <span class="o">:</span> <span class="n">tasks</span><span class="o">.</span><span class="na">javadocJar</span><span class="o">,</span> <span class="n">classifier</span> <span class="o">:</span> <span class="s1">&#39;javadoc&#39;</span><span class="o">,</span> <span class="n">extension</span> <span class="o">:</span> <span class="s1">&#39;jar&#39;</span><span class="o">]</span>
+</span><span class='line'>            <span class="o">].</span><span class="na">each</span> <span class="o">{</span><span class="n">archive</span> <span class="o">-&gt;</span>
+</span><span class='line'>                <span class="n">artifact</span> <span class="o">(</span><span class="n">archive</span><span class="o">.</span><span class="na">jarTask</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">classifier</span> <span class="o">=</span> <span class="n">archive</span><span class="o">.</span><span class="na">classifier</span>
+</span><span class='line'>                    <span class="n">extension</span>  <span class="o">=</span> <span class="n">archive</span><span class="o">.</span><span class="na">classifier</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">jarSignatures</span> <span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">getSignatureFiles</span><span class="o">().</span><span class="na">each</span> <span class="o">{</span><span class="n">signedArchive</span> <span class="o">-&gt;</span>
+</span><span class='line'>                <span class="n">artifact</span> <span class="o">(</span><span class="n">signedArchive</span><span class="o">.</span><span class="na">archive</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">classifier</span> <span class="o">=</span> <span class="n">signedArchive</span><span class="o">.</span><span class="na">classifier</span>
+</span><span class='line'>                    <span class="n">extension</span>  <span class="o">=</span> <span class="n">signedArchive</span><span class="o">.</span><span class="na">extension</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>課題</h2>
+
+<p>まあ、この記事を書いていて、大体策は思いついたのですが、</p>
+
+<p>時間の関係上、後で更新します。</p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[gradle 1.4以降から追加されているmaven-publishプラグインでは、まだmaven central レポジトリーに上げられないようです。]]></title>
@@ -5790,97 +7187,6 @@ long sum = integers.reduce(0, Long::sum);
   ga('send', 'pageview');
 
 </script>
-
-
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[gradle1.6からgroovyのconfigurationはdeprecatedになっています]]></title>
-    <link href="http://mike-neck.github.io/blog/2013/05/22/gradle1-dot-6karagroovyfalseconfigurationhadeprecatedninatuteimasu/"/>
-    <updated>2013-05-22T20:08:00+09:00</updated>
-    <id>http://mike-neck.github.io/blog/2013/05/22/gradle1-dot-6karagroovyfalseconfigurationhadeprecatedninatuteimasu</id>
-    <content type="html"><![CDATA[<h2>gradle1.6からgroovyのconfigurationは非推奨になっています</h2>
-
-<p>まあ今さらですが、さきほどbuild.gradleを書いた時に、</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ gradle idea
-</span><span class='line'>The groovy configuration has been deprecated and is scheduled to be removed in Gradle 2.0. Typically, usages of 'groovy' can simply be replaced with 'compile'. In some cases, it may be necessary to additionally configure the 'groovyClasspath' property of GroovyCompile and Groovydoc tasks.
-</span><span class='line'>:ideaModule
-</span><span class='line'>Download http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.pom
-</span><span class='line'>Download http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3-sources.jar
-</span><span class='line'>Download http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.1.3/groovy-all-2.1.3.jar
-</span><span class='line'>:ideaProject
-</span><span class='line'>:ideaWorkspace
-</span><span class='line'>:idea
-</span><span class='line'>
-</span><span class='line'>BUILD SUCCESSFUL
-</span><span class='line'>
-</span><span class='line'>Total time: 11.174 secs
-</span><span class='line'>$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p>と表示されたので、「うぉっ」と思ってドキュメントを読んでみました。</p>
-
-<p><a href="http://www.gradle.org/docs/current/release-notes#groovy-configuration-is-deprecated">groovy configuration is deprecated</a></p>
-
-<p>じゃあ、今後どうするのかというと、</p>
-
-<h1>compile configurationにgroovyのartifactを指定する</h1>
-
-<p>ということです。</p>
-
-<p>つまり、これまでは</p>
-
-<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">groovy</span> <span class="o">:</span> <span class="s1">&#39;org.codehaus:groovy:groovy-all:2.1.3&#39;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と書いていましたが、</p>
-
-<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">compile</span> <span class="o">:</span> <span class="s1">&#39;org.codehaus.groovy:groovy-all:2.1.3&#39;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と書けばよいようです。</p>
-
-<table>
-<tbody>
-<tr>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B009X5KIFK" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=3864900492" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1617291307" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-</tr>
-</tbody>
-</table>
 
 
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: java | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-16T12:09:28+09:00</updated>
+  <updated>2013-06-20T03:31:25+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -12,6 +12,945 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[gradleのmaven-publishプラグインでライブラリーを発行する方法 - 1]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/06/19/publish-maven-artifact-with-sign-files-1/"/>
+    <updated>2013-06-19T16:21:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/06/19/publish-maven-artifact-with-sign-files-1</id>
+    <content type="html"><![CDATA[<p><img src="http://www.gradle.org/forum-assets/images/gradle_logo.gif"/></p>
+
+<p>こんにちわ、みけです。</p>
+
+<p>ここ数日、gradleのmaven-publishプラグインにはまっていたので、</p>
+
+<p>そのメモです。</p>
+
+<h1>maven-publishプラグインについて</h1>
+
+<p>以下のとおりにメモしていきます。</p>
+
+<ul>
+<li>maven-publishプラグインの基礎</li>
+<li>javadoc、sourcesを発行する</li>
+<li>複数回、成果物を発行する</li>
+<li>pomを変更する</li>
+<li>PGP署名ファイルの発行</li>
+<li>課題</li>
+</ul>
+
+
+<h2>maven-publishプラグインの基礎</h2>
+
+<p>maven-publishプラグインは任意のファイルを</p>
+
+<p>任意のmavenレポジトリーにアップロードすることができるプラグインです。</p>
+
+<p>次のようなビルドスクリプトでは、以下のようなartifactを発行することができます。</p>
+
+<ul>
+<li>sample-project-1.0.jar</li>
+<li>sample-project-1.0.pom</li>
+<li>sample-project-1.0-doc.html</li>
+</ul>
+
+
+<p>```groovy build.gradle
+apply plugin : &lsquo;java&rsquo;
+apply plugin : &lsquo;maven-publish&rsquo;
+// project information
+group = &lsquo;org.mikeneck.sample&rsquo;
+version = &lsquo;1.0&rsquo;
+// publishing description
+publishing {</p>
+
+<pre><code>publications {
+    sample(MavenPublication) {
+        from components.java
+        artifact ('document.html') {
+            classifier = 'doc'
+            extension  = 'html'
+        }
+    }
+}
+repositories {
+    maven {
+        url 'file://Users/mike/maven-sample-repo'
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>また、これらに付随して、それぞれのファイルのmd5ファイルとsha1ファイルも作成されます。</p>
+
+<p>実際に実行してみます。</p>
+
+<p>```
+$ gradle clean test publish
+:clean UP-TO-DATE
+:compileJava
+:processResources UP-TO-DATE
+:classes
+:compileTestJava
+:processTestResources UP-TO-DATE
+:testClasses
+:test
+:generatePomFileForSamplePublication
+:jar
+:publishSamplePublicationToMavenRepository
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0.jar to repository remote at file:/Users/mike/maven-sample-repo
+Transferring 1K from remote
+Uploaded 1K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-doc.html to repository remote at file:/Users/mike/maven-sample-repo
+Transferring 0K from remote
+Uploaded 0K
+:publish</p>
+
+<p>BUILD SUCCESSFUL</p>
+
+<p>Total time: 18.255 secs
+```</p>
+
+<p>pomファイルが発行されたのかどうかよくわかりませんが、</p>
+
+<p>実際に発行されたディレクトリーを見てみます。</p>
+
+<p><code>
+$ cd /Users/mike/maven-sample-repo/org/mikeneck/sample
+$ ls
+sample-project
+$ cd sample-project/
+$ ls
+1.0    maven-metadata.xml    maven-metadata.xml.md5    maven-metadata.xml.sha1
+$ cd 1.0/
+$ ls
+sample-project-1.0-doc.html      sample-project-1.0.jar      sample-project-1.0.pom
+sample-project-1.0-doc.html.md5  sample-project-1.0.jar.md5  sample-project-1.0.pom.md5
+sample-project-1.0-doc.html.sha1 sample-project-1.0.jar.sha1 sample-project-1.0.pom.sha1
+</code></p>
+
+<p>ということでコマンドを実行したあとの標準出力にはpomについての記述はありませんが、</p>
+
+<p>ちゃんと発行されています。</p>
+
+<h3>規約</h3>
+
+<p>maven-publishプラグインでは以下のようなルールがあります。</p>
+
+<ul>
+<li>基本的なartifact名はproject名(ディレクトリの名前) + version番号</li>
+<li><code>classifier</code>に指定された文字列は上記のファイル名の最後に付与される</li>
+<li><code>extension</code>で指定された文字列は拡張子として付与される</li>
+<li><code>classifier</code> + <code>extension</code>での一意性のチェックが行われる</li>
+</ul>
+
+
+<h2>javadoc、sourcesを発行する</h2>
+
+<p>では、先ほどのサンプルに、ソースとjavadocを付与してみます。</p>
+
+<p>```groovy build.gradle
+apply plugin : &lsquo;java&rsquo;
+apply plugin : &lsquo;maven-publish&rsquo;
+// project information
+group = &lsquo;org.mikeneck.sample&rsquo;
+version = &lsquo;1.0&rsquo;
+// zip sources
+task sourceJar(type : Jar) {</p>
+
+<pre><code>from sourceSets.main.allJava
+</code></pre>
+
+<p>}
+// zip javadocs
+task javadocJar(type : Jar, dependsOn : javadoc) {</p>
+
+<pre><code>from javadoc.destinationDir
+</code></pre>
+
+<p>}
+// publishing description
+publishing {</p>
+
+<pre><code>publications {
+    sample(MavenPublication) {
+        from components.java
+        artifact ('document.html') {
+            classifier = 'doc'
+            extension  = 'html'
+        }
+        artifact sourceJar {
+            classifier = 'sources'
+            extension  = 'jar'
+        }
+        artifact javadocJar {
+            classifier = 'javadoc'
+            extension  = 'jar'
+        }
+    }
+}
+repositories {
+    maven {
+        url 'file://Users/mike/maven-sample-repo'
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>DSLによれば、メソッド<code>artifact</code>にはtaskを引数にとることができ、指定したtaskの成果物を発行することができます。</p>
+
+<p>上記の例では、<code>sourceJar</code>タスクによってjarファイルに固められたソースと、</p>
+
+<p><code>javadocJar</code>タスクに寄ってjarファイルに固められたjavadocが、</p>
+
+<p>発行されるようになります。</p>
+
+<p>では、実行してみましょう。</p>
+
+<p>```
+$ gradle clean test publish
+:clean
+:compileJava
+:processResources UP-TO-DATE
+:classes
+:compileTestJava
+:processTestResources UP-TO-DATE
+:testClasses
+:test
+:generatePomFileForSamplePublication
+:jar
+:javadoc
+:javadocJar
+:sourceJar
+:publishSamplePublicationToMavenRepository
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0.jar to repository remote at file:/Users/mike/maven-sample-repo/
+Transferring 1K from remote
+Uploaded 1K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-doc.html to repository remote at file:/Users/mike/maven-sample-repo/
+Transferring 0K from remote
+Uploaded 0K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-sources.jar to repository remote at file:/Users/mike/maven-sample-repo/
+Transferring 1K from remote
+Uploaded 1K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-javadoc.jar to repository remote at file:/Users/mike/maven-sample-repo/
+Transferring 33K from remote
+Uploaded 33K
+:publish</p>
+
+<p>BUILD SUCCESSFUL</p>
+
+<p>Total time: 25.84 secs
+```</p>
+
+<p>上記の標準出力からソースとjavadocが出力されていることがわかります。</p>
+
+<p>実際に出力されたファイルを確認してみます。</p>
+
+<p><code>
+$ cd /Users/mike/maven-sample-repo/org/mikeneck/sample/sample-project/1.0
+$ ls -la
+total 184
+drwxr-xr-x  17 mike  mike   578B  6 19 17:40 .
+drwxr-xr-x   6 mike  mike   204B  6 19 17:05 ..
+-rw-r--r--   1 mike  mike   346B  6 19 17:40 sample-project-1.0-doc.html
+-rw-r--r--   1 mike  mike    32B  6 19 17:40 sample-project-1.0-doc.html.md5
+-rw-r--r--   1 mike  mike    40B  6 19 17:40 sample-project-1.0-doc.html.sha1
+-rw-r--r--   1 mike  mike    33K  6 19 17:40 sample-project-1.0-javadoc.jar
+-rw-r--r--   1 mike  mike    32B  6 19 17:40 sample-project-1.0-javadoc.jar.md5
+-rw-r--r--   1 mike  mike    40B  6 19 17:40 sample-project-1.0-javadoc.jar.sha1
+-rw-r--r--   1 mike  mike   927B  6 19 17:40 sample-project-1.0-sources.jar
+-rw-r--r--   1 mike  mike    32B  6 19 17:40 sample-project-1.0-sources.jar.md5
+-rw-r--r--   1 mike  mike    40B  6 19 17:40 sample-project-1.0-sources.jar.sha1
+-rw-r--r--   1 mike  mike   1.1K  6 19 17:40 sample-project-1.0.jar
+-rw-r--r--   1 mike  mike    32B  6 19 17:40 sample-project-1.0.jar.md5
+-rw-r--r--   1 mike  mike    40B  6 19 17:40 sample-project-1.0.jar.sha1
+-rw-r--r--   1 mike  mike   404B  6 19 17:40 sample-project-1.0.pom
+-rw-r--r--   1 mike  mike    32B  6 19 17:40 sample-project-1.0.pom.md5
+-rw-r--r--   1 mike  mike    40B  6 19 17:40 sample-project-1.0.pom.sha1
+</code></p>
+
+<h2>複数回、成果物を発行する</h2>
+
+<p>これまでの例では<code>sample</code>という発行タスクにいろいろなものを詰め込んでいました。</p>
+
+<p>たとえば、javadocだけとか、sourcesファイルだけとか発行したい場合、</p>
+
+<p>成果物の発行タスクを切り分けたいような場面があるかと思います。</p>
+
+<p>その場合、<code>publications</code>の下の記述を変えることで、成果物の発行タスクを分けることができます。</p>
+
+<p>```groovy build.gradle
+apply plugin : &lsquo;java&rsquo;
+apply plugin : &lsquo;maven-publish&rsquo;
+// project information
+group = &lsquo;org.mikeneck.sample&rsquo;
+version = &lsquo;1.0&rsquo;
+// zip sources
+task sourceJar(type : Jar) {</p>
+
+<pre><code>from sourceSets.main.allJava
+</code></pre>
+
+<p>}
+// zip javadocs
+task javadocJar(type : Jar, dependsOn : javadoc) {</p>
+
+<pre><code>from javadoc.destinationDir
+</code></pre>
+
+<p>}
+// publishing description
+publishing {</p>
+
+<pre><code>publications {
+    // only java archives
+    sample(MavenPublication) {
+        from components.java
+    }
+    // publish documents
+    documents(MavenPublication) {
+        artifact ('document.html') {
+            classifier = 'doc'
+            extension  = 'html'
+        }
+        artifact sourceJar {
+            classifier = 'sources'
+            extension  = 'jar'
+        }
+        artifact javadocJar {
+            classifier = 'javadoc'
+            extension  = 'jar'
+        }
+    }
+}
+repositories {
+    maven {
+        url 'file://Users/mike/maven-sample-repo'
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>これで、メインのjarを発行するタスクと、</p>
+
+<p>ドキュメント類を発行するタスクを切り分けることができました。</p>
+
+<p>実際、タスクにはどのようなものがあるか確認します。</p>
+
+<p>```
+$ gradle tasks
+:tasks</p>
+
+<hr />
+
+<h2>All tasks runnable from root project</h2>
+
+<h2>Build tasks</h2>
+
+<p>assemble &ndash; Assembles the outputs of this project.
+build &ndash; Assembles and tests this project.</p>
+
+<p>…中略…</p>
+
+<h2>Publishing tasks</h2>
+
+<p>publish &ndash; Publishes all publications produced by this project.
+publishDocumentsPublicationToMavenLocal &ndash; Publishes Maven publication &lsquo;documents&rsquo; to the local Maven repository.
+publishDocumentsPublicationToMavenRepository &ndash; Publishes Maven publication &lsquo;documents&rsquo; to Maven repository &lsquo;maven&rsquo;.
+publishSamplePublicationToMavenLocal &ndash; Publishes Maven publication &lsquo;sample&rsquo; to the local Maven repository.
+publishSamplePublicationToMavenRepository &ndash; Publishes Maven publication &lsquo;sample&rsquo; to Maven repository &lsquo;maven&rsquo;.
+publishToMavenLocal &ndash; Publishes all Maven publications produced by this project to the local Maven cache.</p>
+
+<p>…中略…</p>
+
+<p>BUILD SUCCESSFUL</p>
+
+<p>Total time: 21.853 secs
+```</p>
+
+<p>Publishing tasksには次のようなエントリーが入っています。</p>
+
+<ul>
+<li><code>publish</code> すべてを指定したレポジトリーに発行する</li>
+<li><code>publicDocumentsPublication…</code> <code>documents</code>で指定したアーカイブを発行します。</li>
+<li><code>publishSamplePublication…</code> <code>sample</code>で指定したアーカイブを発行します。</li>
+<li><code>publishToMavenLocal</code> すべてをmaven localレポジトリーに発行します。</li>
+</ul>
+
+
+<p>という形で、<code>publishing/publications</code>で複数のアーカイブ発行を指定することで、タスクが生成されます。</p>
+
+<p>さて、ここでは、<code>publish</code>タスクを実行してみたいと思います。</p>
+
+<p>```
+$ gradle clean test publish
+:clean
+:compileJava
+:processResources UP-TO-DATE
+:classes
+:compileTestJava
+:processTestResources UP-TO-DATE
+:testClasses
+:test
+:generatePomFileForDocumentsPublication
+:javadoc
+:javadocJar
+:sourceJar
+:publishDocumentsPublicationToMavenRepository
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0.pom to repository remote at file:/Users/mike/maven-sample-repo/
+Transferring 0K from remote
+Uploaded 0K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-doc.html to repository remote at file:/Users/mike/maven-sample-repo/
+Transferring 0K from remote
+Uploaded 0K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-sources.jar to repository remote at file:/Users/mike/maven-sample-repo/
+Transferring 1K from remote
+Uploaded 1K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-javadoc.jar to repository remote at file:/Users/mike/maven-sample-repo/
+Transferring 33K from remote
+Uploaded 33K
+:generatePomFileForSamplePublication
+:jar
+:publishSamplePublicationToMavenRepository
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0.jar to repository remote at file:/Users/mike/maven-sample-repo/
+Transferring 1K from remote
+Uploaded 1K
+:publish</p>
+
+<p>BUILD SUCCESSFUL</p>
+
+<p>Total time: 12.33 secs
+```</p>
+
+<p>標準出力を見るとわかりますが、<strong>アルファベット順</strong>にタスクが実行されます。</p>
+
+<p>そして、もう一つ気になるところがありますね。</p>
+
+<p>各タスクの前に、<code>generatePomFileFor[タスク名]</code>というタスクが実行されています。</p>
+
+<p>これらが発行するpomは何かを調べてみます。</p>
+
+<p>まず、すこしスクリプトを変更します。</p>
+
+<p>```groovy build.gradle
+apply plugin : &lsquo;java&rsquo;
+apply plugin : &lsquo;maven-publish&rsquo;
+// project information
+group = &lsquo;org.mikeneck.sample&rsquo;
+version = &lsquo;1.0&rsquo;
+// repositories
+repositories {</p>
+
+<pre><code>mavenCentral ()
+</code></pre>
+
+<p>}
+// dependencies
+dependencies {</p>
+
+<pre><code>compile 'org.jsoup:jsoup:1.6.3'
+testCompile 'junit:junit:4.11'
+</code></pre>
+
+<p>}
+// zip sources
+task sourceJar(type : Jar) {</p>
+
+<pre><code>from sourceSets.main.allJava
+</code></pre>
+
+<p>}
+// zip javadocs
+task javadocJar(type : Jar, dependsOn : javadoc) {</p>
+
+<pre><code>from javadoc.destinationDir
+</code></pre>
+
+<p>}
+// publishing description
+publishing {</p>
+
+<pre><code>publications {
+    sample(MavenPublication) {
+        from components.java
+    }
+    documents(MavenPublication) {
+        artifact ('document.html') {
+            classifier = 'doc'
+            extension  = 'html'
+        }
+        artifact sourceJar {
+            classifier = 'sources'
+            extension  = 'jar'
+        }
+        artifact javadocJar {
+            classifier = 'javadoc'
+            extension  = 'jar'
+        }
+    }
+}
+repositories {
+    maven {
+        url 'file://Users/mike/maven-sample-repo'
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p><code>dependencies</code>を追加しました。</p>
+
+<p>この状態で、sampleの方を実行してみます。</p>
+
+<p>なお、このタスクの実行において、タスクの指定に省略名を使用しています。</p>
+
+<p>gradleでは<code>publishToMavenRepository</code>のような単語の頭文字が大文字になっているタスクを</p>
+
+<p>頭文字だけを選択して<code>pTMR</code>のように省略することができます。</p>
+
+<p>```
+$ gradle clean pSPTMR
+:clean
+:generatePomFileForSamplePublication
+:compileJava
+:processResources UP-TO-DATE
+:classes
+:jar
+:publishSamplePublicationToMavenRepository
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0.jar to repository remote at file:/Users/mike/maven-sample-repo/
+Transferring 1K from remote
+Uploaded 1K</p>
+
+<p>BUILD SUCCESSFUL</p>
+
+<p>Total time: 2.498 secs
+```</p>
+
+<p>さて、この結果出力されたpomは次のようになります。</p>
+
+<p>```xml sample-project-1.0.pom
+&lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo;?>
+&lt;project xsi:schemaLocation=&ldquo;<a href="http://maven.apache.org/POM/4.0.0">http://maven.apache.org/POM/4.0.0</a> <a href="http://maven.apache.org/xsd/maven-4.0.0.xsd">http://maven.apache.org/xsd/maven-4.0.0.xsd</a>&rdquo; xmlns=&ldquo;<a href="http://maven.apache.org/POM/4.0.0">http://maven.apache.org/POM/4.0.0</a>&rdquo;</p>
+
+<pre><code>xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+</code></pre>
+
+<p>  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.mikeneck.sample</groupId>
+  <artifactId>sample-project</artifactId>
+  <version>1.0</version>
+  <dependencies></p>
+
+<pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;org.jsoup&lt;/groupId&gt;
+  &lt;artifactId&gt;jsoup&lt;/artifactId&gt;
+  &lt;version&gt;1.6.3&lt;/version&gt;
+  &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>  </dependencies>
+</project>
+```</p>
+
+<p>一方、documentの方を実行してみます。</p>
+
+<p>```
+$ gradle clean pDPTMR
+:clean
+:generatePomFileForDocumentsPublication
+:compileJava
+:processResources UP-TO-DATE
+:classes
+:javadoc
+:javadocJar
+:sourceJar
+:publishDocumentsPublicationToMavenRepository
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0.pom to repository remote at file:/Users/mike/maven-sample-repo/
+Transferring 0K from remote
+Uploaded 0K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-doc.html to repository remote at file:/Users/mike/maven-sample-repo/
+Transferring 0K from remote
+Uploaded 0K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-sources.jar to repository remote at file:/Users/mike/maven-sample-repo/
+Transferring 1K from remote
+Uploaded 1K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-javadoc.jar to repository remote at file:/Users/mike/maven-sample-repo/
+Transferring 33K from remote
+Uploaded 33K</p>
+
+<p>BUILD SUCCESSFUL</p>
+
+<p>Total time: 4.961 secs
+```</p>
+
+<p>この結果出力されたpomは次のとおり、<code>&lt;dependencies&gt;</code>〜<code>&lt;/dependencies&gt;</code>の部分の記述がなくなります。</p>
+
+<p>```xml sample-project-1.0.pom
+&lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo;?>
+&lt;project xsi:schemaLocation=&ldquo;<a href="http://maven.apache.org/POM/4.0.0">http://maven.apache.org/POM/4.0.0</a> <a href="http://maven.apache.org/xsd/maven-4.0.0.xsd">http://maven.apache.org/xsd/maven-4.0.0.xsd</a>&rdquo; xmlns=&ldquo;<a href="http://maven.apache.org/POM/4.0.0">http://maven.apache.org/POM/4.0.0</a>&rdquo;</p>
+
+<pre><code>xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+</code></pre>
+
+<p>  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.mikeneck.sample</groupId>
+  <artifactId>sample-project</artifactId>
+  <version>1.0</version>
+  <packaging>pom</packaging>
+</project>
+```</p>
+
+<p>この違いは、前者のタスクにおいてdependenciesの情報を利用するのに対して、</p>
+
+<p>後者はdependenciesを使わないことにあると勝手に理解しています。</p>
+
+<p>したがって、複数回にわたって成果物を発行する場合は、</p>
+
+<p>pomの生成について気をつけなければなりません。</p>
+
+<h2>pomを変更する</h2>
+
+<p>前回のポストで記述した通り、maven centralに登録するライブラリーについては、</p>
+
+<p>発行するpomにいくつか追加情報を与えなければならない場合があります。</p>
+
+<p>また、Jettyのservletを用いる場合は、</p>
+
+<p>jetty-orbitという存在しないartifactを避けるために、</p>
+
+<p>直接dependencyを書けない場合などがあります。</p>
+
+<p>そのような場合に、pomを書き換える必要が生じます。</p>
+
+<h3>publicationコンテナのpomオブジェクトを用いる</h3>
+
+<p>maven-publishプラグインではpublicationコンテナにて</p>
+
+<p>pomオブジェクトを介して発行されるpomにアクセすることができます。</p>
+
+<p>先ほどのビルドスクリプトにpomを生成するタスクを追加します。</p>
+
+<p>```groovy build.gradle
+apply plugin : &lsquo;java&rsquo;
+apply plugin : &lsquo;maven-publish&rsquo;
+// project information
+group = &lsquo;org.mikeneck.sample&rsquo;
+version = &lsquo;1.0&rsquo;
+// repositories
+repositories {</p>
+
+<pre><code>mavenCentral ()
+</code></pre>
+
+<p>}
+// dependencies
+dependencies {</p>
+
+<pre><code>compile 'org.jsoup:jsoup:1.6.3'
+testCompile 'junit:junit:4.11'
+</code></pre>
+
+<p>}
+// zip sources
+task sourceJar(type : Jar) {</p>
+
+<pre><code>from sourceSets.main.allJava
+</code></pre>
+
+<p>}
+// zip javadocs
+task javadocJar(type : Jar, dependsOn : javadoc) {</p>
+
+<pre><code>from javadoc.destinationDir
+</code></pre>
+
+<p>}
+// publishing description
+publishing {</p>
+
+<pre><code>publications {
+    sample(MavenPublication) {
+        from components.java
+    }
+    documents(MavenPublication) {
+        artifact ('document.html') {
+            classifier = 'doc'
+            extension  = 'html'
+        }
+        artifact sourceJar {
+            classifier = 'sources'
+            extension  = 'jar'
+        }
+        artifact javadocJar {
+            classifier = 'javadoc'
+            extension  = 'jar'
+        }
+    }
+    // editing pom file with builder style
+    pomOnly(MavenPublication) {
+        pom.withXml {
+            def node = asNode()
+            node.children().last() + {
+                resolveStrategy = Closure.DELEGATE_FIRST
+                dependencies {
+                    project.configurations.compile.dependencies.each {dep -&gt;
+                        dependency {
+                            groupId dep.group
+                            artifactId dep.name
+                            version dep.version
+                        }
+                    }
+                }
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/license/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+            }
+        }
+    }
+}
+repositories {
+    maven {
+        url 'file://Users/mike/maven-sample-repo'
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>pomの編集部分で<code>asNode()</code>メソッドを呼び出します。</p>
+
+<p>このメソッドにより、pomファイルを<code>groovy.util.Node</code>の形で取得出来ます。</p>
+
+<p><code>asNode()</code>で返ってくる<code>Node</code>の一番トップの部分は<code>&lt;project&gt;</code>要素です。</p>
+
+<p>この要素の子要素を取得し、最後の要素に<code>plus</code>メソッドで要素を追加します。</p>
+
+<p>追加する<code>Closure</code>は、<code>groovy.util.NodeBuilder</code>と同等のDSLによって、</p>
+
+<p>pomに要素を追加していくことができます。</p>
+
+<p>では、このタスクを実行してみます。</p>
+
+<p>```
+$ gradle clean pPOPTMR
+:clean
+:generatePomFileForPomOnlyPublication
+:publishPomOnlyPublicationToMavenRepository
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0.pom to repository remote at file:/Users/mike/maven-sample-repo/
+Transferring 1K from remote
+Uploaded 1K</p>
+
+<p>BUILD SUCCESSFUL</p>
+
+<p>Total time: 5.813 secs
+```</p>
+
+<p>発行されたpomファイルは次のようになります。</p>
+
+<p>```xml sample-project-1.0.pom
+&lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo;?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.mikeneck.sample</groupId>
+  <artifactId>sample-project</artifactId>
+  <version>1.0</version>
+  <packaging>pom</packaging>
+  <dependencies></p>
+
+<pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;org.jsoup&lt;/groupId&gt;
+  &lt;artifactId&gt;jsoup&lt;/artifactId&gt;
+  &lt;version&gt;1.6.3&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>  </dependencies>
+  <licenses></p>
+
+<pre><code>&lt;license&gt;
+  &lt;name&gt;The Apache Software License, Version 2.0&lt;/name&gt;
+  &lt;url&gt;http://www.apache.org/license/LICENSE-2.0.txt&lt;/url&gt;
+  &lt;distribution&gt;repo&lt;/distribution&gt;
+&lt;/license&gt;
+</code></pre>
+
+<p>  </licenses>
+</project>
+```</p>
+
+<h2>PGP署名ファイルの発行 &mdash; 書きかけ…</h2>
+
+<p>少し話題が飛びますが、</p>
+
+<p>maven central repositoryにライブラリーを発行する場合、</p>
+
+<p>各アーカイブファイルとpomファイルに対してPGP(Pretty Good Privacy)署名が必要となります。</p>
+
+<h3>PGP署名って…？</h3>
+
+<p>PGP署名を簡単に説明すると以下のようになります。</p>
+
+<ul>
+<li>配布物を元に、配布元で非公開鍵で暗号化して署名を作る</li>
+<li>受け取り側で署名に対して公開鍵で復号化したものと、配布物とを比較する</li>
+<li>一致していれば配布物が正しいもの(改ざんされていない)と判定される</li>
+</ul>
+
+
+<p>というファイルの信頼性を確認する仕組みです。</p>
+
+<p>なお、PGPツールとしては、PGPの仕様RFC4880に準拠した、</p>
+
+<p><a href="http://www.gnupg.org">GnuPG(Gnu Privacy Guard)</a>を使うのが一般的なようです。</p>
+
+<p>なお、GnuPGの現在のバージョンは2.0です。</p>
+
+<p>また、Javaでの実装ではBCPGが有名です。</p>
+
+<p>また、gradle本題も<code>bcpg-jdk15-1.46</code>を利用しています。</p>
+
+<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRNzktQnBvNjBnZE0"><img src="https://googledrive.com/host/0B4hhdHWLP7RRNzktQnBvNjBnZE0" style="width : 300px;"/></a></p>
+
+<h3>署名タスクを作成する</h3>
+
+<p>mavenプラグイン + signプラグインであれば、以下の様な記述で署名を作成することが可能です。</p>
+
+<p>```groovy build.gradle
+[&lsquo;maven&rsquo;, &lsquo;signing&rsquo;].each {apply plugin : it}
+artifacts {</p>
+
+<pre><code>archives jar
+</code></pre>
+
+<p>}
+signing {</p>
+
+<pre><code>sign configurations.archives
+</code></pre>
+
+<p>}
+```</p>
+
+<p>しかし、maven-publishプラグインでは、明示的に署名ファイルも取り扱いたいので、</p>
+
+<p>一工夫が必要になります。</p>
+
+<p>```groovy build.gradle
+// plugins
+[&lsquo;maven-publish&rsquo;, &lsquo;signing&rsquo;].each {apply plugin : it}
+// zip sources
+task sourceJar(type : Jar) {</p>
+
+<pre><code>from sourceSets.main.allJava
+</code></pre>
+
+<p>}
+// zip javadocs
+task javadocJar(type : Jar, dependsOn : javadoc) {</p>
+
+<pre><code>from javadoc.destinationDir
+</code></pre>
+
+<p>}
+// collect artifacts
+artifacts {</p>
+
+<pre><code>archives jar
+archives sourceJar
+archives javadocJar
+</code></pre>
+
+<p>}
+// sign task
+task signArchives (type : Sign, dependsOn : [jar, sourceJar, javadocJar]) {</p>
+
+<pre><code>sign configurations.archives
+</code></pre>
+
+<p>}
+// execute sign task
+task preparePublication (dependsOn : signArchives)
+// extract signature files with classifier and extension
+def getSignatureFiles = {</p>
+
+<pre><code>def allFiles = tasks.signArchives.signatureFiles.collect{it}
+def signedSources = allFiles.find { it.name.contains('-sources') }
+def signedJavadoc = allFiles.find { it.name.contains('-javadoc') }
+def signedJar = (allFiles - [signedSources, signedJavadoc])[0]
+return [
+        [archive: signedSources, classifier: 'sources', extension: 'jar.asc'],
+        [archive: signedJavadoc, classifier: 'javadoc', extension: 'jar.asc'],
+        [archive: signedJar,     classifier: null,      extension: 'jar.asc']
+]
+</code></pre>
+
+<p>}
+publishing {</p>
+
+<pre><code>publications {
+    jars(MavenPublication) {
+        from components.java
+        [
+                [jarTask : tasks.sourceJar,  classifier : 'sources', extension : 'jar'],
+                [jarTask : tasks.javadocJar, classifier : 'javadoc', extension : 'jar']                    
+        ].each {archive -&gt;
+            artifact (archive.jarTask) {
+                classifier = archive.classifier
+                extension  = archive.classifier
+            }
+        }
+    }
+    jarSignatures (MavenPublication) {
+        getSignatureFiles().each {signedArchive -&gt;
+            artifact (signedArchive.archive) {
+                classifier = signedArchive.classifier
+                extension  = signedArchive.extension
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<h2>課題</h2>
+
+<p>まあ、この記事を書いていて、大体策は思いついたのですが、</p>
+
+<p>時間の関係上、後で更新します。</p>
+
+<p><!-- admax -->
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+<!-- admax -->
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[gradle 1.4以降から追加されているmaven-publishプラグインでは、まだmaven central レポジトリーに上げられないようです。]]></title>
@@ -1150,217 +2089,6 @@ long sum = integers.reduce(0, Long::sum);
 <h1>あれ、rubyのmix-inについての話はどこ行った…</h1>
 
 <p>vimでrubyのコード書くの辛いです…</p>
-
-<p><!-- admax -->
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-<!-- admax -->
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Groovyでpegdownをさわってみる]]></title>
-    <link href="http://mike-neck.github.io/blog/2013/06/08/groovydepegdownwosawatutemiru/"/>
-    <updated>2013-06-08T05:25:00+09:00</updated>
-    <id>http://mike-neck.github.io/blog/2013/06/08/groovydepegdownwosawatutemiru</id>
-    <content type="html"><![CDATA[<p>みけです。</p>
-
-<p><img src="http://mike-neck.github.io//groovy.codehaus.org/images/groovy-logo-medium.png" style="width : 450px;"/></p>
-
-<p>前回に引き続き、Javaのmarkdownパーサーを試してみます。</p>
-
-<p>で、今回は</p>
-
-<h1><a href="https://github.com/sirthias/pegdown">pegdown</a></h1>
-
-<p>を試してみました。</p>
-
-<p>サンプルコードは前回とほとんど変わりません。</p>
-
-<p>```groovy pegdown-sample.groovy
-@Grab(&lsquo;org.pegdown:pegdown:1.2.1&rsquo;)</p>
-
-<p>def processor = new org.pegdown.PegDownProcessor()</p>
-
-<p>def original = $/</p>
-
-<h2>This is Top Header</h2>
-
-<h1>This is second Header</h1>
-
-<h3>This is topic</h3>
-
-<h4>Lists Item</h4>
-
-<p>${(1..3).collect {&ldquo;+ item${it}&rdquo;}.join(&lsquo;\n&rsquo;)}</p>
-
-<p>and</p>
-
-<p>${(1..3).collect {&ldquo;1. item${it}&rdquo;}.join(&lsquo;\n&rsquo;)}</p>
-
-<h4>Links</h4>
-
-<ul>
-<li><a href="http://mike-neck.github.io/">mike-neck&rsquo;s site</a></li>
-<li><a href="http://mikeneckdq.blog.fc2.com/">mike-neck&rsquo;s dq site</a></li>
-<li><img src="http://groovy.codehaus.org/images/groovy-logo-medium.png" alt="groovy image" /></li>
-</ul>
-
-
-<h4>Html Tags</h4>
-
-<p><img src='http://mike-neck.github.io//googledrive.com/host/0B4hhdHWLP7RRdHRGZ3ZrZU90Q00' style='width : 400px;'></p>
-
-<h4>Codes</h4>
-
-<p>function <code>lists:reverse/1</code> returns a List.</p>
-
-<p>tag <code>&lt;em&gt;</code> means emphasis</p>
-
-<p><code>groovy
-def string = 'This is groovy code.'
-</code></p>
-
-<h4>emphasis</h4>
-
-<p><em>em?</em></p>
-
-<p><strong>bold?</strong></p>
-
-<h4>Blockquotes</h4>
-
-<blockquote><p>This is a blockquotes
-from here.</p></blockquote>
-
-<p>/$</p>
-
-<p>processor.markdownToHtml(original)
-```</p>
-
-<p>実行結果はこんな感じ。</p>
-
-<p>```html</p>
-
-<h2>This is Top Header</h2>
-
-
-<h1>This is second Header</h1>
-
-
-<h3>This is topic</h3>
-
-
-<h4>Lists Item</h4>
-
-
-<ul>
-  <li>item1</li>
-  <li>item2</li>
-  <li>item3</li>
-</ul>
-
-
-<p>and</p>
-
-
-<ol>
-  <li>item1</li>
-  <li>item2</li>
-  <li>item3</li>
-</ol>
-
-
-<h4>Links</h4>
-
-
-<ul>
-  <li><a href="http://mike-neck.github.io/">mike-neck's site</a></li>
-  <li><a href="http://mikeneckdq.blog.fc2.com/">mike-neck's dq site</a></li>
-  <li><img src="http://groovy.codehaus.org/images/groovy-logo-medium.png"  alt="groovy image"/></li>
-</ul>
-
-
-<h4>Html Tags</h4>
-
-
-<p><img src='http://mike-neck.github.io//googledrive.com/host/0B4hhdHWLP7RRdHRGZ3ZrZU90Q00' style='width : 400px;'></p>
-
-
-<h4>Codes</h4>
-
-
-<p>function <code>lists:reverse/1</code> returns a List.</p>
-
-
-<p>tag <code>&lt;em&gt;</code> means emphasis</p>
-
-
-<p><code>groovy
-def string = &#39;This is groovy code.&#39;
-</code></p>
-
-
-<h4>emphasis</h4>
-
-
-<p><em>em?</em></p>
-
-
-<p><strong>bold?</strong></p>
-
-
-<h4>Blockquotes</h4>
-
-
-<blockquote><p>This is a blockquotes from here.</p>
-</blockquote>
-
-
-<p>```</p>
-
-<h2>markdownjとの比較</h2>
-
-<p>markdownjではこんな不具合が有りました。</p>
-
-<ul>
-<li><code>===</code>がレンダーされない</li>
-<li>上の行にテキストがある状態で'&mdash;&ndash;&lsquo;がタグ<code>&lt;tr/&gt;</code>にレンダーされる</li>
-<li>当然ながら、GitHubっぽいコードスニペットはレンダーできない</li>
-</ul>
-
-
-<p>一方、これらのうち、</p>
-
-<ul>
-<li><code>===</code>がレンダーされない</li>
-<li>上の行にテキストがある状態で'&mdash;&ndash;&lsquo;がタグ<code>&lt;tr/&gt;</code>にレンダーされる</li>
-</ul>
-
-
-<p>はgepdownでは解消されているようです。</p>
-
-<p>残念ながら、</p>
-
-<ul>
-<li>当然ながら、GitHubっぽいコードスニペットはレンダーできない</li>
-</ul>
-
-
-<p>というのはあります。</p>
-
-<p>というわけで、pegdownの方が、良さげな感じがします。</p>
 
 <p><!-- admax -->
 <script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
