@@ -455,11 +455,12 @@ publishing {
 
 この状態で、sampleの方を実行してみます。
 
-なお、このタスクの実行において、タスクの指定に省略名を使用しています。
-
-gradleでは`publishToMavenRepository`のような単語の頭文字が大文字になっているタスクを
-
-頭文字だけを選択して`pTMR`のように省略することができます。
+> なお、このタスクの実行において、タスクの指定に省略名を使用しています。
+> 
+> gradleでは`publishToMavenRepository`のような単語の頭文字が大文字になっているタスクを
+> 
+> 頭文字だけを選択して`pTMR`のように省略することができます。
+> 
 
 
 ```
@@ -575,7 +576,7 @@ jetty-orbitという存在しないartifactを避けるために、
 
 maven-publishプラグインではpublicationコンテナにて
 
-pomオブジェクトを介して発行されるpomにアクセすることができます。
+pomオブジェクトを介して発行されるpomにアクセスすることができます。
 
 先ほどのビルドスクリプトにpomを生成するタスクを追加します。
 
@@ -656,9 +657,11 @@ publishing {
 }
 ```
 
-pomの編集部分で`asNode()`メソッドを呼び出します。
+pomオブジェクトの`withXml`メソッドの引数の`Closure`は、
 
-このメソッドにより、pomファイルを`groovy.util.Node`の形で取得出来ます。
+`org.gradle.api.XmlProvider`のメソッドを呼び出すことができます。
+
+そして、`asNode()`メソッドによりpomファイルを`groovy.util.Node`の形で取得出来ます。
 
 `asNode()`で返ってくる`Node`の一番トップの部分は`<project>`要素です。
 
@@ -740,7 +743,7 @@ PGP署名を簡単に説明すると以下のようになります。
 
 また、gradle本題も`bcpg-jdk15-1.46`を利用しています。
 
-[<img src="https://googledrive.com/host/0B4hhdHWLP7RRNzktQnBvNjBnZE0" style="width : 300px;"/>](https://googledrive.com/host/0B4hhdHWLP7RRNzktQnBvNjBnZE0)
+[<img src="//googledrive.com/host/0B4hhdHWLP7RRNzktQnBvNjBnZE0" style="width : 300px;"/>](https://googledrive.com/host/0B4hhdHWLP7RRNzktQnBvNjBnZE0)
 
 ### 署名タスクを作成する
 
@@ -761,29 +764,33 @@ signing {
 一工夫が必要になります。
 
 ```groovy build.gradle
-// plugins
+// plugins see(1)
 ['maven-publish', 'signing'].each {apply plugin : it}
-// zip sources
+// zip sources. see(4)
 task sourceJar(type : Jar) {
     from sourceSets.main.allJava
+    // add classifier to jar file
+    classifier = 'sources'
 }
-// zip javadocs
+// zip javadocs. see(4)
 task javadocJar(type : Jar, dependsOn : javadoc) {
     from javadoc.destinationDir
+    // add classifier to jar file
+    classifier = 'javadoc'
 }
-// collect artifacts
+// collect artifacts. see(3)
 artifacts { 
     archives jar
     archives sourceJar
     archives javadocJar
 }
-// sign task
+// sign task. see(2)
 task signArchives (type : Sign, dependsOn : [jar, sourceJar, javadocJar]) {
     sign configurations.archives
 }
-// execute sign task
+// execute sign task. see(7)
 task preparePublication (dependsOn : signArchives)
-// extract signature files with classifier and extension
+// extracting signature files with classifier and extension. see(5)
 def getSignatureFiles = {
     def allFiles = tasks.signArchives.signatureFiles.collect{it}
     def signedSources = allFiles.find { it.name.contains('-sources') }
@@ -797,6 +804,7 @@ def getSignatureFiles = {
 }
 publishing {
     publications {
+        // publishing artifacts
         jars(MavenPublication) {
             from components.java
             [
@@ -809,6 +817,7 @@ publishing {
                 }
             }
         }
+        // publishing signature files. see(6)
         jarSignatures (MavenPublication) {
             getSignatureFiles().each {signedArchive ->
                 artifact (signedArchive.archive) {
@@ -817,16 +826,510 @@ publishing {
                 }
             }
         }
+        // publishing pom file
+        pom(MavenPublication) {
+            pom.withXml {
+                def node = asNode()
+                node.children().last() + {
+                    resolveStrategy = Closure.DELEGATE_FIRST
+                    name 'sample-project'
+                    description 'give information of gradle maven-publish plugin'
+                    url projectUrl
+                    dependencies {
+                        project.configurations.compile.dependencies.each {dep ->
+                            dependency {
+                                groupId dep.group
+                                artifactId dep.name
+                                version dep.version
+                            }
+                        }
+                    }
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/license/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+                    scm {
+                        url github
+                        connection scmUrl
+                        developerConnection developerUrl
+                    }
+                    developers {
+                        developer {
+                            id 'mike_neck'
+                            name 'Shinya Mochida'
+                            email 'mike <at> mikeneck.org'
+                        }
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        fladDirs "${project.projectDirs}/artifacts"
     }
 }
 ```
 
+変更点は次のとおりです。
+
+#### (1) signingプラグインを導入します。
+
+signingプラグインではmavenプラグインと連携して次のように署名を作成することができます。
+
+```groovy build.gradle
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourceJar
+}
+signing {
+    sign configurations.archives
+}
+```
+
+しかし、mavenプラグインを使わないので、上記の方法では望みの署名ファイルを取得出来ません。
+
+#### (2) `Sign`タイプのタスクを作成する
+
+signingプラグインが入っているので、`type`が`Sign`のタスクを定義することができます。
+
+このタスクを作成しておくと、指定したファイルに対して署名を作成することができます。
+
+なお、このタスクは事前に署名対象のファイルがあることが前提なので、
+
+`jar`、`javadocJar`、`sourceJar`タスクに依存しています。
+
+#### (3) 成果物を一つの変数でアクセスできるようにする
+
+`artifacts{}`ブロックでは指定した`configuration`に成果物を登録することができます。
+
+次の例では`archives` configurationにjarタスク、javadocJarタスク、sourceJarタスクの成果を
+
+登録します。
+
+```groovy build.gradle
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourceJar
+}
+```
+
+これによって、`configurations.archives`というプロパティから、
+
+各種タスクの成果物にアクセスできるようになります。
+
+#### (4) `Jar`タイプのタスクにclassifierを指定して、成果物のファイル名を修正します。
+
+```groovy build.gradle
+// zip sources
+task sourceJar(type : Jar) {
+    from sourceSets.main.allJava
+    // add classifier to jar file
+    classifier = 'sources'
+}
+```
+
+これによって、作成されるsourcesJarのファイル名に`-sources`が含まれるようになります。
+
+#### (5) 署名ファイルを取り出します
+
+`type`が`Sign`のタスクの`getSignatureFiles()`メソッドは、署名したファイルのリストを返します。
+
+それらを`classifier`によって、わけて取り出して、
+
+改めて`classifier`と`extension`を付与します。
+
+#### (6) 署名ファイルをそれぞれ発行します。
+
+上記の(5)のクロージャー`getSignatureFiles`によって、
+
+署名ファイルと`classifier`と`extension`を取得し、
+
+それぞれartifactとして登録、発行します。
+
+#### (7) 事前に実行しておくタスクをまとめたタスクを追加
+
+署名ファイルを作成するタスクを確実に実行しておくために、
+
+`preparePublication`タスクを作成します。
+
+これを`publish`タスクの前に実行します。
+
+---
+
+それでは`publish`タスクを実行してみます。
+
+```
+$gradle clean pP publish
+:clean
+:compileJava
+:processResources UP-TO-DATE
+:classes
+:jar
+:javadoc
+:javadocJar
+:sourceJar
+:signArchives
+:preparePublication
+:generatePomFileForJarSignaturesPublication
+:publishJarSignaturesPublicationToMavenRepository
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0.jar.asc to repository remote at file:/Users/mike/IdeaProjects/sample-project/artifacts
+Transferring 0K from remote
+Uploaded 0K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-sources.jar.asc to repository remote at file:/Users/mike/IdeaProjects/sample-project/artifacts
+Transferring 0K from remote
+Uploaded 0K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-javadoc.jar.asc to repository remote at file:/Users/mike/IdeaProjects/sample-project/artifacts
+Transferring 0K from remote
+Uploaded 0K
+:generatePomFileForJarsPublication
+:publishJarsPublicationToMavenRepository
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0.jar to repository remote at file:/Users/mike/IdeaProjects/sample-project/artifacts/
+Transferring 1K from remote
+Uploaded 1K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-sources.jar to repository remote at file:/Users/mike/IdeaProjects/sample-project/artifacts/
+Transferring 1K from remote
+Uploaded 1K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-javadoc.jar to repository remote at file:/Users/mike/IdeaProjects/sample-project/artifacts/
+Transferring 33K from remote
+Uploaded 33K
+:generatePomFileForPomPublication
+:publishPomPublicationToMavenRepository
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0.pom to repository remote at file:/Users/mike/IdeaProjects/sample-project/artifacts/
+Transferring 1K from remote
+Uploaded 1K
+:publish
+
+BUILD SUCCESSFUL
+
+Total time: 10.894 secs
+```
+
+さて、署名ファイルが作成されているか確認します。
+
+```
+$ cd /Users/mike/IdeaProjects/sample-project/artifacts/org/mikeneck/sample/sample-project/1.0
+$ ls | grep asc
+sample-project-1.0-javadoc.jar.asc
+sample-project-1.0-javadoc.jar.asc.md5
+sample-project-1.0-javadoc.jar.asc.sha1
+sample-project-1.0-sources.jar.asc
+sample-project-1.0-sources.jar.asc.md5
+sample-project-1.0-sources.jar.asc.sha1
+sample-project-1.0.jar.asc
+sample-project-1.0.jar.asc.md5
+sample-project-1.0.jar.asc.sha1
+```
+
+それぞれ署名ファイルが作成されているようです。
+
+では、署名ファイルを検証してみましょう。
+
+```
+$ gpg2 --verify sample-project-1.0-javadoc.jar.asc
+gpg: Signature made 木  6/20 18:05:08 2013 JST using RSA key ID ABC12345
+gpg: Good signature from "Shinya Mochida (Groovy/JavaScript Developer in Japan) <mike@mikeneck.org>"
+$ gpg2 --verify sample-project-1.0-sources.jar.asc
+gpg: Signature made 木  6/20 18:05:08 2013 JST using RSA key ID ABC12345
+gpg: Good signature from "Shinya Mochida (Groovy/JavaScript Developer in Japan) <mike@mikeneck.org>"
+$ gpg2 --verify sample-project-1.0.jar.asc
+gpg: Signature made 木  6/20 18:05:08 2013 JST using RSA key ID ABC12345
+gpg: Good signature from "Shinya Mochida (Groovy/JavaScript Developer in Japan) <mike@mikeneck.org>"
+```
+
+ちゃんと署名できていることが確認できました。
+
+
 課題
 ---
 
-まあ、この記事を書いていて、大体策は思いついたのですが、
+さて、jarファイルの署名をすることは出来ました。
 
-時間の関係上、後で更新します。
+#### pom署名ファイル問題
+
+しかし、残念なことにpomファイルの署名ができていません。
+
+上述のpomファイルを変更するというところで記述した
+
+`org.gradle.api.XmlProvider`の実装クラスは
+
+`org.gradle.api.internal.xml.XmlTransformer.XmlProviderImpl`です。
+
+そのクラスには`public void writeTo(java.io.File file)`というメソッドがあります。
+
+そのメソッドを介してpomファイルを出力することが可能です。
+
+したがって、次の手順でpomファイルの署名も発行することが可能ではないかと
+
+考えられます。
+
+1. pom出力タスク中でpomファイルを書き出し
+1. pom出力タスク中で書きだしたpomファイルの署名をするタスクを実行
+1. pomファイルの署名をするタスクから署名ファイルを取得
+1. 署名ファイルをartifactとして発行
+
+
+上記の手順を実行するようにビルドスクリプトを書いてみます。
+
+以下、一部抜粋。
+
+```groovy build.gradle
+// pom file
+ext {
+    pomFilePath = "${project.projectDir}/tmp/pom.xml"
+    pomFile = file(pomFilePath)
+}
+// task for signing pom
+task signPom(type : Sign) {
+    sign pomFile
+}
+// getting a signature of pom
+def getPomSignatrure = {
+    return project.tasks.signPom.signatureFiles.collect{it}[0]
+}
+publishing {
+    publications {
+        // publish pom
+        pom(MavenPublication) {
+            pom.withXml {
+                def node = asNode()
+                node.chidren().last() + {
+                    dependencies {
+                        resolveStrategy = Closure.DELEGATE_FIRST
+                        project.configurations.compile.dependencies.each {dep ->
+                            dependency {
+                                groupId dep.group
+                                artifactId dep.name
+                                version dep.version
+                            }
+                        }
+                    }
+                }
+                writeTo(project.ext.pomFile)
+                project.tasks.signPom.execute()
+                artifact (getPomSignature()) {
+                    classifier = null
+                    extension  = 'pom.asc'
+                }
+            }
+        }
+    }
+}
+```
+
+ではpublishタスクを実行してみます。
+
+```
+$ gradle --daemon clean pP publish
+:clean
+:compileJava
+:processResources UP-TO-DATE
+:classes
+:jar
+:javadoc
+:javadocJar
+:sourceJar
+:signArchives
+:preparePublication
+:generatePomFileForJarSignaturesPublication
+:publishJarSignaturesPublicationToMavenRepository
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0.jar.asc to repository remote at file:/Users/mike/IdeaProjects/sample-project/artifacts/
+Transferring 0K from remote
+Uploaded 0K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-sources.jar.asc to repository remote at file:/Users/mike/IdeaProjects/sample-project/artifacts/
+Transferring 0K from remote
+Uploaded 0K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-javadoc.jar.asc to repository remote at file:/Users/mike/IdeaProjects/sample-project/artifacts/
+Transferring 0K from remote
+Uploaded 0K
+:generatePomFileForJarsPublication
+:publishJarsPublicationToMavenRepository
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0.jar to repository remote at file:/Users/mike/IdeaProjects/sample-project/artifacts/
+Transferring 1K from remote
+Uploaded 1K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-sources.jar to repository remote at file:/Users/mike/IdeaProjects/sample-project/artifacts/
+Transferring 1K from remote
+Uploaded 1K
+Uploading: org/mikeneck/sample/sample-project/1.0/sample-project-1.0-javadoc.jar to repository remote at file:/Users/mike/IdeaProjects/sample-project/artifacts/
+Transferring 33K from remote
+Uploaded 33K
+:generatePomFileForPomPublication
+:publishPomPublicationToMavenRepository FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':publishPomPublicationToMavenRepository'.
+> Failed to publish publication 'pom' to repository 'maven'
+   > Invalid publication 'pom': artifact file does not exist: '/Users/mike/IdeaProjects/sample-project/tmp/pom.xml.asc'
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+
+BUILD FAILED
+
+Total time: 5.357 secs
+```
+
+`publishPomPublicationToMavenRepository`タスクで落ちてしまっています。
+
+理由は署名ファイルが見つからないということです。
+
+では、該当のディレクトリーの中身を見てみます。
+
+```
+$ ls temp
+pom.xml
+```
+
+pomファイルだけしか出力されていません。
+
+したがって、署名タスクが実行できてない状態になっているわけです。
+
+実行されたタスクを挙げてみると、このようになっています。
+
++ :clean
++ :compileJava
++ :processResources UP-TO-DATE
++ :classes
++ :jar
++ :javadoc
++ :javadocJar
++ :sourceJar
++ :signArchives
++ :preparePublication
++ :generatePomFileForJarSignaturesPublication
++ :publishJarSignaturesPublicationToMavenRepository
++ :generatePomFileForJarsPublication
++ :publishJarsPublicationToMavenRepository
++ :generatePomFileForPomPublication
++ :publishPomPublicationToMavenRepository FAILED
+
+よくみてみると、signPomタスクは実行されていません。
+
+というわけで、明示的にsignPomタスクを実行する必要があるわけですが、
+
+(`Task#execute()`で呼び出さないということ)
+
+`Task#dependsOn`でsignPomタスクを指定しても、発行できないだけでなく、
+
+実際にはpublishing-publicationのコンテキストでは`dependsOn`が使えません。
+
+先ほどのビルドスクリプトを一部変更してみます。
+
+```groovy build.gradle
+publishing {
+    publications {
+        // 中略
+        pom(MavenPublication) {
+            dependsOn project.tasks.signPom
+            pom.withXml {
+                // 中略
+                writeTo(project.ext.pomFile)
+            }
+            artifact (getPomSignature()) {
+                classifier = null
+                extension  = 'pom.asc'
+            }
+        }
+    }
+}
+```
+
+このビルドスクリプトをパースさせると次のようなエラーが発生します。
+
+```
+$ gradle tasks
+Picked up _JAVA_OPTIONS: -Dfile.encoding=UTF-8
+
+FAILURE: Build failed with an exception.
+
+* Where:
+Build file '/Users/mike/IdeaProjects/sample-project/build.gradle' line: 90
+
+* What went wrong:
+A problem occurred configuring root project 'sample-project'.
+> Cannot create a Publication named 'dependsOn' because this container does not support creating elements by name alone. Please specify which subtype of Publication to create. Known subtypes are: MavenPublication
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+
+BUILD FAILED
+
+Total time: 13.805 secs
+```
+
+たとえ、これがDSL上問題がなくても、
+
+pomファイルの出力はsignPomタスクの後に実行されるので、
+
+エラーが発生することは予見できます。
+
+#### 現状考えられるpom署名ファイル回避方法
+
+gradleではダイナミックにタスクの定義ができます。
+
+これを利用して、pomファイルがない場合は、
+
+pomファイルの生成を行い、
+
+一時的なファイルに対して発行を行います。
+
+そして、pomファイルが存在する場合には、
+
+署名タスクを実行して、
+
+artifact登録して、maven repositoryへ発行します。
+
+整理すると…
+
++ maven publishプラグインを二回実行する。
++ pomファイルが存在しない場合は、signPomを実行しない、`withXml`で`writeTo`を使ってpomファイルを出力する。
++ pomファイルが存在する場合は、signPomを先に実行しておいて、署名ファイルもartifactとして発行する
+
+ということになります。
+
+ビルドスクリプトを以下に示します(該当部分のみ)。
+
+```groovy build.gradle
+// dynamic definition of preparePublication
+if (pomFile.exists()) {
+    task preparePublication (dependsOn : [signArchives, signPom])
+} else {
+    task preparePublication (dependsOn : signArchives)
+}
+// publishing if pomFile exists
+publishing {
+    publications {
+        // 中略
+        pom(MavenPublication) {
+            dependsOn project.tasks.signPom
+            pom.withXml {
+                // 中略
+                if (!project.ext.pomFile.exists()) {
+                    writeTo(project.ext.pomFile)
+                }
+            }
+            if (project.ext.pomFile.exists()) {
+                artifact (getPomSignature()) {
+                    classifier = null
+                    extension  = 'pom.asc'
+                }
+            } else {
+                delete(project.ext.pomFile)
+            }
+        }
+    }
+}
+```
+
+…で、これは実は失敗しました。
+
+詳細はまた続きを書きます。
 
 
 {% render_partial _includes/post/post_footer.html %}
