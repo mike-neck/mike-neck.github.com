@@ -1,0 +1,809 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>How to publish artifacts with its signature files to maven central repository via gradle maven-publish plugin (version 1.6) - mike、mikeなるままに…</title>
+  <meta name="author" content="mike-neck">
+
+  
+  <meta name="description" content="Gradle maven-publish plugin provides the easier way to publish artifacts than the old maven plugin. This post introduces you the way to publish &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="mike、mikeなるままに…" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40855644-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">mike、mikeなるままに…</a></h1>
+  
+    <h2>プログラムに関してぬるま湯のような記事を書きます</h2>
+  
+  <valuecommerce   ptnOid="3060695" url="http://mike-neck.github.io/" />
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:mike-neck.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">How to Publish Artifacts With Its Signature Files to Maven Central Repository via Gradle Maven-publish Plugin (Version 1.6)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-21T14:04:00+09:00" pubdate data-updated="true">Jun 21<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="http://www.gradle.org/forum-assets/images/gradle_logo.gif"/></p>
+
+<p>Gradle <strong>maven-publish plugin</strong> provides the easier way to publish artifacts than the old <strong>maven plugin</strong>.</p>
+
+<p>This post introduces you the way to publish artifacts with <strong>maven-publish plugin</strong>.</p>
+
+<p><strong>Please Note that</strong> maven-publish plugin is incubating feature. Its DSL may change later.</p>
+
+<h2>Goal</h2>
+
+<p>After reading this post, you can upload your artifacts to maven central repository via <strong>maven-publish plugin</strong>.</p>
+
+<h2>Basics and Example</h2>
+
+<p>To publish artifacts you should do these things.</p>
+
+<ol>
+<li>to declare applying <strong>maven-publish plugin</strong>.</li>
+<li>to tell gradle which files should be published.</li>
+<li>to tell gradle where to upload artifacts.</li>
+</ol>
+
+
+<p>Now let&rsquo;s see sample build script.</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="c1">// declaration of plugins (1)</span>
+</span><span class='line'><span class="o">[</span><span class="s1">&#39;java&#39;</span><span class="o">,</span> <span class="s1">&#39;maven-publish&#39;</span><span class="o">].</span><span class="na">each</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="n">it</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s1">&#39;com.yourdomain&#39;</span>
+</span><span class='line'><span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;1.0&#39;</span>
+</span><span class='line'><span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">mavenCentral</span> <span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">compile</span> <span class="s1">&#39;org.apache.commons:commons-lang3:3.1&#39;</span>
+</span><span class='line'>    <span class="n">testCompile</span> <span class="s1">&#39;junit:junit:4.11&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">publishing</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">publications</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">myPublication</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// telling gradle to publish project&#39;s jar archive (2)</span>
+</span><span class='line'>            <span class="n">from</span> <span class="n">components</span><span class="o">.</span><span class="na">java</span>
+</span><span class='line'>            <span class="c1">// telling gradle to publish README file (2)</span>
+</span><span class='line'>            <span class="n">artifact</span> <span class="o">(</span><span class="s1">&#39;README.txt&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;README&#39;</span>
+</span><span class='line'>                <span class="n">extension</span>  <span class="o">=</span> <span class="s1">&#39;txt&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="c1">// telling gradle to publish artifact to local directory (3)</span>
+</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">maven</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">url</span> <span class="s2">&quot;file:/${project.projectDir}/artifacts&quot;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>With this script you can publish your artifact via this command.</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">gradle</span> <span class="n">publish</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then you will find some file is generated at <code>artifact</code> directory.</p>
+
+<p>These files are …</p>
+
+<ul>
+<li>sample-project.jar</li>
+<li>sample-project.jar.md5</li>
+<li>sample-project.jar.sha1</li>
+<li>sample-project.pom</li>
+<li>sample-project.pom.md5</li>
+<li>sample-project.pom.sha1</li>
+<li>sample-project-README.txt</li>
+<li>sample-project-README.txt.md5</li>
+<li>sample-project-README.txt.sha1</li>
+</ul>
+
+
+<h2>Conventions</h2>
+
+<p><strong>maven-publish plugin</strong> has some conventions.</p>
+
+<ul>
+<li>base archive name is project name.</li>
+<li><code>classifier</code> is given after the project name.</li>
+<li><code>extension</code> is given after the project name and <code>classifier</code>.</li>
+<li><code>classifier</code> and <code>extension</code> should be unique in all artifacts in a publication.</li>
+</ul>
+
+
+<h2>Publishing javadoc and source code as jar</h2>
+
+<h3>javadoc</h3>
+
+<p>Following shows the way to publish javadoc as jar.</p>
+
+<ol>
+<li>call javadoc task.</li>
+<li>create a task of zipping javadoc and call it.</li>
+<li>give th zipping task to <code>artifact</code> method in publication container.</li>
+</ol>
+
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="c1">// (2)</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">javadocJar</span> <span class="o">(</span><span class="nl">type:</span> <span class="n">Jar</span><span class="o">,</span> <span class="nl">dependsOn:</span> <span class="n">javadoc</span><span class="o">)</span> <span class="o">{</span> <span class="c1">// (1)</span>
+</span><span class='line'>    <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;javadoc&#39;</span>
+</span><span class='line'>    <span class="n">from</span> <span class="n">javadoc</span><span class="o">.</span><span class="na">destinationDir</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">publishing</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">publications</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">myPublication</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">artifact</span> <span class="o">(</span><span class="n">javadocJar</span><span class="o">)</span> <span class="o">{</span> <span class="c1">// (3)</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;javadoc&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>source codes</h3>
+
+<p>Following shows the way to publish source as jar.</p>
+
+<ol>
+<li>create a task of zipping sources as jar.</li>
+<li>give the zipping task to <code>artifact</code> method in publication container.</li>
+</ol>
+
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="c1">// (1)</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">sourceJar</span> <span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Jar</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;sources&#39;</span>
+</span><span class='line'>    <span class="n">from</span> <span class="n">sourceSets</span><span class="o">.</span><span class="na">main</span><span class="o">.</span><span class="na">allSource</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">publishing</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">publications</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">myPublication</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">artifact</span> <span class="o">(</span><span class="n">sourceJar</span><span class="o">)</span> <span class="o">{</span> <span class="c1">// (2)</span>
+</span><span class='line'>                <span class="n">classifier</span> <span class="o">=</span> <span class="s1">&#39;sources&#39;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Modifying POM</h2>
+
+<h3>requirements</h3>
+
+<p><strong>maven-publish plugin</strong> generates POM, but it lacks some elements required by Sonatype OSS repository. Folowing shows list of elements to be added.</p>
+
+<ul>
+<li><code>&lt;name&gt;</code> &ndash; the name of project</li>
+<li><code>&lt;description&gt;</code> &ndash; the description for the project</li>
+<li><code>&lt;url&gt;</code> &ndash; project&rsquo;s url</li>
+<li><code>&lt;scm&gt;&lt;url&gt;</code> &ndash; repository url.</li>
+<li><code>&lt;scm&gt;&lt;connection&gt;</code> &ndash; repository url for scm tool. for example using git &ndash; github, it becomes <code>scm:git:git://github.com/your-name/project-name.git</code></li>
+<li><code>&lt;scm&gt;&lt;developerConnection&gt;</code> &ndash; repository url for scm tool via ssh. for example using git &ndash; github, it becomes <code>scm:git:ssh:git@github.com:your-name/project-name.git</code></li>
+<li><code>&lt;licenses&gt;&lt;license&gt;&lt;name&gt;</code> &ndash; license name (i.e. <code>The Apache Software License, Version 2.0</code> etc…). In the case of the project being licensed under multiple license, <code>licenses</code> elements can have multiple <code>&lt;license&gt;</code> elements.</li>
+<li><code>&lt;licenses&gt;&lt;license&gt;&lt;url&gt;</code> &ndash; license url (e.x. if the project is licensed under Apache version 2, it becomes <code>http://www.apache.org/license/LICENSE-2.0.txt</code>)</li>
+<li><code>&lt;licenses&gt;&lt;license&gt;&lt;distribution&gt;</code> &ndash; <code>repo</code></li>
+<li><code>&lt;developers&gt;&lt;developer&gt;&lt;id&gt;</code> &ndash; developer&rsquo;s id. If there are more than one developers, you can write <code>&lt;developer&gt;</code> elements more than one times.</li>
+<li><code>&lt;developers&gt;&lt;developer&gt;&lt;name&gt;</code> &ndash; developer&rsquo;s name.</li>
+<li><code>&lt;developers&gt;&lt;developer&gt;&lt;email&gt;</code> &ndash; developer&rsquo;s email.</li>
+</ul>
+
+
+<h3>build script</h3>
+
+<p>To add these elements to POM, you can acces pom file via <code>pom</code> object&rsquo;s <code>withXml</code> method in <code>MavenPublication</code> container.</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">publishing</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">publications</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">myPublication</span> <span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">from</span> <span class="n">components</span><span class="o">.</span><span class="na">java</span>
+</span><span class='line'>            <span class="n">pom</span><span class="o">.</span><span class="na">withXml</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">asNode</span><span class="o">().</span><span class="na">children</span><span class="o">().</span><span class="na">last</span><span class="o">()</span> <span class="o">+</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">resolveStrategy</span> <span class="o">=</span> <span class="n">Closure</span><span class="o">.</span><span class="na">DELEGATE_FIRST</span>
+</span><span class='line'>                    <span class="n">name</span> <span class="s1">&#39;project-name&#39;</span>
+</span><span class='line'>                    <span class="n">description</span> <span class="s1">&#39;description for project&#39;</span>
+</span><span class='line'>                    <span class="n">url</span> <span class="n">projectUrl</span>
+</span><span class='line'>                    <span class="n">scm</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="n">url</span> <span class="n">scmUrl</span>
+</span><span class='line'>                        <span class="n">connection</span> <span class="n">connectionUrl</span>
+</span><span class='line'>                        <span class="n">developerConnection</span> <span class="n">developerConnectionUrl</span>
+</span><span class='line'>                    <span class="o">}</span>
+</span><span class='line'>                    <span class="n">licenses</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="n">license</span> <span class="o">{</span>
+</span><span class='line'>                            <span class="n">name</span> <span class="s1">&#39;The Apache Software License, Version 2.0&#39;</span>
+</span><span class='line'>                            <span class="n">url</span> <span class="s1">&#39;http://www.apache.org/license/LICENSE-2.0.txt&#39;</span>
+</span><span class='line'>                            <span class="n">distribution</span> <span class="s1">&#39;repo&#39;</span>
+</span><span class='line'>                        <span class="o">}</span>
+</span><span class='line'>                    <span class="o">}</span>
+</span><span class='line'>                    <span class="n">developers</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="n">developer</span> <span class="o">{</span>
+</span><span class='line'>                            <span class="n">id</span> <span class="s1">&#39;your id or nick name&#39;</span>
+</span><span class='line'>                            <span class="n">name</span> <span class="s1">&#39;Your Name&#39;</span>
+</span><span class='line'>                            <span class="n">email</span> <span class="s1">&#39;your@mail.address&#39;</span>
+</span><span class='line'>                        <span class="o">}</span>
+</span><span class='line'>                    <span class="o">}</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Signing Jar</h2>
+
+<p>To keep quality of maven central repo, signing files is required.</p>
+
+<p>These files should be signed.</p>
+
+<ul>
+<li>main jar (file name is <code>project-name.jar.asc</code>)</li>
+<li>javadoc jar (file name is <code>project-name-javadoc.jar.asc</code>)</li>
+<li>sources jar (file name is <code>project-name-sources.jar.asc</code>)</li>
+<li>pom file (file name is <code>project-name.pom.asc</code>, on this signature this post will mention later)</li>
+</ul>
+
+
+<p>To sign archives is available via <strong>signing plugin</strong>.</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="c1">// adding &#39;signing&#39; plugin</span>
+</span><span class='line'><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">&#39;signing&#39;</span>
+</span><span class='line'><span class="c1">// summarize artifacts</span>
+</span><span class='line'><span class="n">artifacts</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">archives</span> <span class="n">jar</span>
+</span><span class='line'>    <span class="n">archives</span> <span class="n">sourceJar</span>
+</span><span class='line'>    <span class="n">archives</span> <span class="n">javadocJar</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// sign all artifacts</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">signJars</span> <span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Sign</span><span class="o">,</span> <span class="nl">dependsOn:</span> <span class="o">[</span><span class="n">jar</span><span class="o">,</span> <span class="n">javadocJar</span><span class="o">,</span> <span class="n">sourceJar</span><span class="o">])</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">sign</span> <span class="n">configurations</span><span class="o">.</span><span class="na">archives</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// call signJar task before publish task</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">preparePublish</span><span class="o">(</span><span class="nl">dependsOn:</span> <span class="n">signJar</span><span class="o">)</span>
+</span><span class='line'><span class="c1">// extract signature file and give them proper name</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">getSignatureFiles</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">allFiles</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="na">tasks</span><span class="o">.</span><span class="na">signJars</span><span class="o">.</span><span class="na">signatureFiles</span><span class="o">.</span><span class="na">collect</span> <span class="o">{</span> <span class="n">it</span> <span class="o">}</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">signedSources</span> <span class="o">=</span> <span class="n">allFiles</span><span class="o">.</span><span class="na">find</span> <span class="o">{</span> <span class="n">it</span><span class="o">.</span><span class="na">name</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s1">&#39;-sources&#39;</span><span class="o">)</span> <span class="o">}</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">signedJavadoc</span> <span class="o">=</span> <span class="n">allFiles</span><span class="o">.</span><span class="na">find</span> <span class="o">{</span> <span class="n">it</span><span class="o">.</span><span class="na">name</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s1">&#39;-javadoc&#39;</span><span class="o">)</span> <span class="o">}</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">signedJar</span> <span class="o">=</span> <span class="o">(</span><span class="n">allFiles</span> <span class="o">-</span> <span class="o">[</span><span class="n">signedSources</span><span class="o">,</span> <span class="n">signedJavadoc</span><span class="o">])[</span><span class="mi">0</span><span class="o">]</span>
+</span><span class='line'>    <span class="k">return</span> <span class="o">[</span>
+</span><span class='line'>            <span class="o">[</span><span class="nl">archive:</span> <span class="n">signedSources</span><span class="o">,</span> <span class="nl">classifier:</span> <span class="s1">&#39;sources&#39;</span><span class="o">,</span> <span class="nl">extension:</span> <span class="s1">&#39;jar.asc&#39;</span><span class="o">],</span>
+</span><span class='line'>            <span class="o">[</span><span class="nl">archive:</span> <span class="n">signedJavadoc</span><span class="o">,</span> <span class="nl">classifier:</span> <span class="s1">&#39;javadoc&#39;</span><span class="o">,</span> <span class="nl">extension:</span> <span class="s1">&#39;jar.asc&#39;</span><span class="o">],</span>
+</span><span class='line'>            <span class="o">[</span><span class="nl">archive:</span> <span class="n">signedJar</span><span class="o">,</span>     <span class="nl">classifier:</span> <span class="kc">null</span><span class="o">,</span>      <span class="nl">extension:</span> <span class="s1">&#39;jar.asc&#39;</span><span class="o">]</span>
+</span><span class='line'>    <span class="o">]</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">publishing</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">publications</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">signatures</span> <span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// give signature files to rtifact method</span>
+</span><span class='line'>            <span class="n">getSignatureFiles</span><span class="o">().</span><span class="na">each</span> <span class="o">{</span><span class="n">signature</span> <span class="o">-&gt;</span>
+</span><span class='line'>                <span class="n">artifact</span> <span class="o">(</span><span class="n">signature</span><span class="o">.</span><span class="na">archive</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">classifier</span> <span class="o">=</span> <span class="n">signature</span><span class="o">.</span><span class="na">classifier</span>
+</span><span class='line'>                    <span class="n">extension</span>  <span class="o">=</span> <span class="n">signature</span><span class="o">.</span><span class="na">extension</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Signing POM</h2>
+
+<p>Before running <code>publish</code> task, there are no POM file, so calling signing POM task will fail. To avoid this, whether calling POM task or not calling is defined dynamicly.</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">ext</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">pomFilePath</span> <span class="o">=</span> <span class="s2">&quot;${project.projectDir}/build/libs/pom.xml&quot;</span>
+</span><span class='line'>    <span class="n">pomFile</span> <span class="o">=</span> <span class="n">file</span><span class="o">(</span><span class="n">pomFilePath</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">configurations</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">pom</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">artifacts</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">archives</span> <span class="n">jar</span>
+</span><span class='line'>    <span class="n">archives</span> <span class="n">sourceJar</span>
+</span><span class='line'>    <span class="n">archives</span> <span class="n">javadocJar</span>
+</span><span class='line'>    <span class="nf">if</span> <span class="o">(</span><span class="n">pomFile</span><span class="o">.</span><span class="na">exists</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">pom</span> <span class="n">pomFile</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">signPom</span><span class="o">(</span><span class="nl">type:</span> <span class="n">Sign</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">sign</span> <span class="n">configurations</span><span class="o">.</span><span class="na">pom</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">getPomSignature</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">project</span><span class="o">.</span><span class="na">tasks</span><span class="o">.</span><span class="na">signPom</span><span class="o">.</span><span class="na">signatureFiles</span><span class="o">.</span><span class="na">collect</span><span class="o">{</span><span class="n">it</span><span class="o">}[</span><span class="mi">0</span><span class="o">]</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">pomFile</span><span class="o">.</span><span class="na">exists</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">task</span> <span class="nf">preparePublication</span> <span class="o">(</span><span class="n">dependsOn</span> <span class="o">:</span> <span class="o">[</span><span class="n">signJars</span><span class="o">,</span> <span class="n">signPom</span><span class="o">])</span>
+</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">task</span> <span class="nf">preparePublication</span> <span class="o">(</span><span class="n">dependsOn</span> <span class="o">:</span> <span class="n">signJars</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">mike-neck</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-21T14:04:00+09:00" pubdate data-updated="true">Jun 21<span>st</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gradle/'>gradle</a>, <a class='category' href='/blog/categories/groovy/'>groovy</a>, <a class='category' href='/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+  <br/>
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/06/19/publish-maven-artifact-with-sign-files-1/" title="Previous Post: gradleのmaven-publishプラグインでライブラリーを発行する方法 - 1">&laquo; gradleのmaven-publishプラグインでライブラリーを発行する方法 - 1</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/">How to publish artifacts with its signature files to maven central repository via gradle maven-publish plugin (version 1.6)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/19/publish-maven-artifact-with-sign-files-1/">gradleのmaven-publishプラグインでライブラリーを発行する方法 - 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/15/publishing-artifact-with-gradles-new-maven-publish-plugin-is-currently-unavailable/">gradle 1.4以降から追加されているmaven-publishプラグインでは、まだmaven central レポジトリーに上げられないようです。</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/13/how-to-generate-javadoc-in-english-on-japanese-environment/">gradleのjavadocタスクでjavadocを英語で出力する方法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/13/opening-gradle-slash-gradle-with-gradle-will-fail-please-use-gradlew/">gradleプロジェクトは、gradleを使うよりも、gradlewを使うことがオススメです</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/mike-neck">@mike-neck</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'mike-neck',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+<a href="https://twitter.com/mike_neck" class="twitter-follow-button" data-show-count="false" data-lang="ja">@mike_neckさんをフォロー</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/110183156583475779298?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<script type="text/javascript"><!--
+amazon_ad_tag = "kkkjkrt-22"; amazon_ad_width = "160"; amazon_ad_height = "600"; amazon_ad_logo = "hide"; amazon_ad_link_target = "new"; amazon_ad_price = "retail"; amazon_ad_border = "hide"; amazon_color_border = "303030"; amazon_color_background = "E0E0E0"; amazon_color_text = "4B4B4B"; amazon_color_link = "4B4B4B"; amazon_color_price = "4B4B4B"; amazon_color_logo = "E0E0E0";//--></script>
+<script type="text/javascript" src="http://www.assoc-amazon.jp/s/ads.js"></script>
+<h3>Manning Items</h3>
+<p>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_277_1_74" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Node.js_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_270_1_71" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Netherland_300x250.gif" width="300" height="250" alt="blog banner"></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_267_1_68" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/SpringBatch_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_266_1_66" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/SpringRoo_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_259_1_59" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/MachineLearning_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_249_1_48" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/MacRuby_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_238_1_47" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/ScalainDepth_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_211_1_49" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/ContIntegration_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_154_1_55" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Dependency_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_112_1_22" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Skeet.gif" width="217" height="55" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_59_1_54" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Groovy2E_300x250.gif" width="300" height="250" alt=""></a>
+<p>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - mike-neck -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
