@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-27T12:42:10+09:00</updated>
+  <updated>2013-06-27T12:45:33+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -887,6 +887,15 @@
 </span><span class='line'>            <span class="o">}</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and execute gradle tasks as follows</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">gradle</span> <span class="n">clean</span> <span class="n">pP</span> <span class="n">publish</span>
+</span><span class='line'><span class="n">$</span> <span class="n">gradle</span> <span class="n">clean</span> <span class="n">pP</span> <span class="n">publish</span>
 </span></code></pre></td></tr></table></div></figure>
 
 

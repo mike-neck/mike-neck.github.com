@@ -4,7 +4,7 @@
   <title><![CDATA[Category: groovy | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-27T12:42:10+09:00</updated>
+  <updated>2013-06-27T12:45:33+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -656,6 +656,13 @@ repositories {
 
 <p>}
 ```</p>
+
+<p>and execute gradle tasks as follows</p>
+
+<p><code>
+$ gradle clean pP publish
+$ gradle clean pP publish
+</code></p>
 
 <p><!-- admax -->
 <script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
