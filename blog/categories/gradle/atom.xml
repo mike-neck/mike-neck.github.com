@@ -4,7 +4,7 @@
   <title><![CDATA[Category: gradle | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/gradle/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-27T12:45:33+09:00</updated>
+  <updated>2013-06-27T17:06:15+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -663,6 +663,16 @@ repositories {
 $ gradle clean pP publish
 $ gradle clean pP publish
 </code></p>
+
+<p>… Eh? <strong>maven plugin</strong> is easier than this way? <strong>You, right!</strong></p>
+
+<p>But this plugin will become more smart, I believe.</p>
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/mike_neck">@mike_neck</a> You&#39;re doing cool stuff with &#39;maven-publish&#39;: latest gradle nightly has ability to set GAV of publication, too. Docs soon.</p>&mdash; Daz DeBoer (@dazdeboer) <a href="https://twitter.com/dazdeboer/statuses/347938407252635648">June 21, 2013</a></blockquote>
+
+
+<script async src="http://mike-neck.github.io//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 
 <p><!-- admax -->
 <script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
