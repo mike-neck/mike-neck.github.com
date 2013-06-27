@@ -527,6 +527,12 @@ publishing {
 }
 ```
 
+and execute gradle tasks as follows
+
+```
+$ gradle clean pP publish
+$ gradle clean pP publish
+```
 
 
 {% render_partial _includes/post/post_footer.html %}
