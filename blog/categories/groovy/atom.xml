@@ -4,7 +4,7 @@
   <title><![CDATA[Category: groovy | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-26T18:17:21+09:00</updated>
+  <updated>2013-06-27T12:42:10+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[How to publish artifacts with its signature files to maven central repository via gradle maven-publish plugin (version 1.6)]]></title>
+    <title type="html"><![CDATA[How to publish artifacts to maven central repository via gradle maven-publish plugin (version 1.6)]]></title>
     <link href="http://mike-neck.github.io/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/"/>
     <updated>2013-06-21T14:04:00+09:00</updated>
     <id>http://mike-neck.github.io/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6</id>
@@ -332,12 +332,12 @@ publishing {</p>
 
 <h2>Signing POM</h2>
 
-<p>Before running <code>publish</code> task, there are no POM file, so calling signing POM task will fail. To avoid this, whether calling POM task or not calling is defined dynamicly.</p>
+<p>Before running <code>publish</code> task, there are no POM file, so calling signing POM task will fail. To avoid this, whether calling POM task or not is defined dynamicly. And writing POM is available <code>writeTo(File)</code> method via <code>XmlProviderContainer</code> (i.e. on the <code>Closure</code> block of <code>pom.withXml</code>)</p>
 
 <p>```groovy build.gradle
 ext {</p>
 
-<pre><code>pomFilePath = "${project.projectDir}/build/libs/pom.xml"
+<pre><code>pomFilePath = "${project.projectDir}/tmp/pom.xml"
 pomFile = file(pomFilePath)
 </code></pre>
 
@@ -371,7 +371,7 @@ def getPomSignature = {</p>
 </code></pre>
 
 <p>}
-if (pomFile.exists()) {</p>
+if (project.ext.pomFile.exists()) {</p>
 
 <pre><code>task preparePublication (dependsOn : [signJars, signPom])
 </code></pre>
@@ -379,6 +379,279 @@ if (pomFile.exists()) {</p>
 <p>} else {</p>
 
 <pre><code>task preparePublication (dependsOn : signJars)
+</code></pre>
+
+<p>}
+publishing {</p>
+
+<pre><code>publications {
+    jar(MavenPublication) {
+        // publishing main jars
+        pom.withXml {
+            // add required elements
+            // here writing pom file
+            if (!project.ext.pomFile.exists()) {
+                writeTo (project.ext.pomFile)
+            }
+        }
+    }
+    gpgJars(MavenPublication) {
+        // publishing signature of jars
+    }
+    // dynamic publication definition
+    // pom file does exist signature of pom file is published
+    if (project.ext.pomFile.exists()) {
+        gpgPom(MavenPublication) {
+            artifact (getPomSignature()) {
+                classifier = null
+                extension  = 'pom.asc'
+            }
+        }
+    }
+}
+repositories {
+    maven {
+        if (project.ext.pomFile.exists()) {
+            url sonatypeUrl
+            credentials {
+                username = sonatypeUsername
+                password = sonatypePassword
+            }
+        } else {
+            url fileDirectory
+        }
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>and execute gradle tasks as follows</p>
+
+<p><code>
+$ gradle clean pP publish
+$ gradle clean pP publish
+</code></p>
+
+<p>You should execute gradle publish task twice.</p>
+
+<ol>
+<li>The first execution is generating pom file and publishing som artifacts to machine&rsquo;s directory.</li>
+<li>The second execution is publishing pom signature to Sonatype OSS repository.</li>
+</ol>
+
+
+<h4>Please note…</h4>
+
+<p><code>publish</code> task will execute publication tasks according to the alphabetiacl order of publishing task name. And each publication task will generate POM file. So please take care of publication name. The recomending name for publications is …</p>
+
+<ul>
+<li>gpgJars &ndash; publish signatures of jar files.</li>
+<li>gpgPom &ndash; publish signature of POM.</li>
+<li>jar &ndash; publish all jars and POM.</li>
+</ul>
+
+
+<h2>Credential</h2>
+
+<p>You may know an account of Sonatype OSS is required to upload artifact into maven central repo. Here shows settings of sonatype account in <strong>maven-publish plugin</strong>.</p>
+
+<p>```groovy build.gradle
+publishing {</p>
+
+<pre><code>repositories {
+    url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+    credentials {
+        username = sonatypeUsername
+        password = sonatypePassword
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<h2>Conclusion</h2>
+
+<p>Taking these things in account, here is a perfect example script for publishing artifacts to maven central repo with <strong>maven-publish plugin</strong>.</p>
+
+<p>```groovy build.gradle
+[&lsquo;java&rsquo;, &lsquo;siging&rsquo;, &lsquo;maven-publish&rsquo;].each {</p>
+
+<pre><code>apply plguin: it
+</code></pre>
+
+<p>}
+// project information
+group = &lsquo;com.yourdomain&rsquo;
+version = &lsquo;1.0&rsquo;
+// dependency management as you like
+repositories {</p>
+
+<pre><code>mavenCentral ()
+</code></pre>
+
+<p>}
+dependencies {</p>
+
+<pre><code>compile 'org.apache.commons:commons-lang3:3.1'
+testCompile 'junit:junit:4.11'
+</code></pre>
+
+<p>}
+// javadoc.jar generation
+task javadocJar (type: Jar, dependsOn: javadoc) { // (1)</p>
+
+<pre><code>classifier = 'javadoc'
+from javadoc.destinationDir
+</code></pre>
+
+<p>}
+// sources.jar generation
+task sourceJar (type : Jar) {</p>
+
+<pre><code>classifier = 'sources'
+from sourceSets.main.allSource
+</code></pre>
+
+<p>}
+// pom file name
+ext {</p>
+
+<pre><code>pomFilePath = "${project.projectDir}/tmp/pom.xml"
+pomFile = file(pomFilePath)
+</code></pre>
+
+<p>}
+// add configuration for pom signing
+configurations {</p>
+
+<pre><code>pom
+</code></pre>
+
+<p>}
+// summarize artifacts
+artifacts {</p>
+
+<pre><code>archives jar
+archives sourceJar
+archives javadocJar
+if (pomFile.exists()) {
+    pom pomFile
+}
+</code></pre>
+
+<p>}
+// sign all artifacts
+task signJars (type : Sign, dependsOn: [jar, javadocJar, sourceJar]) {</p>
+
+<pre><code>sign configurations.archives
+</code></pre>
+
+<p>}
+// sign pom
+task signPom(type: Sign) {</p>
+
+<pre><code>sign configurations.pom
+</code></pre>
+
+<p>}
+// defining which tasks should be called
+if (project.ext.pomFile.exists()) {</p>
+
+<pre><code>task preparePublication (dependsOn : [signJars, signPom])
+</code></pre>
+
+<p>} else {</p>
+
+<pre><code>task preparePublication (dependsOn : signJars)
+</code></pre>
+
+<p>}
+// extract signatures and add classifier and extension to them
+def getSignatureFiles = {</p>
+
+<pre><code>def allFiles = project.tasks.signJars.signatureFiles.collect { it }
+def signedSources = allFiles.find { it.name.contains('-sources') }
+def signedJavadoc = allFiles.find { it.name.contains('-javadoc') }
+def signedJar = (allFiles - [signedSources, signedJavadoc])[0]
+return [
+        [archive: signedSources, classifier: 'sources', extension: 'jar.asc'],
+        [archive: signedJavadoc, classifier: 'javadoc', extension: 'jar.asc'],
+        [archive: signedJar,     classifier: null,      extension: 'jar.asc']
+]
+</code></pre>
+
+<p>}
+// extract pom signature
+def getPomSignature = {</p>
+
+<pre><code>return project.tasks.signPom.signatureFiles.collect{it}[0]
+</code></pre>
+
+<p>}
+publishing {</p>
+
+<pre><code>publicaitons {
+    gpgJars(MavenPublication) {
+        getSignatureFiles().each {signature -&gt;
+            artifact (signature.archive) {
+                classifier = signature.classifier
+                extension  = signature.extension
+            }
+        }
+    }
+    if (project.ext.pomFile.exists()) {
+        gpgPom(MavenPublication) {
+            artifact (getPomSignature()) {
+                classifier = null
+                extension  = 'pom.asc'
+            }
+        }
+    }
+    jar(MavenPublication) {
+        from components.java
+        pom.withXml {
+            asNode().children().last() + {
+                resolveStrategy = Closure.DELEGATE_FIRST
+                name 'project-name'
+                description 'description for project'
+                url projectUrl
+                scm {
+                    url scmUrl
+                    connection connectionUrl
+                    developerConnection developerConnectionUrl
+                }
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/license/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'your id or nick name'
+                        name 'Your Name'
+                        email 'your@mail.address'
+                    }
+                }
+            }
+        }
+    }
+}
+repositories {
+        if (project.ext.pomFile.exists()) {
+            url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            credentials {
+                username = sonatypeUsername
+                password = sonatypePassword
+            }
+        } else {
+            url fileDirectory
+        }
+}
 </code></pre>
 
 <p>}
