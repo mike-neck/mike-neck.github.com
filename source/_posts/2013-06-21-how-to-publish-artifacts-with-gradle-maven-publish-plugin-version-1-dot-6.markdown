@@ -535,5 +535,13 @@ $ gradle clean pP publish
 ```
 
 
+… Eh? **maven plugin** is easier than this way? **You, right!**
+
+But this plugin will become more smart, I believe.
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/mike_neck">@mike_neck</a> You&#39;re doing cool stuff with &#39;maven-publish&#39;: latest gradle nightly has ability to set GAV of publication, too. Docs soon.</p>&mdash; Daz DeBoer (@dazdeboer) <a href="https://twitter.com/dazdeboer/statuses/347938407252635648">June 21, 2013</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
 {% render_partial _includes/post/post_footer.html %}
 
