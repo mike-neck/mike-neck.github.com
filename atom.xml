@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-06-30T13:48:29+09:00</updated>
+  <updated>2013-06-30T15:40:25+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -12,6 +12,87 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[第一回渋谷javaに行ってきた]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/06/30/first-shibuya-java/"/>
+    <updated>2013-06-30T15:05:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/06/30/first-shibuya-java</id>
+    <content type="html"><![CDATA[<p><a href="http://atnd.org/events/40140">第一回渋谷java</a>というのに行って来ました。</p>
+
+<p>javaの勉強会としては比較的若い人の集まった勉強会だったと思います。</p>
+
+<hr />
+
+<p>自己紹介で「好きなEclipseのショートカットは？」とか聞かれたので、</p>
+
+<p>相変わらずのことで「Eclipse氏ね」と答えて来ました。</p>
+
+<p>後、Eclipseの代替するエディターがvimだったので、</p>
+
+<p>いや、IntelliJ IDEAですからとも自己紹介しておきました。</p>
+
+<hr />
+
+<p>一応タイトルはネタっぽいですが、</p>
+
+<p>真面目な話をして来ました。</p>
+
+<iframe src="http://www.slideshare.net/slideshow/embed_code/23694003" width="476" height="400" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+
+<hr />
+
+<p>他の参加者のブログがいくつかあるようです。</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/jflute/20130629/1372519117">新たなるJavaの風景、渋谷javaがスタート！</a></li>
+<li><a href="http://blog.k11i.biz/2013/06/java.html">第１回 #渋谷Java でトークしてきました</a></li>
+<li><a href="http://hotchemi.hateblo.jp/entry/2013/06/29/230427">第1回渋谷Javaに行ってきた</a></li>
+</ul>
+
+
+<p>あと、いくつかスライドがアップロードされています。</p>
+
+<p>JavaとOSS &ndash; ユーザーサイドから語ってみる</p>
+
+<iframe src="http://www.slideshare.net/slideshow/embed_code/23660334" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen> </iframe>
+
+
+<p> <div style="margin-bottom:5px"> <strong> <a href="http://www.slideshare.net/commonplace0807/java-23660334" title="渋谷Java第一回" target="_blank">渋谷Java第一回</a> </strong> from <strong><a href="http://www.slideshare.net/commonplace0807" target="_blank">commonplace0807</a></strong> </div></p>
+
+<hr />
+
+<p>今回は初回ということでLTだけでしたが、ハンズオンなども実施していくとのことです。</p>
+
+<p>Eclipse強制されるのでなければ、行こうかなと思います。</p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Java8 lambda式を使ってみた]]></title>
@@ -8684,350 +8765,6 @@ long sum = integers.reduce(0, Long::sum);
 <p><img src="https://googledrive.com/host/0B4hhdHWLP7RRczBZcy04U2tNMms" style="width : 424px; height : 252px;"" /></p>
 
 <p>という感じで、テストが通りました。</p>
-
-<!-- admax -->
-
-
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-
-
-<!-- admax -->
-
-
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[JavaではじめてSocketプログラムを書いてみた]]></title>
-    <link href="http://mike-neck.github.io/blog/2013/05/25/javadehazimetesocketpuroguramuwoshu-itemita/"/>
-    <updated>2013-05-25T21:13:00+09:00</updated>
-    <id>http://mike-neck.github.io/blog/2013/05/25/javadehazimetesocketpuroguramuwoshu-itemita</id>
-    <content type="html"><![CDATA[<p>みけです。</p>
-
-<p>jjugのメーリングリストにconcurrentに関する質問が着ていたので、</p>
-
-<p>答えようと思ってみたんですが、</p>
-
-<p>Socketを使ったプログラムで、</p>
-
-<p><strong>そういえば僕、Socketを使ったプログラム書いたこと無いな</strong></p>
-
-<p>と思い至り、書いてみることにしました。</p>
-
-<h2>SocketServerのほう</h2>
-
-<p><code>java.net.ServerSocket</code>を使って書くようです。</p>
-
-<figure class='code'><figcaption><span>SimpleServer.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">mikeneck</span><span class="o">.</span><span class="na">socket</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.PrintStream</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.net.InetSocketAddress</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.net.ServerSocket</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.net.Socket</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> * @author mike_neck</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SimpleServer</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">ServerSocket</span> <span class="n">serverSocket</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">SimpleServer</span><span class="o">(</span><span class="kt">int</span> <span class="n">port</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">serverSocket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerSocket</span><span class="o">(</span><span class="n">port</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">try</span> <span class="o">(</span><span class="n">Socket</span> <span class="n">socket</span> <span class="o">=</span> <span class="n">serverSocket</span><span class="o">.</span><span class="na">accept</span><span class="o">();</span>
-</span><span class='line'>                 <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span>
-</span><span class='line'>                     <span class="k">new</span> <span class="nf">InputStreamReader</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">()));</span>
-</span><span class='line'>                 <span class="n">PrintStream</span> <span class="n">writer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintStream</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">())</span>
-</span><span class='line'>            <span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">String</span> <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
-</span><span class='line'>                <span class="n">writer</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">line</span><span class="o">);</span>
-</span><span class='line'>                <span class="k">if</span> <span class="o">(</span><span class="n">line</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;BYE&quot;</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="k">break</span><span class="o">;</span>
-</span><span class='line'>                <span class="o">}</span>
-</span><span class='line'>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>SocketClientのほう</h2>
-
-<p>クライアントアプリケーションの方は<code>java.net.Socket</code>を用いるようです。</p>
-
-<figure class='code'><figcaption><span>SimpleClient.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">mikeneck</span><span class="o">.</span><span class="na">multithreads</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.DataOutputStream</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.net.Socket</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> * @author mike_neck</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SimpleClient</span> <span class="kd">implements</span> <span class="n">AutoCloseable</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Socket</span> <span class="n">socket</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">DataOutputStream</span> <span class="n">output</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">BufferedReader</span> <span class="n">input</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">SimpleClient</span><span class="o">(</span><span class="n">String</span> <span class="n">hostname</span><span class="o">,</span> <span class="kt">int</span> <span class="n">port</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Socket</span><span class="o">(</span><span class="n">hostname</span><span class="o">,</span> <span class="n">port</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">SimpleClient</span> <span class="nf">open</span> <span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">output</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DataOutputStream</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">input</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span>
-</span><span class='line'>            <span class="k">new</span> <span class="nf">InputStreamReader</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">()));</span>
-</span><span class='line'>        <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">sendMessage</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">output</span><span class="o">.</span><span class="na">writeBytes</span><span class="o">(</span><span class="n">message</span> <span class="o">+</span> <span class="sc">&#39;\n&#39;</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">String</span> <span class="n">line</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">((</span><span class="n">line</span> <span class="o">=</span> <span class="n">input</span><span class="o">.</span><span class="na">readLine</span><span class="o">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">line</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">bye</span> <span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">output</span><span class="o">.</span><span class="na">writeBytes</span><span class="o">(</span><span class="s">&quot;BYE\n&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">close</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="n">socket</span><span class="o">.</span><span class="na">isClosed</span><span class="o">())</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">socket</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>SocketServerでの疑問</h2>
-
-<p>と、まあ簡単なプログラムを書いたのですが、</p>
-
-<p>二回メッセージを送る場合はどうなるのかとか、疑問が残りますね。</p>
-
-<p>で、テストを書くわけですが…</p>
-
-<p>案の定落ちました。</p>
-
-<figure class='code'><figcaption><span>SendManyMessages.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// import とか packageとか省略</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SendManyMessages</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">ExecutorService</span> <span class="n">SERVICE</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newFixedThreadPool</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">PORT</span> <span class="o">=</span> <span class="mi">14541</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">LOCALHOST</span> <span class="o">=</span> <span class="s">&quot;localhost&quot;</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Rule</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">TestName</span> <span class="n">testName</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TestName</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@BeforeClass</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">start</span> <span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">SERVICE</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="k">new</span> <span class="n">SimpleServer</span><span class="o">(</span><span class="n">PORT</span><span class="o">));</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@AfterClass</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">end</span> <span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">new</span> <span class="nf">SimpleClient</span><span class="o">(</span><span class="n">LOCALHOST</span><span class="o">,</span> <span class="n">PORT</span><span class="o">).</span><span class="na">open</span><span class="o">().</span><span class="na">bye</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@ThisTestWillFail</span>
-</span><span class='line'>    <span class="nd">@Test</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">send2times</span> <span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">SimpleClient</span> <span class="n">client</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleClient</span><span class="o">(</span><span class="n">LOCALHOST</span><span class="o">,</span> <span class="n">PORT</span><span class="o">).</span><span class="na">open</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">client</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="s">&quot;hello&quot;</span><span class="o">),</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;hello&quot;</span><span class="o">));</span>
-</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">client</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="s">&quot;good-bye&quot;</span><span class="o">),</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;good-bye&quot;</span><span class="o">));</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>SendManyMessages.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">SocketException</span><span class="o">:</span> <span class="n">Broken</span> <span class="n">pipe</span>
-</span><span class='line'>  <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">SocketOutputStream</span><span class="o">.</span><span class="na">socketWrite0</span><span class="o">(</span><span class="n">Native</span> <span class="n">Method</span><span class="o">)</span>
-</span><span class='line'>  <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">SocketOutputStream</span><span class="o">.</span><span class="na">socketWrite</span><span class="o">(</span><span class="n">SocketOutputStream</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">109</span><span class="o">)</span>
-</span><span class='line'>  <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">SocketOutputStream</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">SocketOutputStream</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">132</span><span class="o">)</span>
-</span><span class='line'>  <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">DataOutputStream</span><span class="o">.</span><span class="na">writeBytes</span><span class="o">(</span><span class="n">DataOutputStream</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">276</span><span class="o">)</span>
-</span><span class='line'>  <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="na">mikeneck</span><span class="o">.</span><span class="na">multithreads</span><span class="o">.</span><span class="na">SimpleClient</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="n">SimpleClient</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">31</span><span class="o">)</span>
-</span><span class='line'>  <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="na">mikeneck</span><span class="o">.</span><span class="na">multithreads</span><span class="o">.</span><span class="na">SendManyMessages</span><span class="o">.</span><span class="na">send2times</span><span class="o">(</span><span class="n">SendManyMessages</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">37</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>うん、まあ、今回は別になんか状態を持つようなサーバーを作りたいわけではないし、</p>
-
-<p>そういうサーバーを作りたい場合は、まあ、そういう工夫をすればいいということだけ覚えておこう。</p>
-
-<p>なお、他に書いたテストもありますが、</p>
-
-<p>面倒なので、gistにあげておきました。</p>
-
-<p><a href="https://gist.github.com/mike-neck/5649095">こちらをどうぞ</a></p>
 
 <!-- admax -->
 
