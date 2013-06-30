@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>初めてRubyのモジュールを書いてみた - mike、mikeなるままに…</title>
+  <title>Java8 lambda式を使ってみた - mike、mikeなるままに…</title>
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="こんにちわ、みけです。 前回の記事『Rubyのmixinの話を読んでいたら、何故かjavaを書いていた』はあまりにも rubyに対して失礼なので、 初心者らしく、ちゃんとmoduleを作ってみました。 ところで、僕の感心事は前回の記事でも書いたように、 &hellip;">
+  <meta name="description" content="こんにちわ、みけです。 Java8初心者勉強会というのを開催してみました。 参加者2人でした。 Java8はだれも興味ないんだなと思いました。 Java8のラムダ式 特にもうこれといって目新しいこともありません。 メソッドが一つだけのインターフェースを記述するときに、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/06/11/how-to-create-rubys-module">
+  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/06/27/java8-lambdashi-woshi-tutemita">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="mike、mikeなるままに…" type="application/atom+xml">
@@ -81,7 +81,7 @@
   
   <header>
     
-      <h1 class="entry-title">初めてRubyのモジュールを書いてみた</h1>
+      <h1 class="entry-title">Java8 Lambda式を使ってみた</h1>
     
     
       <p class="meta">
@@ -97,7 +97,7 @@
   
 
 
-<time datetime="2013-06-11T02:04:00+09:00" pubdate data-updated="true">Jun 11<span>th</span>, 2013</time>
+<time datetime="2013-06-27T22:24:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
         
       </p>
     
@@ -106,62 +106,23 @@
 
 <div class="entry-content"><p>こんにちわ、みけです。</p>
 
-<p>前回の記事<a href="http://mike-neck.github.io/blog/2013/06/08/rubyfalsemixinfalsehua-wodu-ndeitara%2C-he-gu-kajavawoshu-iteita/">『Rubyのmixinの話を読んでいたら、何故かjavaを書いていた』</a>はあまりにも</p>
+<p>Java8初心者勉強会というのを開催してみました。</p>
 
-<p>rubyに対して失礼なので、</p>
+<p>参加者2人でした。</p>
 
-<p>初心者らしく、ちゃんと<code>module</code>を作ってみました。</p>
+<p>Java8はだれも興味ないんだなと思いました。</p>
 
-<p>ところで、僕の感心事は前回の記事でも書いたように、</p>
+<h2>Java8のラムダ式</h2>
 
-<h2>rubyの<code>module</code>はインスタンス変数にアクセスすることができるのか？</h2>
+<p>特にもうこれといって目新しいこともありません。</p>
 
-<p>ということです。</p>
+<p>メソッドが一つだけのインターフェースを記述するときに、</p>
 
-<p>で、結論から言えば、</p>
+<p>非常に記述が楽になるというものです。</p>
 
-<h2>rubyの<code>module</code>はインスタンス変数にアクセスできました</h2>
+<p>例えば次のようなクラスがあるとします。</p>
 
-<p>となります。</p>
-
-<h3><code>module</code>を作成</h3>
-
-<figure class='code'><figcaption><span>having_title.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># -*- codig: utf-8 -*-</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">module</span> <span class="nn">HavingTitle</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">title</span><span class="o">=</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@title</span> <span class="o">=</span> <span class="n">t</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">title</span>
-</span><span class='line'>    <span class="vi">@title</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>module</code>の<code>HavingTitle</code>は単純にタイトルというものに</p>
-
-<p>アクセスすることができるモジュールです。</p>
-
-<p>先程も書きましたが、僕の疑問は<code>@title</code>フィールドに、</p>
-
-<p>インスタンス化することができない<code>module</code>がアクセすることができるのか</p>
-
-<p>ということです。</p>
-
-<h3><code>module</code>を<code>include</code>した<code>class</code>を作成</h3>
-
-<figure class='code'><figcaption><span>book.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Item.jara</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -175,95 +136,96 @@
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># -*- coding: utf-8 -*-</span>
-</span><span class='line'>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;./having_title&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">Book</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="no">HavingTitle</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:price</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@price</span> <span class="o">=</span> <span class="n">price</span>
-</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">print_info</span>
-</span><span class='line'>    <span class="s2">&quot;Book[title : </span><span class="si">#{</span><span class="vi">@title</span><span class="si">}</span><span class="s2">, price : </span><span class="si">#{</span><span class="vi">@price</span><span class="si">}</span><span class="s2">]&quot;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Item</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">final</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">final</span> <span class="kt">int</span> <span class="n">price</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Item</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">int</span> <span class="n">price</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">price</span> <span class="o">=</span> <span class="n">price</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getPrice</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">price</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>タイトルというものを持っていそうなクラスということで</p>
+<p>上記の<code>Item</code>クラスを<code>price</code>の昇順、<code>name</code>の昇順でソートするコードは以下のようになります。</p>
 
-<p><code>Book</code>というクラスをつくりました。</p>
-
-<p>後は<code>Book</code>クラスをインスタンス化して、</p>
-
-<p>フィールド<code>@title</code>にアクセスできるかどうか確認出来れば</p>
-
-<p>僕の疑問は解決出来ます。</p>
-
-<h3>irbで動作を確認</h3>
-
-<p>あ、まだrubyでのテストの書き方知らないので、</p>
-
-<p>ここはirbで勘弁して下さい。</p>
-
-<figure class='code'><figcaption><span>book.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">001</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">&#39;./book&#39;</span>
-</span><span class='line'><span class="o">=&gt;</span> <span class="kp">true</span>
-</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">002</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">book</span> <span class="o">=</span> <span class="no">Book</span><span class="o">.</span><span class="n">new</span> <span class="s1">&#39;anti-oedipus&#39;</span><span class="p">,</span> <span class="mi">4000</span>
-</span><span class='line'><span class="o">=&gt;</span> <span class="c1">#&lt;Book:0x007f90890b6e38 @price=4000, @title=&quot;anti-oedipus&quot;&gt;</span>
-</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">003</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">book</span><span class="o">.</span><span class="n">print_info</span>
-</span><span class='line'><span class="o">=&gt;</span> <span class="s2">&quot;Book[title : anti-oedipus, price : 4000]&quot;</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">List</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="n">items</span> <span class="o">=</span> <span class="n">getItemList</span><span class="o">();</span>
+</span><span class='line'><span class="n">items</span><span class="o">.</span><span class="na">sort</span><span class="o">((</span><span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">priceOrder</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="na">getPrice</span><span class="o">()</span> <span class="o">-</span> <span class="n">right</span><span class="o">.</span><span class="na">getPrice</span><span class="o">();</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">nameOrder</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="na">getName</span><span class="o">().</span>
+</span><span class='line'>            <span class="n">compareTo</span><span class="o">(</span><span class="n">right</span><span class="o">.</span><span class="na">getNmae</span><span class="o">());</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">priceOrder</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">?</span> <span class="n">priceOrder</span> <span class="o">:</span> <span class="n">nameOrder</span><span class="o">;</span>
+</span><span class='line'><span class="o">});</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>というわけで、特に何のエラーも出ることなく、</p>
+<p>ところで、<code>Item</code>クラスの<code>price</code>だとか<code>name</code>だとかについて、</p>
 
-<p>フィールド<code>@title</code>にアクセスできているようですね。</p>
+<p>それをソートするという操作は別に外のクラスが実装しても構わないけど、</p>
 
-<h2>モジュールの機能の一つとしてのMix-in</h2>
+<p><code>Item</code>クラスが持っている方が何かと便利です。</p>
 
-<p>まあ、<a href="http://www.amazon.co.jp/gp/product/4873113679/ref=as_li_ss_tl?ie=UTF8&amp;camp=247&amp;creative=7399&amp;creativeASIN=4873113679&amp;linkCode=as2&amp;tag=kkkjkrt-22">『初めてのRuby』</a>にはモジュールについて次のように書いてあります。</p>
+<p>したがって、オーダーするにあたって、<code>Item</code>クラスに次のようなメソッドを</p>
 
-<blockquote><p><strong>モジュール</strong>はクラスに似ています。モジュールは「インスタンス化できないクラス」のようなものです。
-<code>Class</code>クラスは<code>Module</code>のサブクラスですから、「クラス = モジュール + インスタンス化能力」と言ってもよさそうです。
-(<a href="http://www.amazon.co.jp/gp/product/4873113679/ref=as_li_ss_tl?ie=UTF8&amp;camp=247&amp;creative=7399&amp;creativeASIN=4873113679&amp;linkCode=as2&amp;tag=kkkjkrt-22">Yugui著『初めてのRuby』</a>(オライリー・ジャパン、2008年、p.159))</p></blockquote>
+<p>持たせるようにします。</p>
 
-<p>Javaしかわからない(Javaも詳しくはわからない)僕には、</p>
+<figure class='code'><figcaption><span>Item.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Item</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">final</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">final</span> <span class="kt">int</span> <span class="n">price</span><span class="o">;</span>
+</span><span class='line'>    <span class="c1">// 途中省略</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">comparePriceAscNameAsc</span> <span class="o">(</span><span class="n">Item</span> <span class="n">that</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">priceOrder</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">price</span> <span class="o">-</span> <span class="n">that</span><span class="o">.</span><span class="na">price</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">priceOrder</span> <span class="o">!=</span> <span class="mi">0</span> <span class="n">priceOrder</span> <span class="o">:</span>
+</span><span class='line'>                <span class="k">this</span><span class="o">.</span><span class="na">name</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">that</span><span class="o">.</span><span class="na">name</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p><code>abstract class</code>と考えておけばよさそうです。</p>
 
-<p>で、複数のモジュールを継承できるので、</p>
+<p>先ほどのソートをするコードのラムダ式部分は非常に簡単化されます。</p>
 
-<p>なんか、アレですね…</p>
-
-<table>
-<tbody>
-<tr>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4873113679" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4774151661" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-</tr>
-</tbody>
-</table>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">items</span><span class="o">.</span><span class="na">sort</span><span class="o">((</span><span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">left</span><span class="o">.</span><span class="na">comparePriceAscNameAsc</span><span class="o">(</span><span class="n">right</span><span class="o">));</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
+<p>ところで、呼び出されるメソッドはこのケースの場合わかりきっているので、</p>
 
+<blockquote><p>TODO : この記述は適当に書いているのでドキュメントを読み直します</p></blockquote>
+
+<p>Method Referenceに変更することが可能です。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">items</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="nl">Item:</span><span class="o">:</span><span class="n">comparePriceAscNameAsc</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>という感じで、ラムダ式っぽい記述はなくなりました。</p>
+
+<p>ちなみにMethod and Constructor Referenceは<a href="http://cr.openjdk.java.net/~dlsmith/jsr335-0.6.1/C.html">Lambdaの仕様の一部</a>です。</p>
 
 <!-- admax -->
 
@@ -311,12 +273,12 @@
   
 
 
-<time datetime="2013-06-11T02:04:00+09:00" pubdate data-updated="true">Jun 11<span>th</span>, 2013</time>
+<time datetime="2013-06-27T22:24:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ruby/'>ruby</a>
+    <a class='category' href='/blog/categories/java/'>java</a>
   
 </span>
 
@@ -325,7 +287,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/06/11/how-to-create-rubys-module/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/06/11/how-to-create-rubys-module/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/06/27/java8-lambdashi-woshi-tutemita/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/06/27/java8-lambdashi-woshi-tutemita/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -339,10 +301,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/06/10/how-to-link-other-issues-on-jira6/" title="Previous Post: JIRA6のチケットで他のチケットへのリンクを張る方法">&laquo; JIRA6のチケットで他のチケットへのリンクを張る方法</a>
+        <a class="basic-alignment left" href="/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/" title="Previous Post: How to publish artifacts to maven central repository via gradle maven-publish plugin (version 1.6)">&laquo; How to publish artifacts to maven central repository via gradle maven-publish plugin (version 1.6)</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/06/13/opening-gradle-slash-gradle-with-gradle-will-fail-please-use-gradlew/" title="Next Post: gradleプロジェクトは、gradleを使うよりも、gradlewを使うことがオススメです">gradleプロジェクトは、gradleを使うよりも、gradlewを使うことがオススメです &raquo;</a>
       
     </p>
   </footer>
