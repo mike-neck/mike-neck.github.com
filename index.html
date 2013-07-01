@@ -9,7 +9,7 @@
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="第一回渋谷javaというのに行って来ました。 javaの勉強会としては比較的若い人の集まった勉強会だったと思います。 自己紹介で「好きなEclipseのショートカットは？」とか聞かれたので、 相変わらずのことで「Eclipse氏ね」と答えて来ました。 後、 &hellip;">
+  <meta name="description" content="こんにちわ。 みけです。 JavaFXでjavascriptのテスティングフレームワークを作ろうと思ってから、 早1年半。 全然成果があがっていません。 今日は、そんな自分のための俺得なエントリー。 Goal 期待していいこと JSObjectでのarrayの取り扱い 期待できないこと &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,140 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/01/using-javafx-as-headless-browser/">JavaFXをheadless browserとして使うためのJSObjectの扱い方 - 1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-01T13:03:00+09:00" pubdate data-updated="true">Jul 1<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>こんにちわ。</p>
+
+<p>みけです。</p>
+
+<p>JavaFXでjavascriptのテスティングフレームワークを作ろうと思ってから、</p>
+
+<p>早1年半。</p>
+
+<p>全然成果があがっていません。</p>
+
+<p>今日は、そんな自分のための俺得なエントリー。</p>
+
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRbkltQVpjMUkzNE0" style="width : 450px;"/></p>
+
+<h2>Goal</h2>
+
+<h4>期待していいこと</h4>
+
+<ul>
+<li>JSObjectでのarrayの取り扱い</li>
+</ul>
+
+
+<h4>期待できないこと</h4>
+
+<ul>
+<li>JavaFXのスレッドの同期方法</li>
+<li>JSObjectでのobjectの取り扱い</li>
+</ul>
+
+
+<h2>JSObjectの扱い方 &ndash; array編</h2>
+
+<p><code>JSObject#getSlot(int)</code>を使ってarrayの要素を取得します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">final</span> <span class="n">String</span> <span class="n">script</span> <span class="o">=</span> <span class="s">&quot;(function(){return [&#39;a&#39;, 2, &#39;c&#39;, 4, &#39;e&#39;];})()&quot;</span><span class="o">;</span>
+</span><span class='line'><span class="kd">final</span> <span class="n">BlockingQueue</span><span class="o">&lt;</span><span class="n">JSObject</span><span class="o">&gt;</span> <span class="n">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedBlockingQueue</span><span class="o">&lt;&gt;();</span>
+</span><span class='line'><span class="n">Platform</span><span class="o">.</span><span class="na">runLater</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">queue</span><span class="o">.</span><span class="na">put</span><span class="o">((</span><span class="n">JSObject</span><span class="o">)</span> <span class="n">webEngine</span><span class="o">.</span><span class="na">executeScript</span><span class="o">(</span><span class="n">script</span><span class="o">));</span>
+</span><span class='line'><span class="o">});</span>
+</span><span class='line'><span class="n">JSObject</span> <span class="n">array</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">take</span><span class="o">();</span>
+</span><span class='line'><span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="s">&quot; -&gt; &quot;</span> <span class="o">+</span> <span class="n">array</span><span class="o">.</span><span class="na">getSlot</span><span class="o">(</span><span class="n">i</span><span class="o">));</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>結果は次のようになります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="mi">0</span> <span class="o">-&gt;</span> <span class="n">a</span>
+</span><span class='line'><span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">2</span>
+</span><span class='line'><span class="mi">2</span> <span class="o">-&gt;</span> <span class="n">c</span>
+</span><span class='line'><span class="mi">3</span> <span class="o">-&gt;</span> <span class="mi">4</span>
+</span><span class='line'><span class="mi">4</span> <span class="o">-&gt;</span> <span class="n">e</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ちなみに要素のindexより多い数を<code>JSObject#getSLot(int)</code>の引数に渡すと、</p>
+
+<p><code>String</code>の<code>undefined</code>が返ってきます。</p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -6159,276 +6293,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/08/rubyfalsemixinfalsehua-wodu-ndeitara%2C-he-gu-kajavawoshu-iteita/">Rubyのmixinの話を読んでいたら、何故かjavaを書いていた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-08T21:22:00+09:00" pubdate data-updated="true">Jun 8<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>こんにちわ、みけです。</p>
-
-<p><a href="https://twitter.com/suginoy">@suginoy</a>さんに</p>
-
-<p><a href="http://www.amazon.co.jp/gp/product/4774151661/ref=as_li_ss_tl?ie=UTF8&amp;camp=247&amp;creative=7399&amp;creativeASIN=4774151661&amp;linkCode=as2&amp;tag=kkkjkrt-22">『楽しい開発スタートアップRuby』</a>を買っていただいたので、</p>
-
-<p>今日はそれを某社オフィスで読んでいました。</p>
-
-<h1>Rubyのmix-inについての読んだ後の会話</h1>
-
-<ul>
-<li>僕「mix-inよくわからん」</li>
-<li>イケメン「多重継承できるやつでしょう」</li>
-<li>僕「mix-inってインスタンス変数とかにアクセスできるのかな？」</li>
-<li>イケメン「できそうじゃね」</li>
-<li>僕「あ〜、Java8のdefault実装でもmix-inと同じ事できそうじゃね」</li>
-<li>イケメン「いや、できないでしょう。default実装といっても、interfaceにフィールドを持つことができないわけだから」</li>
-<li>僕「え、できないのか、あー、そうかできないな。えっ、じゃあ、あれ、誰得なの？」</li>
-</ul>
-
-
-<p>(多少脚色有り、あと会話内容忘れたので、結構適当)</p>
-
-<p>で、</p>
-
-<h1>書いていたのがJava8のコードでした</h1>
-
-<figure class='code'><figcaption><span>Score.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">mikeneck</span><span class="o">.</span><span class="na">jdk8</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> * @author mike</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Score</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">final</span> <span class="kd">private</span> <span class="n">String</span> <span class="n">title</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">final</span> <span class="kd">private</span> <span class="kt">int</span> <span class="n">value</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">Score</span><span class="o">(</span><span class="n">String</span> <span class="n">title</span><span class="o">,</span> <span class="kt">int</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">title</span> <span class="o">=</span> <span class="n">title</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getTitle</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">title</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getValue</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">value</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>Grade.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">mikeneck</span><span class="o">.</span><span class="na">jdk8</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> * @author mike</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Grade</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Score</span><span class="o">&gt;</span> <span class="nf">scores</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">default</span> <span class="kt">long</span> <span class="nf">getTotalScore</span> <span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="nf">scores</span><span class="o">()</span>
-</span><span class='line'>                <span class="o">.</span><span class="na">stream</span><span class="o">()</span>
-</span><span class='line'>                <span class="o">.</span><span class="na">mapToLong</span><span class="o">(</span><span class="nl">Score:</span><span class="o">:</span><span class="n">getValue</span><span class="o">)</span>
-</span><span class='line'>                <span class="o">.</span><span class="na">reduce</span><span class="o">(</span><span class="mi">0</span><span class="n">l</span><span class="o">,</span> <span class="nl">Long:</span><span class="o">:</span><span class="n">sum</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ところで、このdefaultメソッド、</p>
-
-<p>書いている途中はこんな感じでした。</p>
-
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRYk5mVkd1RFFQYmc" style="width : 501px;" /></p>
-
-<p>IntelliJ IDEAではシンタックスをもっとよくできる場合は、</p>
-
-<p>こういう形で通知してくれます。</p>
-
-<p>紫の部分にカーソルをあてて、</p>
-
-<p>Alt + Enter (mac の場合は option + enter)をすると、</p>
-
-<p>操作の候補が表示されます。</p>
-
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRQzhXZnc0Z2lVc0k" style="width : 501px;"/></p>
-
-<p>ここでは<strong>Replace lambda with method reference</strong>を選択します。</p>
-
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRbnFGWmE1czJrRk0" style="width : 501px;"/></p>
-
-<p>すごいシンプルなコードになりました。</p>
-
-<p>続いて、mapした結果をreduceしていきます。</p>
-
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRa0s1ZldObzA0VzA" style="width : 501px;"/></p>
-
-<p>初期値<code>0l</code>で、結果を合計したいので、次のような演算を書きます。</p>
-
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRTVAxQUE0d0tQMU0" style="width : 501px;"/></p>
-
-<p>これはこれでまちがいでありません。</p>
-
-<p>ところで、<code>java.util.stream.Stream#mapToLong</code>の戻り値である、</p>
-
-<p><code>java.util.stream.LongStream</code>のjavadocを読むとこのように記述されています。</p>
-
-<blockquote><p>Api note : Sum, min, max, and average are all special cases of reduction.
-Summing a stream of numbers can be expressed as:</p>
-
-<p><code>
-long sum = integers.reduce(0, (a, b) -&gt; a+b);
-</code></p>
-
-<p>or more compactly:</p>
-
-<p><code>
-long sum = integers.reduce(0, Long::sum);
-</code></p>
-
-<p><em>引用元 : javadoc (build-89)</em></p></blockquote>
-
-<p>つまり、<code>java.util.function.LongBinaryOperator</code>の記述</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">(</span><span class="n">sum</span><span class="o">,</span> <span class="n">item</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">sum</span> <span class="o">+</span> <span class="n">item</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>は、<code>java.lang.Long</code>の<code>static</code>なメソッド<code>sum(long, long)</code>に</p>
-
-<p>置き換えることができるということです。</p>
-
-<p>その結果、先のコードは次のようになりました(既出)。</p>
-
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRS25qWnVZX2dHdW8" style="width : 501px;"/></p>
-
-<p>さて、ここらへんの<code>Stream</code>系の操作がエンタープライズな現場で使われるかどうかは</p>
-
-<p>微妙ですが…(というのも、値の集計をするというのであれば、DBにさせたほうが早いので)</p>
-
-<p>実際に現場で使うとなると、</p>
-
-<p>高機能なIDE(<code>Long::sum</code>の部分はIntelliJでも簡略化できなかった)と</p>
-
-<p><code>Stream</code>系のApiの書き方を覚えておかないと、</p>
-
-<p>相当効率悪くなるとおもいます。</p>
-
-<p>というわけで、Java8の勉強をしたい方は是非</p>
-
-<p>6月26日(水)の『Java8初心者勉強会』にご参加下さい。</p>
-
-<p>Java8初心者勉強会 &ndash; <a href="http://atnd.org/event/java8beginner20130626tokyo">http://atnd.org/event/java8beginner20130626tokyo</a></p>
-
-<p>結論</p>
-
-<h1>あれ、rubyのmix-inについての話はどこ行った…</h1>
-
-<p>vimでrubyのコード書くの辛いです…</p>
-
-<!-- admax -->
-
-
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-
-
-<!-- admax -->
-
-
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -6444,6 +6308,10 @@ long sum = integers.reduce(0, Long::sum);
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/01/using-javafx-as-headless-browser/">JavaFXをheadless browserとして使うためのJSObjectの扱い方 - 1</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/30/first-shibuya-java/">第一回渋谷javaに行ってきた</a>
       </li>
     
@@ -6457,10 +6325,6 @@ long sum = integers.reduce(0, Long::sum);
     
       <li class="post">
         <a href="/blog/2013/06/19/publish-maven-artifact-with-sign-files-1/">gradleのmaven-publishプラグインでライブラリーを発行する方法 - 1</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/15/publishing-artifact-with-gradles-new-maven-publish-plugin-is-currently-unavailable/">gradle 1.4以降から追加されているmaven-publishプラグインでは、まだmaven central レポジトリーに上げられないようです。</a>
       </li>
     
   </ul>

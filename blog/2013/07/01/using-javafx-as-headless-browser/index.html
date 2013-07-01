@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>AndroidがJavaだと思っている人のためのGroovy講座 - 1 - mike、mikeなるままに…</title>
+  <title>JavaFXをheadless browserとして使うためのJSObjectの扱い方 - 1 - mike、mikeなるままに…</title>
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="タイトルが偉そうなこと書いていますが、 大したことは書きません。 みけです。 Android Studioが出てきてgradleとは何ぞと思っている方がいると思います gradleはgroovyで記述できるビルドシステムです。 antの自由なところと、 &hellip;">
+  <meta name="description" content="こんにちわ。 みけです。 JavaFXでjavascriptのテスティングフレームワークを作ろうと思ってから、 早1年半。 全然成果があがっていません。 今日は、そんな自分のための俺得なエントリー。 Goal 期待していいこと JSObjectでのarrayの取り扱い 期待できないこと &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/05/27/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo">
+  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/07/01/using-javafx-as-headless-browser">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="mike、mikeなるままに…" type="application/atom+xml">
@@ -81,7 +81,7 @@
   
   <header>
     
-      <h1 class="entry-title">AndroidがJavaだと思っている人のためのGroovy講座 - 1</h1>
+      <h1 class="entry-title">JavaFXをheadless browserとして使うためのJSObjectの扱い方 - 1</h1>
     
     
       <p class="meta">
@@ -97,94 +97,49 @@
   
 
 
-<time datetime="2013-05-27T12:29:00+09:00" pubdate data-updated="true">May 27<span>th</span>, 2013</time>
+<time datetime="2013-07-01T13:03:00+09:00" pubdate data-updated="true">Jul 1<span>st</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>タイトルが偉そうなこと書いていますが、</p>
-
-<p>大したことは書きません。</p>
+<div class="entry-content"><p>こんにちわ。</p>
 
 <p>みけです。</p>
 
-<h1>Android Studioが出てきてgradleとは何ぞと思っている方がいると思います</h1>
+<p>JavaFXでjavascriptのテスティングフレームワークを作ろうと思ってから、</p>
 
-<p>gradleはgroovyで記述できるビルドシステムです。</p>
+<p>早1年半。</p>
 
-<p>antの自由なところと、mavenの依存性管理を組み合わせたイケてるところが売りです。</p>
+<p>全然成果があがっていません。</p>
 
-<p>さて、この記事では…</p>
+<p>今日は、そんな自分のための俺得なエントリー。</p>
 
-<h1>gradleのことはほとんど書きません</h1>
+<p><img src="//googledrive.com/host/0B4hhdHWLP7RRbkltQVpjMUkzNE0" style="width : 450px;"/></p>
 
-<p>Android開発者でgradleとは何やねん？って思っている方には</p>
+<h2>Goal</h2>
 
-<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00C7AMKTU" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+<h4>期待していいこと</h4>
 
-
-<p>こちらに詳細が書かれていますので、読んでみて下さい。</p>
-
-<p>で、この記事は何を書いているの？というわけで、</p>
-
-<h1>簡単なgroovyの文法の説明を書きます</h1>
-
-<p>これを覚えると、gradleの記述で少し楽をできるかもしれません。</p>
-
-<p>でも、groovyのことを完璧に説明しているかというと、そうでもないので、</p>
-
-<p>詳しくは次の本を買って読んで下さい。</p>
-
-<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4774147273" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+<ul>
+<li>JSObjectでのarrayの取り扱い</li>
+</ul>
 
 
-<p>では、以下、本題</p>
+<h4>期待できないこと</h4>
 
-<h2>メソッドの引数部分の括弧は省略できる</h2>
-
-<p>多分gradleを初めて見た人で何やねんこれと思う記述はこういうやつだと思います。</p>
-
-<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">task</span> <span class="n">myTask</span>
-</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li>JavaFXのスレッドの同期方法</li>
+<li>JSObjectでのobjectの取り扱い</li>
+</ul>
 
 
-<p>この<code>task</code>というのは、<code>AbstractProject</code>という抽象クラスで定義されている<code>public Task task(Object task)</code>というメソッドです。このメソッドはタスクをプロジェクトに登録するメソッドです。</p>
+<h2>JSObjectの扱い方 &ndash; array編</h2>
 
-<p>したがって、上記の例では<code>task</code>メソッドによって<code>myTask.toString()</code>で得られる名前(<code>myTask</code>)のタスクが作成されます。</p>
+<p><code>JSObject#getSlot(int)</code>を使ってarrayの要素を取得します。</p>
 
-<p>gradleの中で同様な記述がたくさんあると思います。</p>
-
-<p>例えば</p>
-
-<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">repositories</span> <span class="o">{</span>
-</span><span class='line'>    <span class="c1">// some repository configuration</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
-</span><span class='line'>    <span class="c1">// some dependency configuration</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これら<code>repositories</code>や、<code>dependencies</code>も、実はみんなメソッドです。</p>
-
-<h3>裏をとってみる</h3>
-
-<p>では、こっから先はちょっと混みいった話</p>
-
-<p>gradleのprojectの元になるクラスは<code>org.gradle.api.internal.project.AbstractProject</code>クラスです。</p>
-
-<p>このクラスの中を少し見てみましょう。</p>
-
-<figure class='code'><figcaption><span>AbstractProject.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -193,55 +148,36 @@
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">AbstractProject</span>
-</span><span class='line'>        <span class="kd">extends</span> <span class="n">AbstractPluginAware</span>
-</span><span class='line'>        <span class="kd">implements</span> <span class="n">ProjectInternal</span><span class="o">,</span> <span class="n">DynamicObjectAware</span> <span class="o">{</span>
-</span><span class='line'>    <span class="c1">// some codes</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">repositories</span><span class="o">(</span><span class="n">Closure</span> <span class="n">configureClosure</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">ConfigureUtil</span><span class="o">.</span><span class="na">configure</span><span class="o">(</span><span class="n">configureClosure</span><span class="o">,</span> <span class="n">getRepositories</span><span class="o">());</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">dependencies</span><span class="o">(</span><span class="n">Closure</span> <span class="n">configureClosure</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">ConfigureUtil</span><span class="o">.</span><span class="na">configure</span><span class="o">(</span><span class="n">configureClosure</span><span class="o">,</span> <span class="n">getDependencies</span><span class="o">());</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">// some codes</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Task</span> <span class="nf">task</span><span class="o">(</span><span class="n">String</span> <span class="n">task</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">taskContainer</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">task</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Task</span> <span class="nf">task</span><span class="o">(</span><span class="n">Object</span> <span class="n">task</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">taskContainer</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">task</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">// some codes</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">final</span> <span class="n">String</span> <span class="n">script</span> <span class="o">=</span> <span class="s">&quot;(function(){return [&#39;a&#39;, 2, &#39;c&#39;, 4, &#39;e&#39;];})()&quot;</span><span class="o">;</span>
+</span><span class='line'><span class="kd">final</span> <span class="n">BlockingQueue</span><span class="o">&lt;</span><span class="n">JSObject</span><span class="o">&gt;</span> <span class="n">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedBlockingQueue</span><span class="o">&lt;&gt;();</span>
+</span><span class='line'><span class="n">Platform</span><span class="o">.</span><span class="na">runLater</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">queue</span><span class="o">.</span><span class="na">put</span><span class="o">((</span><span class="n">JSObject</span><span class="o">)</span> <span class="n">webEngine</span><span class="o">.</span><span class="na">executeScript</span><span class="o">(</span><span class="n">script</span><span class="o">));</span>
+</span><span class='line'><span class="o">});</span>
+</span><span class='line'><span class="n">JSObject</span> <span class="n">array</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">take</span><span class="o">();</span>
+</span><span class='line'><span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="s">&quot; -&gt; &quot;</span> <span class="o">+</span> <span class="n">array</span><span class="o">.</span><span class="na">getSlot</span><span class="o">(</span><span class="n">i</span><span class="o">));</span>
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>はい、<code>dependencies</code>や<code>repositories</code>、<code>task</code>といったキーワードはすべてメソッドですね。</p>
+<p>結果は次のようになります。</p>
 
-<h2>結論：groovyではメソッドの引数部分の括弧を省略できる</h2>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="mi">0</span> <span class="o">-&gt;</span> <span class="n">a</span>
+</span><span class='line'><span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">2</span>
+</span><span class='line'><span class="mi">2</span> <span class="o">-&gt;</span> <span class="n">c</span>
+</span><span class='line'><span class="mi">3</span> <span class="o">-&gt;</span> <span class="mi">4</span>
+</span><span class='line'><span class="mi">4</span> <span class="o">-&gt;</span> <span class="n">e</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>…ん、gradleのことほとんど書かないと言ったな、あれは嘘だ。</p>
+
+<p>ちなみに要素のindexより多い数を<code>JSObject#getSLot(int)</code>の引数に渡すと、</p>
+
+<p><code>String</code>の<code>undefined</code>が返ってきます。</p>
 
 <!-- admax -->
 
@@ -289,12 +225,12 @@
   
 
 
-<time datetime="2013-05-27T12:29:00+09:00" pubdate data-updated="true">May 27<span>th</span>, 2013</time>
+<time datetime="2013-07-01T13:03:00+09:00" pubdate data-updated="true">Jul 1<span>st</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/groovy/'>groovy</a>, <a class='category' href='/blog/categories/java/'>java</a>
+    <a class='category' href='/blog/categories/java/'>java</a>
   
 </span>
 
@@ -303,7 +239,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/05/27/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/05/27/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/07/01/using-javafx-as-headless-browser/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/07/01/using-javafx-as-headless-browser/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -317,10 +253,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/05/26/blogfalsegeng-xin-pingwosong-reruyounirakefalsetasukuwoshu-itemita/" title="Previous Post: blogの更新pingを送れるようにrakeのタスクを書いてみた">&laquo; blogの更新pingを送れるようにrakeのタスクを書いてみた</a>
+        <a class="basic-alignment left" href="/blog/2013/06/30/first-shibuya-java/" title="Previous Post: 第一回渋谷javaに行ってきた">&laquo; 第一回渋谷javaに行ってきた</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/05/30/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo-2/" title="Next Post: AndroidがJavaだと思っている人のためのGroovy講座 - 2">AndroidがJavaだと思っている人のためのGroovy講座 - 2 &raquo;</a>
       
     </p>
   </footer>
