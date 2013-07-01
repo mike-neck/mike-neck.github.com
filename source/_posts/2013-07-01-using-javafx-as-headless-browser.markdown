@@ -18,6 +18,8 @@ JavaFXでjavascriptのテスティングフレームワークを作ろうと思�
 
 今日は、そんな自分のための俺得なエントリー。
 
+<img src="//googledrive.com/host/0B4hhdHWLP7RRbkltQVpjMUkzNE0" style="width : 450px;"/>
+
 Goal
 ---
 
