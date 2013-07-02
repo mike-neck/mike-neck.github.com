@@ -9,9 +9,7 @@
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="こんにちわ、みけです。 @suginoyさんに 『楽しい開発スタートアップRuby』を買っていただいたので、 今日はそれを某社オフィスで読んでいました。 Rubyのmix-inについての読んだ後の会話 僕「mix-inよくわからん」
-イケメン「多重継承できるやつでしょう」
-僕「mix- &hellip;">
+  <meta name="description" content="こんにちわ、みけです。 微妙に表題の件に関して、30分くらいさまよったので、覚書き。 公式のドキュメントはこちらです。 JIRA User&rsquo;s Guide > Working with an Issue > Linking Issues &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +78,93 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/10/how-to-link-other-issues-on-jira6/">JIRA6のチケットで他のチケットへのリンクを張る方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-10T15:10:00+09:00" pubdate data-updated="true">Jun 10<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>こんにちわ、みけです。</p>
+
+<p>微妙に表題の件に関して、30分くらいさまよったので、覚書き。</p>
+
+<p>公式のドキュメントはこちらです。</p>
+
+<p><a href="https://confluence.atlassian.com/display/JIRA/Linking+Issues">JIRA User&rsquo;s Guide > Working with an Issue > Linking Issues</a></p>
+
+<h2>JIRA6であるチケットから他のチケットへのリンクを張る方法</h2>
+
+<h3>JIRAのissueの上にあるメニューから<strong>More > Link</strong>を選択します</h3>
+
+<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRVjFGRmExVzhlMjQ" target="_blank"><img src="//googledrive.com/host/0B4hhdHWLP7RRVjFGRmExVzhlMjQ" style="width : 501px;"/></a></p>
+
+<h3>当該チケットとの関係を選択して、関連するチケットを選択します</h3>
+
+<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRaExlSGJnMUJjejQ" target="_blank"><img src="//googledrive.com/host/0B4hhdHWLP7RRaExlSGJnMUJjejQ" style="width : 334px;"/></a></p>
+
+<h3>チケットが関連付けられているか確認します</h3>
+
+<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRT2RfWklwbkExdGM" target="_blank"><img src="//googledrive.com/host/0B4hhdHWLP7RRT2RfWklwbkExdGM" style="width : 501px;"/></a></p>
+
+<p>…</p>
+
+<p>えっ、Redmineならもっと簡単だって？</p>
+
+<p>そうですね。</p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -2852,172 +2937,6 @@ long sum = integers.reduce(0, Long::sum);
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/26/blogfalsegeng-xin-pingwosong-reruyounirakefalsetasukuwoshu-itemita/">Blogの更新pingを送れるようにrakeのタスクを書いてみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-26T21:38:00+09:00" pubdate data-updated="true">May 26<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>こんにちわ、みけです。</p>
-
-<p>お金がないので、ブログを読んでもらって、</p>
-
-<p>google adsenseをみんなに押してもらわないと、</p>
-
-<p>死んでしまいます。</p>
-
-<p>さて、そんなことはどうでもよくて、</p>
-
-<p>bloggerでブログをやっていたときは、</p>
-
-<p>googleさんが勝手に検索エンジンに乗せてくれるので、</p>
-
-<p>検索しやすかったのですが、</p>
-
-<p>githubでブログを書くようになって、</p>
-
-<p>検索で出にくくなっていたので、</p>
-
-<p>更新pingをrakeで送りつけるようにしました。</p>
-
-<p>まあ、「更新ping ruby」でググった結果をrakeのタスクにしただけですが…</p>
-
-<p>で、追加したのがこんな感じのタスクです。</p>
-
-<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;yaml&quot;</span>
-</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;xmlrpc/client&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">#-- sending ping --#</span>
-</span><span class='line'><span class="n">desc</span> <span class="s2">&quot;Sedning ping to Web Search Engines&quot;</span>
-</span><span class='line'><span class="n">task</span> <span class="ss">:ping</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">site_config</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;_config.yml&#39;</span><span class="p">))</span>
-</span><span class='line'>  <span class="n">blog_title</span> <span class="o">=</span> <span class="n">site_config</span><span class="o">[</span><span class="s1">&#39;title&#39;</span><span class="o">]</span>
-</span><span class='line'>  <span class="n">blog_url</span> <span class="o">=</span> <span class="n">site_config</span><span class="o">[</span><span class="s1">&#39;url&#39;</span><span class="o">]</span>
-</span><span class='line'>  <span class="n">ping_url</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;ping.yml&#39;</span><span class="p">))</span>
-</span><span class='line'>  <span class="n">ping_url</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">url</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">ping</span> <span class="o">=</span> <span class="ss">XMLRPC</span><span class="p">:</span><span class="ss">:Client</span><span class="o">.</span><span class="n">new2</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">begin</span>
-</span><span class='line'>      <span class="n">result</span> <span class="o">=</span> <span class="n">ping</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;weblogUpdates.ping&#39;</span><span class="p">,</span> <span class="n">blog_title</span><span class="p">,</span> <span class="n">blog_url</span><span class="p">)</span>
-</span><span class='line'>      <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">url</span><span class="si">}</span><span class="s2"> : </span><span class="si">#{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>    <span class="k">rescue</span> <span class="o">=&gt;</span> <span class="n">e</span>
-</span><span class='line'>      <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">url</span><span class="si">}</span><span class="s2"> : </span><span class="si">#{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>この新たに追加したタスクを後は、gen_deployタスクに追加します。</p>
-
-<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">desc</span> <span class="s2">&quot;Generate website and deploy&quot;</span>
-</span><span class='line'><span class="n">task</span> <span class="ss">:gen_deploy</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:integrate</span><span class="p">,</span> <span class="ss">:generate</span><span class="p">,</span> <span class="ss">:deploy</span><span class="p">,</span> <span class="ss">:ping</span><span class="o">]</span> <span class="k">do</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>あと、適当に<code>ping.yml</code>に更新pingを送りつけるサイトを記述すればおｋです。</p>
-
-<figure class='code'><figcaption><span>ping.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://blogsearch.google.com/ping/RPC2</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://api.my.yahoo.co.jp/RPC2</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://blog.goo.ne.jp/XMLRPC</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.bloggers.jp/rpc/</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.rss.drecom.jp/</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.fc2.com/</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://rpc.weblogs.com/RPC2</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://rpc.reader.livedoor.com/ping</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.blogranking.net/</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://www.blogpeople.net/ping/</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!-- admax -->
-
-
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-
-
-<!-- admax -->
-
-
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -3035,6 +2954,10 @@ long sum = integers.reduce(0, Long::sum);
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/02/one-of-techniques-to-use-javafx-as-headless-browser/">JavaFXをヘッドレスブラウザーとして使うための基本テク #javafx</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/01/using-javafx-as-headless-browser/">JavaFXをheadless browserとして使うためのJSObjectの扱い方 - 1</a>
       </li>
     
@@ -3048,10 +2971,6 @@ long sum = integers.reduce(0, Long::sum);
     
       <li class="post">
         <a href="/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/">How to publish artifacts to maven central repository via gradle maven-publish plugin (version 1.6)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/19/publish-maven-artifact-with-sign-files-1/">gradleのmaven-publishプラグインでライブラリーを発行する方法 - 1</a>
       </li>
     
   </ul>

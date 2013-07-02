@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-07-01T13:48:18+09:00</updated>
+  <updated>2013-07-02T12:50:11+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -12,6 +12,290 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[JavaFXをヘッドレスブラウザーとして使うための基本テク #javafx]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/07/02/one-of-techniques-to-use-javafx-as-headless-browser/"/>
+    <updated>2013-07-02T10:28:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/07/02/one-of-techniques-to-use-javafx-as-headless-browser</id>
+    <content type="html"><![CDATA[<p>こんにちわ、みけです。</p>
+
+<p>JavaFXをヘッドレスブラウザーとして使おうとして、</p>
+
+<p>いろいろとWebのリダイレクトにハマりまくっています。</p>
+
+<p>で、今回はJavaFXをJavaFXのスレッド以外のスレッドから扱うTipsを集めました。</p>
+
+<h2>Goal</h2>
+
+<h4>期待していいこと</h4>
+
+<ul>
+<li>JavaFXの操作をJavaFXの外からする方法</li>
+</ul>
+
+
+<h4>期待してはいけないこと</h4>
+
+<ul>
+<li>GUIプログラミングの云々かんぬん</li>
+</ul>
+
+
+<h2>Basics</h2>
+
+<p>JavaFXのアプリケーションのサンプル的な起動方法は次のとおりです。</p>
+
+<figure class='code'><figcaption><span>SampleApplication.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">javafx.application.Application</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javafx.stage.Stage</span><span class="o">;</span>
+</span><span class='line'><span class="c1">// この中のmainメソッドからアプリケーションを起動しちゃう</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleApplication</span> <span class="kd">extends</span> <span class="n">Application</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Application</span><span class="o">.</span><span class="na">launch</span><span class="o">(</span><span class="n">SampleApplication</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">(</span><span class="n">Stage</span> <span class="n">stage</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// do something.</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>さて、この方法を採用している限りにおいては、</p>
+
+<p>JavaFXのスレッドがどうのこうのでハマることはありません。</p>
+
+<p>今回のテーマはJavaFXアプリケーションの外と内をわけることにあります。</p>
+
+<p>JavaFXアプリケーションはバックグラウンドで実行します。</p>
+
+<p>そのためには<code>java.util.concurrent.ExecutorService</code>を用います。</p>
+
+<figure class='code'><figcaption><span>ApplicationLauncher.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">javafx.application.Application</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javafx.application.Platform</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.concurrent.ExecutorService</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.concurrent.Executors</span><span class="o">;</span>
+</span><span class='line'><span class="c1">// 先ほどのSampleApplicationを起動します。</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ApplicationLauncher</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">ExecutorService</span> <span class="n">SERVICE</span> <span class="o">=</span>
+</span><span class='line'>            <span class="n">Executors</span><span class="o">.</span><span class="na">newFixedThreadPool</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// launch application</span>
+</span><span class='line'>        <span class="n">SERVICE</span><span class="o">.</span><span class="na">submit</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">(){</span>
+</span><span class='line'>            <span class="nd">@Override</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">Application</span><span class="o">.</span><span class="na">launch</span><span class="o">(</span><span class="n">SampleApplication</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>        <span class="c1">// do something</span>
+</span><span class='line'>        <span class="c1">// shutdown application</span>
+</span><span class='line'>        <span class="n">Platform</span><span class="o">.</span><span class="na">exit</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">SERVICE</span><span class="o">.</span><span class="na">shutdown</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2><code>Platform#RunLater(java.lang.Runnable)</code></h2>
+
+<p>JavaFX上でのみ動作するオブジェクトへの操作は<code>Platform#runLater(java.lang.Runnable)</code>を</p>
+
+<p>通じて行います。</p>
+
+<figure class='code'><figcaption><span>ControllerStimulation.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">javafx.application.Platform</span><span class="o">;</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ControllerStimulation</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// JavaFXのcontrollerクラスのインスタンス</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">SampleController</span> <span class="n">controller</span><span class="o">;</span>
+</span><span class='line'>    <span class="c1">// Platform#runLater(Runnable)を通じてcontrollerクラスへの操作を行う。</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">simulateClickButton</span> <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Platform</span><span class="o">.</span><span class="na">runLater</span><span class="o">(</span><span class="k">new</span> <span class="n">SimulateClickButton</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="c1">// 実際にcontrollerクラスを操作するRunnable</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">class</span> <span class="nc">SimulateClickButton</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span> <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">controller</span><span class="o">.</span><span class="na">clickButton</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>戻り値を利用したい場合</h2>
+
+<p>御存知の通り、<code>java.lang.Runnable#run()</code>は値を返しませんので、</p>
+
+<p>値の受け渡しには<code>java.util.concurrent.BlockingQueue&lt;T&gt;</code>を使うことになります。</p>
+
+<p><code>Platform#runLater</code>が<code>java.util.concurrent.Callable&lt;T&gt;</code>を引数にとって、</p>
+
+<p><code>java.util.concurrent.Future&lt;T&gt;</code>を返してくれるといいんですけどね…</p>
+
+<figure class='code'><figcaption><span>JavascriptExecution.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">javafx.application.Platform</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javafx.scene.web.WebEngine</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.concurrent.BlockingQueue</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.concurrent.LinkedBlockingQueue</span><span class="o">;</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">JavascriptExecution</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// controllerクラスのインスタンス</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">SampleController</span> <span class="n">controller</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">callJavascript</span><span class="o">(</span><span class="n">String</span> <span class="n">javascript</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">final</span> <span class="n">BlockingQueue</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedBlockingQueue</span><span class="o">&lt;&gt;();</span>
+</span><span class='line'>        <span class="n">Platform</span><span class="o">.</span><span class="na">runLater</span><span class="o">(</span><span class="k">new</span> <span class="n">CallJavascript</span><span class="o">(</span><span class="n">queue</span><span class="o">,</span> <span class="n">javascript</span><span class="o">));</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">take</span><span class="o">();</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">class</span> <span class="nc">CallJavascript</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">private</span> <span class="kd">final</span> <span class="n">BlockingQueue</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">queue</span><span class="o">;</span>
+</span><span class='line'>        <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">script</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">CallJavascript</span><span class="o">(</span><span class="kd">final</span> <span class="n">BlockingQueue</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">queue</span><span class="o">,</span> <span class="n">String</span> <span class="n">script</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">this</span><span class="o">.</span><span class="na">queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">;</span>
+</span><span class='line'>            <span class="k">this</span><span class="o">.</span><span class="na">script</span> <span class="o">=</span> <span class="n">script</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">WebEngine</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="na">getEngine</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="o">(</span><span class="n">String</span><span class="o">)</span> <span class="n">engine</span><span class="o">.</span><span class="na">executeScript</span><span class="o">(</span><span class="n">script</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">queue</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実際はJavascriptなどでエラーがあると、<code>netscape.javascript.JSException</code>がthrowされるので、</p>
+
+<p><code>Platform#runLater(java.lang.Runnable)</code>で<code>java.lang.RuntimeException</code>を検知して、</p>
+
+<p>Applicatoinを終了させるような仕組みを組み込んでおくことが望まれるのですが、</p>
+
+<p>それはここでの話を逸脱するし、誰得な気がするので、</p>
+
+<p>やめておく…</p>
+
+<p>以下、実際に僕が書いているコード</p>
+
+<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRQVYweDh2QU1LVk0" target="_blank"><img src="http://mike-neck.github.io//googledrive.com/host/0B4hhdHWLP7RRQVYweDh2QU1LVk0" style="width : 450px;"></a></p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[JavaFXをheadless browserとして使うためのJSObjectの扱い方 - 1]]></title>
@@ -8457,145 +8741,6 @@ long sum = integers.reduce(0, Long::sum);
 <h2>結論：groovyではメソッドの引数部分の括弧を省略できる</h2>
 
 <p>…ん、gradleのことほとんど書かないと言ったな、あれは嘘だ。</p>
-
-<!-- admax -->
-
-
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-
-
-<!-- admax -->
-
-
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[blogの更新pingを送れるようにrakeのタスクを書いてみた]]></title>
-    <link href="http://mike-neck.github.io/blog/2013/05/26/blogfalsegeng-xin-pingwosong-reruyounirakefalsetasukuwoshu-itemita/"/>
-    <updated>2013-05-26T21:38:00+09:00</updated>
-    <id>http://mike-neck.github.io/blog/2013/05/26/blogfalsegeng-xin-pingwosong-reruyounirakefalsetasukuwoshu-itemita</id>
-    <content type="html"><![CDATA[<p>こんにちわ、みけです。</p>
-
-<p>お金がないので、ブログを読んでもらって、</p>
-
-<p>google adsenseをみんなに押してもらわないと、</p>
-
-<p>死んでしまいます。</p>
-
-<p>さて、そんなことはどうでもよくて、</p>
-
-<p>bloggerでブログをやっていたときは、</p>
-
-<p>googleさんが勝手に検索エンジンに乗せてくれるので、</p>
-
-<p>検索しやすかったのですが、</p>
-
-<p>githubでブログを書くようになって、</p>
-
-<p>検索で出にくくなっていたので、</p>
-
-<p>更新pingをrakeで送りつけるようにしました。</p>
-
-<p>まあ、「更新ping ruby」でググった結果をrakeのタスクにしただけですが…</p>
-
-<p>で、追加したのがこんな感じのタスクです。</p>
-
-<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;yaml&quot;</span>
-</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;xmlrpc/client&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">#-- sending ping --#</span>
-</span><span class='line'><span class="n">desc</span> <span class="s2">&quot;Sedning ping to Web Search Engines&quot;</span>
-</span><span class='line'><span class="n">task</span> <span class="ss">:ping</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">site_config</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;_config.yml&#39;</span><span class="p">))</span>
-</span><span class='line'>  <span class="n">blog_title</span> <span class="o">=</span> <span class="n">site_config</span><span class="o">[</span><span class="s1">&#39;title&#39;</span><span class="o">]</span>
-</span><span class='line'>  <span class="n">blog_url</span> <span class="o">=</span> <span class="n">site_config</span><span class="o">[</span><span class="s1">&#39;url&#39;</span><span class="o">]</span>
-</span><span class='line'>  <span class="n">ping_url</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;ping.yml&#39;</span><span class="p">))</span>
-</span><span class='line'>  <span class="n">ping_url</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">url</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">ping</span> <span class="o">=</span> <span class="ss">XMLRPC</span><span class="p">:</span><span class="ss">:Client</span><span class="o">.</span><span class="n">new2</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">begin</span>
-</span><span class='line'>      <span class="n">result</span> <span class="o">=</span> <span class="n">ping</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;weblogUpdates.ping&#39;</span><span class="p">,</span> <span class="n">blog_title</span><span class="p">,</span> <span class="n">blog_url</span><span class="p">)</span>
-</span><span class='line'>      <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">url</span><span class="si">}</span><span class="s2"> : </span><span class="si">#{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>    <span class="k">rescue</span> <span class="o">=&gt;</span> <span class="n">e</span>
-</span><span class='line'>      <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">url</span><span class="si">}</span><span class="s2"> : </span><span class="si">#{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>この新たに追加したタスクを後は、gen_deployタスクに追加します。</p>
-
-<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">desc</span> <span class="s2">&quot;Generate website and deploy&quot;</span>
-</span><span class='line'><span class="n">task</span> <span class="ss">:gen_deploy</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:integrate</span><span class="p">,</span> <span class="ss">:generate</span><span class="p">,</span> <span class="ss">:deploy</span><span class="p">,</span> <span class="ss">:ping</span><span class="o">]</span> <span class="k">do</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>あと、適当に<code>ping.yml</code>に更新pingを送りつけるサイトを記述すればおｋです。</p>
-
-<figure class='code'><figcaption><span>ping.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://blogsearch.google.com/ping/RPC2</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://api.my.yahoo.co.jp/RPC2</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://blog.goo.ne.jp/XMLRPC</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.bloggers.jp/rpc/</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.rss.drecom.jp/</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.fc2.com/</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://rpc.weblogs.com/RPC2</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://rpc.reader.livedoor.com/ping</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://ping.blogranking.net/</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">http://www.blogpeople.net/ping/</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
 
 <!-- admax -->
 

@@ -185,12 +185,18 @@
         <lastmod>2013-07-01T13:47:12+09:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://mike-neck.github.io/blog/2013/07/02/one-of-techniques-to-use-javafx-as-headless-browser/
+        </loc>
+        <lastmod>2013-07-02T12:49:17+09:00</lastmod>
+    </url>
+    <url>
         <loc>http://mike-neck.github.io/blog/archives/</loc>
-        <lastmod>2013-07-01T13:47:12+09:00</lastmod>
+        <lastmod>2013-07-02T12:49:17+09:00</lastmod>
     </url>
     <url>
         <loc>http://mike-neck.github.io/</loc>
-        <lastmod>2013-07-01T13:47:12+09:00</lastmod>
+        <lastmod>2013-07-02T12:49:17+09:00</lastmod>
     </url>
     <url>
         <loc>http://mike-neck.github.io/robots.txt</loc>

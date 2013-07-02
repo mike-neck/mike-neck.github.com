@@ -1,0 +1,593 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>JavaFXをヘッドレスブラウザーとして使うための基本テク #javafx - mike、mikeなるままに…</title>
+  <meta name="author" content="mike-neck">
+
+  
+  <meta name="description" content="こんにちわ、みけです。 JavaFXをヘッドレスブラウザーとして使おうとして、 いろいろとWebのリダイレクトにハマりまくっています。 で、今回はJavaFXをJavaFXのスレッド以外のスレッドから扱うTipsを集めました。 Goal 期待していいこと &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/07/02/one-of-techniques-to-use-javafx-as-headless-browser">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="mike、mikeなるままに…" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40855644-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">mike、mikeなるままに…</a></h1>
+  
+    <h2>プログラムに関してぬるま湯のような記事を書きます</h2>
+  
+  <valuecommerce   ptnOid="3060695" url="http://mike-neck.github.io/" />
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:mike-neck.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">JavaFXをヘッドレスブラウザーとして使うための基本テク #javafx</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-02T10:28:00+09:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>こんにちわ、みけです。</p>
+
+<p>JavaFXをヘッドレスブラウザーとして使おうとして、</p>
+
+<p>いろいろとWebのリダイレクトにハマりまくっています。</p>
+
+<p>で、今回はJavaFXをJavaFXのスレッド以外のスレッドから扱うTipsを集めました。</p>
+
+<h2>Goal</h2>
+
+<h4>期待していいこと</h4>
+
+<ul>
+<li>JavaFXの操作をJavaFXの外からする方法</li>
+</ul>
+
+
+<h4>期待してはいけないこと</h4>
+
+<ul>
+<li>GUIプログラミングの云々かんぬん</li>
+</ul>
+
+
+<h2>Basics</h2>
+
+<p>JavaFXのアプリケーションのサンプル的な起動方法は次のとおりです。</p>
+
+<figure class='code'><figcaption><span>SampleApplication.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">javafx.application.Application</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javafx.stage.Stage</span><span class="o">;</span>
+</span><span class='line'><span class="c1">// この中のmainメソッドからアプリケーションを起動しちゃう</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleApplication</span> <span class="kd">extends</span> <span class="n">Application</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Application</span><span class="o">.</span><span class="na">launch</span><span class="o">(</span><span class="n">SampleApplication</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">(</span><span class="n">Stage</span> <span class="n">stage</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// do something.</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>さて、この方法を採用している限りにおいては、</p>
+
+<p>JavaFXのスレッドがどうのこうのでハマることはありません。</p>
+
+<p>今回のテーマはJavaFXアプリケーションの外と内をわけることにあります。</p>
+
+<p>JavaFXアプリケーションはバックグラウンドで実行します。</p>
+
+<p>そのためには<code>java.util.concurrent.ExecutorService</code>を用います。</p>
+
+<figure class='code'><figcaption><span>ApplicationLauncher.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">javafx.application.Application</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javafx.application.Platform</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.concurrent.ExecutorService</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.concurrent.Executors</span><span class="o">;</span>
+</span><span class='line'><span class="c1">// 先ほどのSampleApplicationを起動します。</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ApplicationLauncher</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">ExecutorService</span> <span class="n">SERVICE</span> <span class="o">=</span>
+</span><span class='line'>            <span class="n">Executors</span><span class="o">.</span><span class="na">newFixedThreadPool</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// launch application</span>
+</span><span class='line'>        <span class="n">SERVICE</span><span class="o">.</span><span class="na">submit</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">(){</span>
+</span><span class='line'>            <span class="nd">@Override</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">Application</span><span class="o">.</span><span class="na">launch</span><span class="o">(</span><span class="n">SampleApplication</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>        <span class="c1">// do something</span>
+</span><span class='line'>        <span class="c1">// shutdown application</span>
+</span><span class='line'>        <span class="n">Platform</span><span class="o">.</span><span class="na">exit</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">SERVICE</span><span class="o">.</span><span class="na">shutdown</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2><code>Platform#RunLater(java.lang.Runnable)</code></h2>
+
+<p>JavaFX上でのみ動作するオブジェクトへの操作は<code>Platform#runLater(java.lang.Runnable)</code>を</p>
+
+<p>通じて行います。</p>
+
+<figure class='code'><figcaption><span>ControllerStimulation.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">javafx.application.Platform</span><span class="o">;</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ControllerStimulation</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// JavaFXのcontrollerクラスのインスタンス</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">SampleController</span> <span class="n">controller</span><span class="o">;</span>
+</span><span class='line'>    <span class="c1">// Platform#runLater(Runnable)を通じてcontrollerクラスへの操作を行う。</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">simulateClickButton</span> <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Platform</span><span class="o">.</span><span class="na">runLater</span><span class="o">(</span><span class="k">new</span> <span class="n">SimulateClickButton</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="c1">// 実際にcontrollerクラスを操作するRunnable</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">class</span> <span class="nc">SimulateClickButton</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span> <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">controller</span><span class="o">.</span><span class="na">clickButton</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>戻り値を利用したい場合</h2>
+
+<p>御存知の通り、<code>java.lang.Runnable#run()</code>は値を返しませんので、</p>
+
+<p>値の受け渡しには<code>java.util.concurrent.BlockingQueue&lt;T&gt;</code>を使うことになります。</p>
+
+<p><code>Platform#runLater</code>が<code>java.util.concurrent.Callable&lt;T&gt;</code>を引数にとって、</p>
+
+<p><code>java.util.concurrent.Future&lt;T&gt;</code>を返してくれるといいんですけどね…</p>
+
+<figure class='code'><figcaption><span>JavascriptExecution.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">javafx.application.Platform</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javafx.scene.web.WebEngine</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.concurrent.BlockingQueue</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.concurrent.LinkedBlockingQueue</span><span class="o">;</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">JavascriptExecution</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// controllerクラスのインスタンス</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">SampleController</span> <span class="n">controller</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">callJavascript</span><span class="o">(</span><span class="n">String</span> <span class="n">javascript</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">final</span> <span class="n">BlockingQueue</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedBlockingQueue</span><span class="o">&lt;&gt;();</span>
+</span><span class='line'>        <span class="n">Platform</span><span class="o">.</span><span class="na">runLater</span><span class="o">(</span><span class="k">new</span> <span class="n">CallJavascript</span><span class="o">(</span><span class="n">queue</span><span class="o">,</span> <span class="n">javascript</span><span class="o">));</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">take</span><span class="o">();</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">class</span> <span class="nc">CallJavascript</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">private</span> <span class="kd">final</span> <span class="n">BlockingQueue</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">queue</span><span class="o">;</span>
+</span><span class='line'>        <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">script</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">CallJavascript</span><span class="o">(</span><span class="kd">final</span> <span class="n">BlockingQueue</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">queue</span><span class="o">,</span> <span class="n">String</span> <span class="n">script</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">this</span><span class="o">.</span><span class="na">queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">;</span>
+</span><span class='line'>            <span class="k">this</span><span class="o">.</span><span class="na">script</span> <span class="o">=</span> <span class="n">script</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">WebEngine</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="na">getEngine</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="o">(</span><span class="n">String</span><span class="o">)</span> <span class="n">engine</span><span class="o">.</span><span class="na">executeScript</span><span class="o">(</span><span class="n">script</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">queue</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実際はJavascriptなどでエラーがあると、<code>netscape.javascript.JSException</code>がthrowされるので、</p>
+
+<p><code>Platform#runLater(java.lang.Runnable)</code>で<code>java.lang.RuntimeException</code>を検知して、</p>
+
+<p>Applicatoinを終了させるような仕組みを組み込んでおくことが望まれるのですが、</p>
+
+<p>それはここでの話を逸脱するし、誰得な気がするので、</p>
+
+<p>やめておく…</p>
+
+<p>以下、実際に僕が書いているコード</p>
+
+<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRQVYweDh2QU1LVk0" target="_blank"><img src="//googledrive.com/host/0B4hhdHWLP7RRQVYweDh2QU1LVk0" style="width : 450px;"></a></p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">mike-neck</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-02T10:28:00+09:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/07/02/one-of-techniques-to-use-javafx-as-headless-browser/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/07/02/one-of-techniques-to-use-javafx-as-headless-browser/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+  <br/>
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/07/01/using-javafx-as-headless-browser/" title="Previous Post: JavaFXをheadless browserとして使うためのJSObjectの扱い方 - 1">&laquo; JavaFXをheadless browserとして使うためのJSObjectの扱い方 - 1</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/02/one-of-techniques-to-use-javafx-as-headless-browser/">JavaFXをヘッドレスブラウザーとして使うための基本テク #javafx</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/01/using-javafx-as-headless-browser/">JavaFXをheadless browserとして使うためのJSObjectの扱い方 - 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/30/first-shibuya-java/">第一回渋谷javaに行ってきた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/27/java8-lambdashi-woshi-tutemita/">Java8 lambda式を使ってみた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/">How to publish artifacts to maven central repository via gradle maven-publish plugin (version 1.6)</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/mike-neck">@mike-neck</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'mike-neck',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+<a href="https://twitter.com/mike_neck" class="twitter-follow-button" data-show-count="false" data-lang="ja">@mike_neckさんをフォロー</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/110183156583475779298?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<script type="text/javascript"><!--
+amazon_ad_tag = "kkkjkrt-22"; amazon_ad_width = "160"; amazon_ad_height = "600"; amazon_ad_logo = "hide"; amazon_ad_link_target = "new"; amazon_ad_price = "retail"; amazon_ad_border = "hide"; amazon_color_border = "303030"; amazon_color_background = "E0E0E0"; amazon_color_text = "4B4B4B"; amazon_color_link = "4B4B4B"; amazon_color_price = "4B4B4B"; amazon_color_logo = "E0E0E0";//--></script>
+<script type="text/javascript" src="http://www.assoc-amazon.jp/s/ads.js"></script>
+<h3>Manning Items</h3>
+<p>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_277_1_74" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Node.js_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_270_1_71" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Netherland_300x250.gif" width="300" height="250" alt="blog banner"></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_267_1_68" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/SpringBatch_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_266_1_66" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/SpringRoo_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_259_1_59" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/MachineLearning_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_249_1_48" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/MacRuby_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_238_1_47" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/ScalainDepth_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_211_1_49" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/ContIntegration_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_154_1_55" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Dependency_300x250.gif" width="300" height="250" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_112_1_22" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Skeet.gif" width="217" height="55" alt=""></a>
+<br/>
+<a href="http://affiliate.manning.com/idevaffiliate.php?id=1272_59_1_54" target="_blank"><img border="0" src="http://affiliate.manning.com/banners/Groovy2E_300x250.gif" width="300" height="250" alt=""></a>
+<p>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - mike-neck -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
