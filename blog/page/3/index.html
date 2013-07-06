@@ -9,7 +9,7 @@
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="こんにちわ、みけです。 お金がないので、ブログを読んでもらって、 google adsenseをみんなに押してもらわないと、 死んでしまいます。 さて、そんなことはどうでもよくて、 bloggerでブログをやっていたときは、 googleさんが勝手に検索エンジンに乗せてくれるので、 &hellip;">
+  <meta name="description" content="タイトルが偉そうなこと書いていますが、 大したことは書きません。 みけです。 Android Studioが出てきてgradleとは何ぞと思っている方がいると思います gradleはgroovyで記述できるビルドシステムです。 antの自由なところと、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,204 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/27/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo/">AndroidがJavaだと思っている人のためのGroovy講座 - 1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-27T12:29:00+09:00" pubdate data-updated="true">May 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>タイトルが偉そうなこと書いていますが、</p>
+
+<p>大したことは書きません。</p>
+
+<p>みけです。</p>
+
+<h1>Android Studioが出てきてgradleとは何ぞと思っている方がいると思います</h1>
+
+<p>gradleはgroovyで記述できるビルドシステムです。</p>
+
+<p>antの自由なところと、mavenの依存性管理を組み合わせたイケてるところが売りです。</p>
+
+<p>さて、この記事では…</p>
+
+<h1>gradleのことはほとんど書きません</h1>
+
+<p>Android開発者でgradleとは何やねん？って思っている方には</p>
+
+<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00C7AMKTU" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>こちらに詳細が書かれていますので、読んでみて下さい。</p>
+
+<p>で、この記事は何を書いているの？というわけで、</p>
+
+<h1>簡単なgroovyの文法の説明を書きます</h1>
+
+<p>これを覚えると、gradleの記述で少し楽をできるかもしれません。</p>
+
+<p>でも、groovyのことを完璧に説明しているかというと、そうでもないので、</p>
+
+<p>詳しくは次の本を買って読んで下さい。</p>
+
+<iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4774147273" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>では、以下、本題</p>
+
+<h2>メソッドの引数部分の括弧は省略できる</h2>
+
+<p>多分gradleを初めて見た人で何やねんこれと思う記述はこういうやつだと思います。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">task</span> <span class="n">myTask</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この<code>task</code>というのは、<code>AbstractProject</code>という抽象クラスで定義されている<code>public Task task(Object task)</code>というメソッドです。このメソッドはタスクをプロジェクトに登録するメソッドです。</p>
+
+<p>したがって、上記の例では<code>task</code>メソッドによって<code>myTask.toString()</code>で得られる名前(<code>myTask</code>)のタスクが作成されます。</p>
+
+<p>gradleの中で同様な記述がたくさんあると思います。</p>
+
+<p>例えば</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// some repository configuration</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// some dependency configuration</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これら<code>repositories</code>や、<code>dependencies</code>も、実はみんなメソッドです。</p>
+
+<h3>裏をとってみる</h3>
+
+<p>では、こっから先はちょっと混みいった話</p>
+
+<p>gradleのprojectの元になるクラスは<code>org.gradle.api.internal.project.AbstractProject</code>クラスです。</p>
+
+<p>このクラスの中を少し見てみましょう。</p>
+
+<figure class='code'><figcaption><span>AbstractProject.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">AbstractProject</span>
+</span><span class='line'>        <span class="kd">extends</span> <span class="n">AbstractPluginAware</span>
+</span><span class='line'>        <span class="kd">implements</span> <span class="n">ProjectInternal</span><span class="o">,</span> <span class="n">DynamicObjectAware</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// some codes</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">repositories</span><span class="o">(</span><span class="n">Closure</span> <span class="n">configureClosure</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">ConfigureUtil</span><span class="o">.</span><span class="na">configure</span><span class="o">(</span><span class="n">configureClosure</span><span class="o">,</span> <span class="n">getRepositories</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">dependencies</span><span class="o">(</span><span class="n">Closure</span> <span class="n">configureClosure</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">ConfigureUtil</span><span class="o">.</span><span class="na">configure</span><span class="o">(</span><span class="n">configureClosure</span><span class="o">,</span> <span class="n">getDependencies</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// some codes</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Task</span> <span class="nf">task</span><span class="o">(</span><span class="n">String</span> <span class="n">task</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">taskContainer</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">task</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Task</span> <span class="nf">task</span><span class="o">(</span><span class="n">Object</span> <span class="n">task</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">taskContainer</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">task</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// some codes</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>はい、<code>dependencies</code>や<code>repositories</code>、<code>task</code>といったキーワードはすべてメソッドですね。</p>
+
+<h2>結論：groovyではメソッドの引数部分の括弧を省略できる</h2>
+
+<p>…ん、gradleのことほとんど書かないと言ったな、あれは嘘だ。</p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -3680,838 +3878,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/14/erlangfalselistsmoziyuruwoshi-sitemiru-di-1hui/">Erlangのlistsモジュールを試してみる - 第1回</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-14T03:15:00+09:00" pubdate data-updated="true">May 14<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>みけです。</p>
-
-<p>Erlangのlistsモジュールを試してみるの第一回になります。</p>
-
-<p>なお、最初の16個は</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="nn">lists</span><span class="p">:</span><span class="nf">sublist</span><span class="p">(</span>
-</span><span class='line'>    <span class="nn">lists</span><span class="p">:</span><span class="nf">sort</span><span class="p">(</span>
-</span><span class='line'>        <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span>
-</span><span class='line'>            <span class="k">fun</span><span class="p">({</span><span class="nv">F</span><span class="p">,</span> <span class="nv">A</span><span class="p">})</span> <span class="o">-&gt;</span>
-</span><span class='line'>                <span class="nb">atom_to_list</span><span class="p">(</span><span class="nv">F</span><span class="p">)</span> <span class="o">++</span>
-</span><span class='line'>                <span class="s">&quot;/&quot;</span> <span class="o">++</span>
-</span><span class='line'>                <span class="nb">integer_to_list</span><span class="p">(</span><span class="nv">A</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">end</span><span class="p">,</span>
-</span><span class='line'>            <span class="nn">lists</span><span class="p">:</span><span class="nf">module_info</span><span class="p">(</span><span class="n">exports</span><span class="p">))),</span>
-</span><span class='line'>    <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>    <span class="mi">16</span><span class="p">).</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>の実行結果</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="p">[</span>
-</span><span class='line'>  <span class="s">&quot;all/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;any/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;append/1&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;append/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;concat/1&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;delete/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;dropwhile/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;duplicate/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;filter/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;flatlength/1&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;flatmap/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;flatten/1&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;flatten/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;foldl/3&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;foldr/3&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;foreach/2&quot;</span>
-</span><span class='line'><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>です。</p>
-
-<h3>all/2</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>all(Pred, List) &ndash;> boolean()</h4>
-
-<h5>Types</h5>
-
-<ul>
-<li>Pred = fun((Elem :: T) &ndash;> boolean())</li>
-<li>List = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns true if Pred(Elem) returns true for all elements Elem in List, otherwise false.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#all-2">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<ul>
-<li>すべての要素が第一引数に与えられた関数で<code>true</code>になれば<code>true</code>を返します。</li>
-<li>第一引数に与えられた関数で<code>false</code>になるものが一つでもあれば、<code>false</code>を返します。</li>
-</ul>
-
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">all</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">X</span> <span class="ow">rem</span> <span class="mi">2</span> <span class="o">=:=</span> <span class="mi">0</span> <span class="k">end</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="p">]).</span>
-</span><span class='line'><span class="n">true</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">all</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">X</span> <span class="ow">rem</span> <span class="mi">2</span> <span class="o">=:=</span> <span class="mi">0</span> <span class="k">end</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]).</span>
-</span><span class='line'><span class="n">false</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>偶数であることを判断する関数を第一引数に与えています。</p>
-
-<p>最初の例では全部偶数である<code>[0, 2, 4, 8]</code>が与えられています。</p>
-
-<p>その結果、<code>true</code>が返ってきます。</p>
-
-<p>一方、二番目の例では単なる1間隔の順列<code>[1, 2, 3, 4]</code>が与えられています。</p>
-
-<p>したがって、<code>false</code>が返ってきます。</p>
-
-<h3>any/2</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>any(Pred, List) &ndash;> boolean()</h4>
-
-<h5>Types</h5>
-
-<ul>
-<li>Pred = fun((Elem :: T) &ndash;> boolean())</li>
-<li>List = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns true if Pred(Elem) returns true for at least one element Elem in List.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#any-2">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<ul>
-<li>リストの要素のうち、一つでも第一引数に渡した関数が<code>true</code>を返せば<code>true</code>が返ってきます。</li>
-<li>リストの要素すべてで、第一引数の関数を満たさなければ<code>false</code>が返ってきます。</li>
-</ul>
-
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">any</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">is_integer</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="k">end</span><span class="p">,</span>                                         <span class="mi">1</span><span class="o">&gt;</span>     <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="s">&quot;hoge&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">true</span> <span class="k">end</span><span class="p">]).</span>
-</span><span class='line'><span class="n">true</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">any</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">is_integer</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="k">end</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="s">&quot;hoge&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">true</span> <span class="k">end</span><span class="p">]).</span>
-</span><span class='line'><span class="n">false</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>整数であることを判断する関数を第一引数として与えています。</p>
-
-<p>最初の例ではリストの4番目の要素<code>1</code>が整数ですので、この関数から<code>true</code>が返ってきます。したがって、実行結果は<code>true</code>となります。</p>
-
-<p>２つ目の例では先ほどは整数だった<code>1</code>をリスト<code>[1]</code>に変更しています。そのため、関数が<code>true</code>を返すものがありません。したがって、実行結果は<code>false</code>になります。</p>
-
-<h3>append/1</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>append(ListOfLists) &ndash;> List1</h4>
-
-<h5>Types</h5>
-
-<ul>
-<li>ListOfLists = [List]</li>
-<li>List = List1 = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns a list in which all the sub-lists of ListOfLists have been appended.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#append-1">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<p>リストの中に含まれる複数のリストを結合した新しいリストを返します。</p>
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">append</span><span class="p">([[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">]]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">]</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">append</span><span class="p">([[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">,[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span><span class="mi">5</span><span class="p">],[</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">]]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span><span class="mi">5</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例ではリストの中にある複数のリストが結合されて一つのリストにまとまります。</p>
-
-<p>次の例ではリストの中にある複数のリストが結合されて一つのリストにまとまっていますが、リスト中のリスト中のリストは展開されません。</p>
-
-<h3>append/2</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>append(List1, List2) &ndash;> List3</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>List1 = List2 = List3 = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns a new list List3 which is made from the elements of List1 followed by the elements of List2.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#append-2">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<p>リストを結合して新しいリストを返します。</p>
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">append</span><span class="p">(</span><span class="s">&quot;ir&quot;</span><span class="p">,</span> <span class="s">&quot;of&quot;</span><span class="p">).</span>
-</span><span class='line'><span class="s">&quot;irof&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>リスト<code>"ir"</code>とリスト<code>"of"</code>が結合されて、新しいリスト<code>"irof"</code>が返されます。</p>
-
-<h3>concat/1</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>concat(Things) &ndash;> string()</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Things = [Thing]</li>
-<li>Thing = atom() | integer() | float() | string()</li>
-</ul>
-
-
-<p>Concatenates the text representation of the elements of Things. The elements of Things can be atoms, integers, floats or strings.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#concat-1">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<p>リスト中の要素の文字列表現を結合する。要素はアトム、整数、浮動小数点数、文字列。</p>
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">concat</span><span class="p">([</span><span class="n">lists</span><span class="p">,</span> <span class="n">&#39;:&#39;</span><span class="p">,</span> <span class="s">&quot;concat&quot;</span><span class="p">,</span> <span class="n">&#39;/&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">]).</span>
-</span><span class='line'><span class="s">&quot;lists:concat/1&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>アトム、アトム、文字列、アトム、整数を結合して文字列を出力しています。</p>
-
-<h3>delete/2</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>delete(Elem, List1) &ndash;> List2</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Elem = T</li>
-<li>List1 = List2 = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns a copy of List1 where the first element matching Elem is deleted, if there is such an element.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#delete-2">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<p>リストから指定要素にマッチする最初の要素を削除したリストを返します。</p>
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">delete</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="n">q</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">e</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="n">q</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">e</span><span class="p">]</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">delete</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="n">f</span><span class="p">,</span><span class="n">o</span><span class="p">,</span><span class="n">o</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">z</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="n">f</span><span class="p">,</span><span class="n">o</span><span class="p">,</span><span class="n">o</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">z</span><span class="p">]</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">delete</span><span class="p">(</span><span class="n">hoge</span><span class="p">,</span> <span class="p">[</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">baz</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="n">foo</span><span class="p">,</span><span class="n">bar</span><span class="p">,</span><span class="n">baz</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例では、リストの中に指定した要素<code>a</code>があるため、それを削除したリストが返されます。</p>
-
-<p>次の例では、リストの中に指定した要素<code>a</code>が２つありますが、最初の<code>a</code>が削除されたリストが返されます。</p>
-
-<p>最後の例では、リストの中に指定した要素<code>hoge</code>と同じ要素がないため、元のリストと同じ内容のリストが返されます。</p>
-
-<h3>dropwhile/2</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>dropwhile(Pred, List1) &ndash;> List2</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Pred = fun((Elem :: T) &ndash;> boolean())</li>
-<li>List1 = List2 = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Drops elements Elem from List1 while Pred(Elem) returns true and returns the remaining list.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#dropwhile-2">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<p>引数として与えた関数<code>Pred(Elem)</code>が<code>true</code>を返す間、要素<code>Elem</code>をリストから削除して、残ったリストを返します。</p>
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">dropwhile</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">X</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="k">end</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">dropwhile</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">X</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="k">end</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例では要素が<code>5</code>より小さい要素は除外され、<code>5</code>より大きいリストが返されます。</p>
-
-<p>次の例では、要素が<code>2</code>より大きい間の要素は除外され、初めて<code>2</code>が出てきた後の要素が残ったリストが返されます。(返されたリストには関数が<code>true</code>を返すものが含まれます)</p>
-
-<h3>duplicate/2</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>duplicate(N, Elem) &ndash;> List</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>N = integer() >= 0</li>
-<li>Elem = T</li>
-<li>List = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns a list which contains N copies of the term Elem.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#duplicate-2">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<p>要素<code>Elem</code>を<code>N</code>回繰り返したリストが返されます。</p>
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">duplicate</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">irof</span><span class="p">).</span>
-</span><span class='line'><span class="p">[</span><span class="n">irof</span><span class="p">,</span><span class="n">irof</span><span class="p">,</span><span class="n">irof</span><span class="p">,</span><span class="n">irof</span><span class="p">,</span><span class="n">irof</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>要素<code>irof</code>が<code>5</code>回繰り返されたリストが返されます。</p>
-
-<h3>filter/2</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>filter(Pred, List1) &ndash;> List2</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Pred = fun((Elem :: T) &ndash;> boolean())</li>
-<li>List1 = List2 = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>List2 is a list of all elements Elem in List1 for which Pred(Elem) returns true.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#filter-2">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<p>リストの中から条件を満たす要素を取り出したリストを返します。</p>
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">X</span> <span class="ow">rem</span> <span class="mi">3</span> <span class="o">=:=</span> <span class="mi">0</span> <span class="k">end</span><span class="p">,</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>リストの中から<code>3</code>の剰余が<code>0</code>のものを取り出したリストを返します。</p>
-
-<h3>flatlength/1</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>flatlength(DeepList) &ndash;> integer() >= 0</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>DeepList = [term() | DeepList]</li>
-</ul>
-
-
-<p>Equivalent to <code>length(flatten(DeepList))</code>, but more efficient.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#flatlength-1">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<p>BIFの<code>length/1</code>関数と同様な関数ですが、より便利です。</p>
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">flatlength</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="mi">4</span><span class="p">,[[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span><span class="mi">7</span><span class="p">]]).</span>
-</span><span class='line'><span class="mi">7</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nb">length</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="mi">4</span><span class="p">,[[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span><span class="mi">7</span><span class="p">]]).</span>
-</span><span class='line'><span class="mi">3</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>内部にリストを含むリストに対して内部のリストの要素数を含む要素数を返します。最初の例では内部リストの要素の数を含めて<code>7</code>を返します。</p>
-
-<p>一方、BIFの<code>length/1</code>では、内部リストを一つの要素として数えるため、<code>3</code>が返ってきます。</p>
-
-<h3>flatmap/2</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>flatmap(Fun, List1) &ndash;> List2</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Fun = fun((A) &ndash;> [B])</li>
-<li>List1 = [A]</li>
-<li>List2 = [B]</li>
-<li>A = B = term()</li>
-</ul>
-
-
-<p>Takes a function from As to lists of Bs, and a list of As (List1) and produces a list of Bs by applying the function to every element in List1 and appending the resulting lists.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#flatmap-2">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<p>第一引数には要素Aからリスト[B]を生成する関数を取ります。第二引数はリストです。そしてリスト[B]が結合されたリストが返されます。</p>
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">flatmap</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="nv">X</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="nv">X</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="k">end</span><span class="p">,</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">flatmap</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">X</span> <span class="o">*</span> <span class="nv">X</span> <span class="k">end</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]).</span>
-</span><span class='line'><span class="o">**</span> <span class="n">exception</span> <span class="nn">error</span><span class="p">:</span> <span class="n">bad</span> <span class="n">argument</span>
-</span><span class='line'>     <span class="n">in</span> <span class="n">operator</span>  <span class="o">++/</span><span class="mi">2</span>
-</span><span class='line'>        <span class="n">called</span> <span class="n">as</span> <span class="mi">16</span> <span class="o">++</span> <span class="p">[]</span>
-</span><span class='line'>     <span class="n">in</span> <span class="n">call</span> <span class="n">from</span> <span class="nn">lists</span><span class="p">:</span><span class="n">flatmap</span><span class="o">/</span><span class="mi">2</span> <span class="p">(</span><span class="n">lists</span><span class="p">.</span><span class="n">erl</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1235</span><span class="p">)</span>
-</span><span class='line'>     <span class="n">in</span> <span class="n">call</span> <span class="n">from</span> <span class="nn">lists</span><span class="p">:</span><span class="n">flatmap</span><span class="o">/</span><span class="mi">2</span> <span class="p">(</span><span class="n">lists</span><span class="p">.</span><span class="n">erl</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1235</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例での第一引数の関数は、入力された要素を倍にした値と、倍にした値に1を加えた値の二つを要素としてもつリストを返します。これをリスト<code>[0, 1, 2, 3]</code>に対して実行し、最終的にそれらを結合したリスト<code>[0,1,2,3,4,5,6,7]</code>が返ってきます。</p>
-
-<p>次の例では、第一引数の関数は入力された要素の二乗を返します。これをリスト<code>[1, 2, 3, 4]</code>に対して実行します。しかし第一引数が返す値はリストではないため、例外が発生して終了します。</p>
-
-<h3>flatten/1</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>flatten(DeepList) &ndash;> List</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>DeepList = [term() | DeepList]</li>
-<li>List = [term()]</li>
-</ul>
-
-
-<p>Returns a flattened version of DeepList.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#flatten-1">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<p>内部にリストを持つリストのネストをなくしたリストを返します。</p>
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">flatten</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,[</span><span class="mi">5</span><span class="p">],</span><span class="mi">6</span><span class="p">],[[[</span><span class="mi">7</span><span class="p">],</span><span class="mi">8</span><span class="p">]],</span><span class="mi">9</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>内部にリストを持つリストから、ネストなしリストを返します。</p>
-
-<h3>flatten/2</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>flatten(DeepList, Tail) &ndash;> List</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>DeepList = [term() | DeepList]</li>
-<li>Tail = List = [term()]</li>
-</ul>
-
-
-<p>Returns a flattened version of DeepList with the tail Tail appended.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#flatten-2">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<p>最初のネストがあるリストに<code>lists:flatten/1</code>を施して、第二引数のリストを追加したリストを返します。</p>
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">flatten</span><span class="p">(</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">[</span><span class="mi">1</span><span class="p">,[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,[[</span><span class="mi">4</span><span class="p">],</span><span class="mi">5</span><span class="p">]],</span><span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">flatten</span><span class="p">(</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">[</span><span class="mi">1</span><span class="p">,[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,[[</span><span class="mi">4</span><span class="p">],</span><span class="mi">5</span><span class="p">]],</span><span class="mi">6</span><span class="p">],</span> <span class="p">[[</span><span class="mi">7</span><span class="p">],</span><span class="mi">8</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,[</span><span class="mi">7</span><span class="p">],</span><span class="mi">8</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例では、ネストしたリストからネストを外し、第二引数のリストを追加したリストが返ってきます。</p>
-
-<p>次の例でも、第一引数のネストしたリストのネストが外れ、第二引数のリストを追加したものが返ってきますが、第二引数のリストのネストは残ったままとなります。</p>
-
-<h3>foldl/3</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>foldl(Fun, Acc0, List) &ndash;> Acc1</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Fun = fun((Elem :: T, AccIn) &ndash;> AccOut)</li>
-<li>Acc0 = Acc1 = AccIn = AccOut = term()</li>
-<li>List = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Calls Fun(Elem, AccIn) on successive elements A of List, starting with AccIn == Acc0. Fun/2 must return a new accumulator which is passed to the next call. The function returns the final value of the accumulator. Acc0 is returned if the list is empty.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#foldl-3">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<p>リストの左側から１つずつ要素を取り出し、第一引数の関数を連続で呼び出します。第一引数の関数は二つの引数を取り、次回の引数として使われる値を返します。第二引数には初期値を与えます。<code>lists:foldl</code>関数は最後の第一引数の関数の結果を返します。</p>
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">foldl</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Accum</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">X</span> <span class="o">+</span> <span class="nv">Accum</span> <span class="k">end</span><span class="p">,</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]).</span>
-</span><span class='line'><span class="mi">15</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">foldl</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Accum</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="nv">X</span> <span class="o">*</span> <span class="nv">X</span> <span class="p">|</span> <span class="nv">Accum</span><span class="p">]</span> <span class="k">end</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">[],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="mi">25</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例では初期値0からリスト<code>[1,2,3,4,5]</code>を順番に足していき、最後の結果<code>15</code>を返します。</p>
-
-<p>次の例では、初期値<code>[]</code>のリストにリスト<code>[1,2,3,4,5]</code>の要素の二乗を追加していき、最終的にリスト<code>[25,16,9,4,1]</code>を返します。</p>
-
-<h3>foldr/3</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>foldr(Fun, Acc0, List) &ndash;> Acc1</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Fun = fun((Elem :: T, AccIn) &ndash;> AccOut)</li>
-<li>Acc0 = Acc1 = AccIn = AccOut = term()</li>
-<li>List = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Like <code>foldl/3</code>, but the list is traversed from right to left.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#foldr-3">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<p><code>lists:foldl/3</code>と同様に順次計算していきますが、<code>lists:foldr/3</code>では関数の引数をリストの右から左の順番で取っていきます。</p>
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">foldr</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Accum</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">X</span> <span class="o">+</span> <span class="nv">Accum</span> <span class="k">end</span><span class="p">,</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]).</span>
-</span><span class='line'><span class="mi">15</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">foldr</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Accum</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[{</span><span class="nv">X</span><span class="p">,</span> <span class="nv">X</span> <span class="o">*</span> <span class="nv">X</span><span class="p">}|</span><span class="nv">Accum</span><span class="p">]</span> <span class="k">end</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">[],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[{</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">},{</span><span class="mi">3</span><span class="p">,</span><span class="mi">9</span><span class="p">},{</span><span class="mi">4</span><span class="p">,</span><span class="mi">16</span><span class="p">},{</span><span class="mi">5</span><span class="p">,</span><span class="mi">25</span><span class="p">}]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例では、初期値<code>0</code>に対してリスト<code>[1,2,3,4,5]</code>の要素を右側から足していき、最後の結果<code>15</code>を返します。</p>
-
-<p>次の例では、初期値<code>[]</code>に、リスト<code>[1,2,3,4,5]</code>の元の数とその二乗のペアを右側から追加していき、最後の結果<code>[{1,1}, {2,4}, {3,9}, {4,16}, {5,25}]</code>を返します。</p>
-
-<h3>foreach/2</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>foreach(Fun, List) &ndash;> ok</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Fun = fun((Elem :: T) &ndash;> term())</li>
-<li>List = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Calls Fun(Elem) for each element Elem in List. This function is used for its side effects and the evaluation order is defined to be the same as the order of the elements in the list.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#foreach-2">参照元</a></p></blockquote>
-
-<h4>解説</h4>
-
-<p>第一引数に与えられた関数をリストの要素すべてに適用します。この関数は副作用のある処理に用いられます。処理順はリストの順番に実行されます。</p>
-
-<h4>実例</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">foreach</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="nn">io</span><span class="p">:</span><span class="nf">format</span><span class="p">(</span><span class="s">&quot;</span><span class="si">~p</span><span class="s"> x </span><span class="si">~p</span><span class="s"> = </span><span class="si">~p~n</span><span class="s">&quot;</span><span class="p">,</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>         <span class="p">[</span><span class="nv">X</span><span class="p">,</span> <span class="nv">X</span><span class="p">,</span> <span class="nv">X</span> <span class="o">*</span> <span class="nv">X</span><span class="p">])</span> <span class="k">end</span><span class="p">,</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]).</span>
-</span><span class='line'><span class="mi">1</span> <span class="n">x</span> <span class="mi">1</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span class='line'><span class="mi">2</span> <span class="n">x</span> <span class="mi">2</span> <span class="o">=</span> <span class="mi">4</span>
-</span><span class='line'><span class="mi">3</span> <span class="n">x</span> <span class="mi">3</span> <span class="o">=</span> <span class="mi">9</span>
-</span><span class='line'><span class="mi">4</span> <span class="n">x</span> <span class="mi">4</span> <span class="o">=</span> <span class="mi">16</span>
-</span><span class='line'><span class="mi">5</span> <span class="n">x</span> <span class="mi">5</span> <span class="o">=</span> <span class="mi">25</span>
-</span><span class='line'><span class="n">ok</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>リストの要素を順番に標準出力に出力しています。</p>
-
-<h2>次回</h2>
-
-<p>次回は次の式の結果をやっていきます。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="nn">lists</span><span class="p">:</span><span class="nf">sublist</span><span class="p">(</span>
-</span><span class='line'>    <span class="nn">lists</span><span class="p">:</span><span class="nf">sort</span><span class="p">(</span>
-</span><span class='line'>        <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span>
-</span><span class='line'>            <span class="k">fun</span><span class="p">({</span><span class="nv">F</span><span class="p">,</span> <span class="nv">A</span><span class="p">})</span> <span class="o">-&gt;</span>
-</span><span class='line'>                <span class="nb">atom_to_list</span><span class="p">(</span><span class="nv">F</span><span class="p">)</span> <span class="o">++</span>
-</span><span class='line'>                <span class="s">&quot;/&quot;</span> <span class="o">++</span>
-</span><span class='line'>                <span class="nb">integer_to_list</span><span class="p">(</span><span class="nv">A</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">end</span><span class="p">,</span>
-</span><span class='line'>            <span class="nn">lists</span><span class="p">:</span><span class="nf">module_info</span><span class="p">(</span><span class="n">exports</span><span class="p">))),</span>
-</span><span class='line'>    <span class="mi">17</span><span class="p">,</span>
-</span><span class='line'>    <span class="mi">16</span><span class="p">).</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!-- admax -->
-
-
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-
-
-<!-- admax -->
-
-
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -4529,6 +3895,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/06/gradle1-dot-7-release-notes-translation/">gradle1.7のリリースノート超意訳</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/02/one-of-techniques-to-use-javafx-as-headless-browser/">JavaFXをヘッドレスブラウザーとして使うための基本テク #javafx</a>
       </li>
     
@@ -4542,10 +3912,6 @@
     
       <li class="post">
         <a href="/blog/2013/06/27/java8-lambdashi-woshi-tutemita/">Java8 lambda式を使ってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/">How to publish artifacts to maven central repository via gradle maven-publish plugin (version 1.6)</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: gradle | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/gradle/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-07-02T12:50:11+09:00</updated>
+  <updated>2013-07-06T23:28:56+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -12,6 +12,208 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[gradle1.7のリリースノート超意訳]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/07/06/gradle1-dot-7-release-notes-translation/"/>
+    <updated>2013-07-06T19:23:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/07/06/gradle1-dot-7-release-notes-translation</id>
+    <content type="html"><![CDATA[<p>こんにちわ、みけです。</p>
+
+<p>現在、gradle1.7-rc1が利用できます。</p>
+
+<p>リリースノートの超意訳をどうぞ。</p>
+
+<hr />
+
+<h2>Gradle Release Notes</h2>
+
+<h4>Version 1.7-rc-1</h4>
+
+<p>Gradle1.7になるとすごく速くなります。dependency解決とビルドスクリプトのコンパイルの改善をしました。Gradleユーザーみんなこの恩恵に預かれますが、でっかいプロジェクトだと、その効果はもっと顕著になります。パフォーマンスの改善とスケービリティがGradle1.7の主要なテーマになっています。</p>
+
+<p>これらの改善点に加えて、Gradle1.7では面白い機能がついてきます。finalizer taskメカニズムによってタスクの結果がどうであれ、タスクの次に別のタスクを起動させることができるようになります。例えば、アプリケーションサーバーを起動するようなintegrationテスト(の失敗)の後にアプリケーションサーバーを終了させることができるようになります。コピーやアーカイブ生成時にファイルの重複をコントロールする機能が登場します。</p>
+
+<p>Gradle1.7のBuild Setupプラグインの改善によりプロジェクトをテンプレートから生成する機能が利用可能になります。これにより新規プロジェクトの作成が簡単になります。</p>
+
+<p>C++からネイティブバイナリーを作成する機能も進化します。ネイティブバイナリーの生成に関しては結構面倒な領域ですが、今後もGradleのこの分野での進化を期待して下さい。</p>
+
+<p>Gradle1.7ではコア・テベロップチーム以外からのコントリビュートが多いのも特徴です。Gradle1.7に貢献してくださったデベロッパーの皆様に感謝しております。</p>
+
+<h1>Table Of Contents</h1>
+
+<h3>新機能や追加機能</h3>
+
+<h5>より速いGradleビルド</h5>
+
+<p>Gradle1.7でのビルドはより速くなります。</p>
+
+<ul>
+<li>dependency解決が速くなります(ほとんどのビルドで改善効果が現れます)</li>
+<li>テスト実行が高速化されます(特にログを大量に出力しているようなGradleで顕著です)</li>
+<li>ビルドスクリプトのコンパイルが速くなります(Gradle1.6に比べて75%の時間でできるようになります)</li>
+<li>並行実行モードが高速になります</li>
+</ul>
+
+
+<h5>Finalizer tasks <small>incubating</small></h5>
+
+<p>Gradle1.7から新しいタスク実行ルールが導入され、タスク終了時に他のタスクを起動することができるようになります。この機能は<a href="https://github.com/erdi">Marcin Erdmann</a>氏によるものです。</p>
+
+<p><a href="http://www.gradle.org/docs/release-candidate/userguide/more_about_tasks.html#N10F84">Finalizer tasks</a>ではタスク終了時にそのタスクの結果にかかわらず別のタスクを起動します。</p>
+
+<p>```groovy
+configure([integTest1, integTest2]) {</p>
+
+<pre><code>dependsOn startAppServer
+finalizedBy stopAppServer
+</code></pre>
+
+<p>}
+```</p>
+
+<p>この例では<code>integTest1</code>タスクと<code>integTest2</code>タスクの終了時に<code>stopAppServer</code>タスクを実行するように宣言されています。どちらか片方のタスクがビルドの最中に起動された場合もfinalizer taskが自動で実行されます。ビルドの最中に両方のタスクが起動された場合でも必ず両方のタスクの最後にfinalizer taskが実行されます。finalizer taskの<code>stopAppServer</code>はGradle実行時に起動タスクとして指定する必要はありません。</p>
+
+<h5>C++プロジェクトサポートの改善 <small>incubating</small></h5>
+
+<p>GradleはC++プロジェクトのサポートをしていました。これはGradleをネイティブコードプロジェクトのビルドツールとして最良のものにする改善になります。</p>
+
+<ul>
+<li>スタティックライブラリーの作成、リンク作成</li>
+<li>異なるC++ツールチェインでも利用可能になります(Visual C++、GCCなど)</li>
+<li>異なるアーキテクチャー、ビルドタイプ、OSへの対応</li>
+<li>Variantに基づいた依存性解決</li>
+<li>その他もろもろ(詳しくは<a href="https://github.com/gradle/gradle/blob/master/design-docs/continuous-delivery-for-c-plus-plus.md">こちら</a>を見て下さい(英語))</li>
+</ul>
+
+
+<h5>JCenter レポジトリーのサポート <small>incubating</small></h5>
+
+<p><a href="https://bintray.com/bintray/jcenter">Bintray&rsquo;s JCenter Repository</a>からdependencyを取得できるようになります。<code>jcenter()</code>レポジトリーノーテーションにより利用可能です。JCenterはコミュニティリポジトリーで、<a href="https://bintray.com/">Bintray</a>から無料で配布可能です。</p>
+
+<p>```groovy
+repositories {</p>
+
+<pre><code>jcenter()
+</code></pre>
+
+<p>}
+```</p>
+
+<p>このスクリプトにより<a href="http://jcenter.bintray.com">http://jcenter.bintray.com</a>がApache Maven repositoryと同様にリポジトリーリストに追加されます。</p>
+
+<h5>パターン・ベース・ファイル・コピー設定 <small>incubating</small></h5>
+
+<p>Gradle1.7ではきめ細かい設定によりどのファイルがコピーされるべきかを定義することができます。設定方法は"Ant Patterns"のように指定出来ます。この機能は<a href="https://github.com/kylewm">Kyle Marhan</a>氏によるものです。</p>
+
+<p>GradleにはファイルコピーのAPI(<a href="http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/file/CopySpec.html">CopySpec</a>)があり、アーカイブすることもできます。この新しい機能はより強力なものとなります。</p>
+
+<p>```groovy
+task copyFiles(type : Copy) {</p>
+
+<pre><code>from 'src/files'
+into "$buildDir/copied-files"
+// Replace the version number variable in only the text files
+filesMaching('**/*.txt') {
+    expand version: '1.0'
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p><code>fileMatching</code>メソッドではClosureを引数に取り、<a href="http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/file/FileCopyDetails.html"><code>FileCopyDetails</code></a>オブジェクトの設定を行うことができます。これと反対の動作をする<a href="http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/file/CopySpec.html#filesNotMatching%28java.lang.String%2C%20org.gradle.api.Action%29"><code>filesNotMatching</code></a>というメソッドもあり、パターンに該当しないファイルすべてを指定することもできます。</p>
+
+<h5>ファイル重複時のハンドリング機能 <small>incubating</small></h5>
+
+<p>ファイルのコピーやアーカイブするときに、よく重複することがあります。そのような重複が発生した場合の処理方法を設定できるようになります。</p>
+
+<p>```groovy
+task zip(type : Zip) {</p>
+
+<pre><code>from 'dir1'
+from 'dir2'
+duplicatesStrategy 'exclude'
+</code></pre>
+
+<p>}
+```</p>
+
+<p>処理方法には２つあります。<code>include</code>と<code>exclude</code>です。</p>
+
+<p><code>include</code>ストラテジーの場合、既存のGradleの動作と変わりありません。後からコピーされたもので上書きされます。なお、実際に発生した場合には警告が出力されるようになります。アーカイブ(zip、jar)の場合は新しいものが作成されます。</p>
+
+<p><code>exclude</code>ストラテジーの場合、重複したファイルは無視されます。最初にコピーされたファイルが最終的に使われ、その後のファイルは無視され続けます。アーカイブの場合も同様で、最初に作成されたら、同じファイル名のものは作成されません。</p>
+
+<p>```groovy
+task zip (type : Zip) {</p>
+
+<pre><code>duplicatesStrategy 'exclude' // default strategy
+from ('dir1') {
+    filesMatching('**/*.xml') {
+        duplicatesStrategy 'include'
+    }
+}
+from ('dir2') {
+    duplicatesStrategy 'include'
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<h5>Gradle Wrapperはビルドスクリプトを特にいじらなくても利用可能になります <small>incubating</small></h5>
+
+<p><a href="http://www.gradle.org/docs/release-candidate/userguide/gradle_wrapper.html">Gradle Wrapper</a>は<code>Wrapper</code>タスクを定義しなくても利用できるようになります。つまり<code>Wrapper</code>のためにビルドスクリプトをいじることはありません。</p>
+
+<p><code>Wrapper</code>を利用するためには単純に次のコマンドを実行するだけです。</p>
+
+<p><code>
+$ gradle wrapper
+</code></p>
+
+<p><code>Wrapper</code>ファイルがこれにより生成・設定されて、現在使用しているGradleのバージョンを利用することができるようになります。</p>
+
+<p>なお、<code>wrapper</code>タスクをカスタマイズしたい場合は、ビルドスクリプトを次のように変更します。</p>
+
+<p>```groovy
+wrapper {</p>
+
+<pre><code>gradleVersion '1.6'
+</code></pre>
+
+<p>}
+```</p>
+
+<p>もし既存の<code>Wrapper</code>タイプのタスクがある場合は、そちらが使われます。それ以外の場合はデフォルトの<code>wrapper</code>タスクが使用されます。</p>
+
+<h5>Javaライブラリーテンプレートプロジェクトの生成</h5>
+
+<p>build-setupプラグインがプロジェクトタイプをサポートするようになりました。Gradle1.7ではjava-libraryタイプが利用可能です。このタイプで生成されるのは以下のとおりです。</p>
+
+<ul>
+<li></li>
+</ul>
+
+
+<p><!-- admax -->
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+<!-- admax -->
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to publish artifacts to maven central repository via gradle maven-publish plugin (version 1.6)]]></title>
@@ -3559,192 +3761,6 @@ at error.run(error.groovy:2)
 <p>実際に、rubyなど他の言語のいいところを借りたりしているので、</p>
 
 <p>後発の優位性を遺憾なく発揮しているわけですが…</p>
-
-<p><!-- admax -->
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-<!-- admax -->
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[gradleとJUnitのEnclosedの話]]></title>
-    <link href="http://mike-neck.github.io/blog/2013/05/25/an-falseding-xian-nihamatutetaren-gaitagradletojunitfalseenclosedfalsehua/"/>
-    <updated>2013-05-25T23:19:00+09:00</updated>
-    <id>http://mike-neck.github.io/blog/2013/05/25/an-falseding-xian-nihamatutetaren-gaitagradletojunitfalseenclosedfalsehua</id>
-    <content type="html"><![CDATA[<p>みけです。</p>
-
-<p><a href="http://mike-neck.github.io/blog/2013/05/25/javadehazimetesocketpuroguramuwoshu-itemita/">先ほど書いたエントリー</a>でテストをgradleで走らせたのですが、</p>
-
-<blockquote class="twitter-tweet" lang="ja"><p>gradleでテストした時に謎のclassMethodとかいうテストが勝手に挟み込まれて、落ちて困っている</p>&mdash; もちださんさん (@mike_neck) <a href="https://twitter.com/mike_neck/status/338275875294441472">2013年5月25日</a></blockquote>
-
-
-<script async src="http://mike-neck.github.io//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p>という状態が発生してました。</p>
-
-<p>具体的には、</p>
-
-<p>```java
-package org.mikeneck.multithreads;</p>
-
-<p>import org.junit.*;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.rules.TestName;
-import org.junit.runner.RunWith;</p>
-
-<p>import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.*;</p>
-
-<p>import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;</p>
-
-<p>/<em>*
- * @author mike
- </em>/
-@RunWith(Enclosed.class)
-public class SimpleSocketTest {</p>
-
-<pre><code>public static class SingleClient {
-
-    private static final ExecutorService SERVICE = Executors.newFixedThreadPool(1);
-
-    private static final int PORT = 12521;
-
-    private static final String LOCALHOST = "localhost";
-
-    private SimpleClient client;
-
-    @Rule
-    public TestName testName = new TestName();
-
-    @BeforeClass
-    public static void start () throws IOException {
-        SERVICE.execute(new SimpleServer(PORT));
-    }
-
-    @Before
-    public void setup () throws IOException {
-        client = new SimpleClient(LOCALHOST, PORT);
-    }
-
-    @After
-    public void tearDown () throws Exception {
-        System.out.println(testName.getMethodName() + " is closing");
-        client.close();
-    }
-
-    @AfterClass
-    public static void end () throws IOException {
-        new SimpleClient(LOCALHOST, PORT).open().bye();
-    }
-
-    @Test
-    public void socketProcessing () throws IOException {
-        client.open();
-        String message = client.sendMessage("Hello");
-        System.out.println("Message from Server [" + message + "]");
-        assertThat(message, is("Hello"));
-        System.out.println("Assertion ends.");
-    }
-}
-</code></pre>
-
-<p>}
-```</p>
-
-<p>というテストに対して、</p>
-
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRaS15VXNZRTNVWUU" style="width : 424px; height : 262px;" /></p>
-
-<p>という感じで、謎の<code>classMethod</code>というテストが追加されていて、</p>
-
-<p>実行されてテストが落ちてしまうようです。</p>
-
-<h2>先駆者はいた</h2>
-
-<p>とりあえず、<code>gradle</code>、<code>Enclosed</code>、<code>Junit</code>でググっていたところ、</p>
-
-<p>次の二つのエントリーを発見しました。</p>
-
-<ul>
-<li><a href="http://d.hatena.ne.jp/irof/20120430/p1">GradleでEnclosedのテストが二回実行されるんだ</a></li>
-<li><a href="http://d.hatena.ne.jp/shuji_w6e/20120808/1344386399">GradleでEnclosedテストが2回実行されることの対策</a></li>
-</ul>
-
-
-<p>というわけで、<code>gradle</code>と<code>Enclosed</code>の相性がわるいっぽい…</p>
-
-<h2>gradleでEnclosedなテストをする時の対策</h2>
-
-<p>というわけで、<a href="https://twitter.com/shuji_w6e">@shuji_w6e</a>さんのページによると</p>
-
-<p><strong>テストの実行時に除外クラスを指定すること。</strong></p>
-
-<p>だそうです。</p>
-
-<p>```groovy build.gradle
-apply plugin : &lsquo;groovy&rsquo;
-apply plugin : &lsquo;idea&rsquo;</p>
-
-<p>group = &lsquo;org.mikeneck.multithreads&rsquo;
-version = &lsquo;1.0&rsquo;</p>
-
-<p>def compatibility = 1.7</p>
-
-<p>sourceCompatibility = compatibility
-targetCompatibility = compatibility</p>
-
-<p>repositories {</p>
-
-<pre><code>mavenCentral ()
-</code></pre>
-
-<p>}</p>
-
-<p>dependencies {</p>
-
-<pre><code>compile 'org.codehaus.groovy:groovy-all:2.1.3'
-testCompile ('junit:junit:4.11') {
-    exclude module : 'hamcrest-core'
-    exclude module : 'hamcrest'
-}
-testCompile 'org.hamcrest:hamcrest-library:1.+'
-</code></pre>
-
-<p>}</p>
-
-<p>test {</p>
-
-<pre><code>exclude '**/*$*'
-</code></pre>
-
-<p>}
-```</p>
-
-<p>とりあえず、テストクラスを除外してみました。</p>
-
-<h2>結果</h2>
-
-<p><img src="https://googledrive.com/host/0B4hhdHWLP7RRczBZcy04U2tNMms" style="width : 424px; height : 252px;"" /></p>
-
-<p>という感じで、テストが通りました。</p>
 
 <p><!-- admax -->
 <script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>

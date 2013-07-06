@@ -9,7 +9,7 @@
   <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="こんにちわ、みけです。 JavaFXをヘッドレスブラウザーとして使おうとして、 いろいろとWebのリダイレクトにハマりまくっています。 で、今回はJavaFXをJavaFXのスレッド以外のスレッドから扱うTipsを集めました。 Goal 期待していいこと &hellip;">
+  <meta name="description" content="こんにちわ、みけです。 現在、gradle1.7-rc1が利用できます。 リリースノートの超意訳をどうぞ。 Gradle Release Notes Version 1.7-rc-1 Gradle1.7になるとすごく速くなります。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,260 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/06/gradle1-dot-7-release-notes-translation/">gradle1.7のリリースノート超意訳</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-06T19:23:00+09:00" pubdate data-updated="true">Jul 6<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>こんにちわ、みけです。</p>
+
+<p>現在、gradle1.7-rc1が利用できます。</p>
+
+<p>リリースノートの超意訳をどうぞ。</p>
+
+<hr />
+
+<h2>Gradle Release Notes</h2>
+
+<h4>Version 1.7-rc-1</h4>
+
+<p>Gradle1.7になるとすごく速くなります。dependency解決とビルドスクリプトのコンパイルの改善をしました。Gradleユーザーみんなこの恩恵に預かれますが、でっかいプロジェクトだと、その効果はもっと顕著になります。パフォーマンスの改善とスケービリティがGradle1.7の主要なテーマになっています。</p>
+
+<p>これらの改善点に加えて、Gradle1.7では面白い機能がついてきます。finalizer taskメカニズムによってタスクの結果がどうであれ、タスクの次に別のタスクを起動させることができるようになります。例えば、アプリケーションサーバーを起動するようなintegrationテスト(の失敗)の後にアプリケーションサーバーを終了させることができるようになります。コピーやアーカイブ生成時にファイルの重複をコントロールする機能が登場します。</p>
+
+<p>Gradle1.7のBuild Setupプラグインの改善によりプロジェクトをテンプレートから生成する機能が利用可能になります。これにより新規プロジェクトの作成が簡単になります。</p>
+
+<p>C++からネイティブバイナリーを作成する機能も進化します。ネイティブバイナリーの生成に関しては結構面倒な領域ですが、今後もGradleのこの分野での進化を期待して下さい。</p>
+
+<p>Gradle1.7ではコア・テベロップチーム以外からのコントリビュートが多いのも特徴です。Gradle1.7に貢献してくださったデベロッパーの皆様に感謝しております。</p>
+
+<h1>Table Of Contents</h1>
+
+<h3>新機能や追加機能</h3>
+
+<h5>より速いGradleビルド</h5>
+
+<p>Gradle1.7でのビルドはより速くなります。</p>
+
+<ul>
+<li>dependency解決が速くなります(ほとんどのビルドで改善効果が現れます)</li>
+<li>テスト実行が高速化されます(特にログを大量に出力しているようなGradleで顕著です)</li>
+<li>ビルドスクリプトのコンパイルが速くなります(Gradle1.6に比べて75%の時間でできるようになります)</li>
+<li>並行実行モードが高速になります</li>
+</ul>
+
+
+<h5>Finalizer tasks <small>incubating</small></h5>
+
+<p>Gradle1.7から新しいタスク実行ルールが導入され、タスク終了時に他のタスクを起動することができるようになります。この機能は<a href="https://github.com/erdi">Marcin Erdmann</a>氏によるものです。</p>
+
+<p><a href="http://www.gradle.org/docs/release-candidate/userguide/more_about_tasks.html#N10F84">Finalizer tasks</a>ではタスク終了時にそのタスクの結果にかかわらず別のタスクを起動します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">configure</span><span class="o">([</span><span class="n">integTest1</span><span class="o">,</span> <span class="n">integTest2</span><span class="o">])</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">dependsOn</span> <span class="n">startAppServer</span>
+</span><span class='line'>    <span class="n">finalizedBy</span> <span class="n">stopAppServer</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この例では<code>integTest1</code>タスクと<code>integTest2</code>タスクの終了時に<code>stopAppServer</code>タスクを実行するように宣言されています。どちらか片方のタスクがビルドの最中に起動された場合もfinalizer taskが自動で実行されます。ビルドの最中に両方のタスクが起動された場合でも必ず両方のタスクの最後にfinalizer taskが実行されます。finalizer taskの<code>stopAppServer</code>はGradle実行時に起動タスクとして指定する必要はありません。</p>
+
+<h5>C++プロジェクトサポートの改善 <small>incubating</small></h5>
+
+<p>GradleはC++プロジェクトのサポートをしていました。これはGradleをネイティブコードプロジェクトのビルドツールとして最良のものにする改善になります。</p>
+
+<ul>
+<li>スタティックライブラリーの作成、リンク作成</li>
+<li>異なるC++ツールチェインでも利用可能になります(Visual C++、GCCなど)</li>
+<li>異なるアーキテクチャー、ビルドタイプ、OSへの対応</li>
+<li>Variantに基づいた依存性解決</li>
+<li>その他もろもろ(詳しくは<a href="https://github.com/gradle/gradle/blob/master/design-docs/continuous-delivery-for-c-plus-plus.md">こちら</a>を見て下さい(英語))</li>
+</ul>
+
+
+<h5>JCenter レポジトリーのサポート <small>incubating</small></h5>
+
+<p><a href="https://bintray.com/bintray/jcenter">Bintray&rsquo;s JCenter Repository</a>からdependencyを取得できるようになります。<code>jcenter()</code>レポジトリーノーテーションにより利用可能です。JCenterはコミュニティリポジトリーで、<a href="https://bintray.com/">Bintray</a>から無料で配布可能です。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">jcenter</span><span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このスクリプトにより<a href="http://jcenter.bintray.com">http://jcenter.bintray.com</a>がApache Maven repositoryと同様にリポジトリーリストに追加されます。</p>
+
+<h5>パターン・ベース・ファイル・コピー設定 <small>incubating</small></h5>
+
+<p>Gradle1.7ではきめ細かい設定によりどのファイルがコピーされるべきかを定義することができます。設定方法は&#8221;Ant Patterns&#8221;のように指定出来ます。この機能は<a href="https://github.com/kylewm">Kyle Marhan</a>氏によるものです。</p>
+
+<p>GradleにはファイルコピーのAPI(<a href="http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/file/CopySpec.html">CopySpec</a>)があり、アーカイブすることもできます。この新しい機能はより強力なものとなります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">task</span> <span class="nf">copyFiles</span><span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Copy</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">from</span> <span class="s1">&#39;src/files&#39;</span>
+</span><span class='line'>    <span class="n">into</span> <span class="s2">&quot;$buildDir/copied-files&quot;</span>
+</span><span class='line'>    <span class="c1">// Replace the version number variable in only the text files</span>
+</span><span class='line'>    <span class="n">filesMaching</span><span class="o">(</span><span class="s1">&#39;**/*.txt&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">expand</span> <span class="nl">version:</span> <span class="s1">&#39;1.0&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>fileMatching</code>メソッドではClosureを引数に取り、<a href="http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/file/FileCopyDetails.html"><code>FileCopyDetails</code></a>オブジェクトの設定を行うことができます。これと反対の動作をする<a href="http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/file/CopySpec.html#filesNotMatching%28java.lang.String%2C%20org.gradle.api.Action%29"><code>filesNotMatching</code></a>というメソッドもあり、パターンに該当しないファイルすべてを指定することもできます。</p>
+
+<h5>ファイル重複時のハンドリング機能 <small>incubating</small></h5>
+
+<p>ファイルのコピーやアーカイブするときに、よく重複することがあります。そのような重複が発生した場合の処理方法を設定できるようになります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">task</span> <span class="nf">zip</span><span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Zip</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">from</span> <span class="s1">&#39;dir1&#39;</span>
+</span><span class='line'>    <span class="n">from</span> <span class="s1">&#39;dir2&#39;</span>
+</span><span class='line'>    <span class="n">duplicatesStrategy</span> <span class="s1">&#39;exclude&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>処理方法には２つあります。<code>include</code>と<code>exclude</code>です。</p>
+
+<p><code>include</code>ストラテジーの場合、既存のGradleの動作と変わりありません。後からコピーされたもので上書きされます。なお、実際に発生した場合には警告が出力されるようになります。アーカイブ(zip、jar)の場合は新しいものが作成されます。</p>
+
+<p><code>exclude</code>ストラテジーの場合、重複したファイルは無視されます。最初にコピーされたファイルが最終的に使われ、その後のファイルは無視され続けます。アーカイブの場合も同様で、最初に作成されたら、同じファイル名のものは作成されません。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">task</span> <span class="nf">zip</span> <span class="o">(</span><span class="n">type</span> <span class="o">:</span> <span class="n">Zip</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">duplicatesStrategy</span> <span class="s1">&#39;exclude&#39;</span> <span class="c1">// default strategy</span>
+</span><span class='line'>    <span class="n">from</span> <span class="o">(</span><span class="s1">&#39;dir1&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">filesMatching</span><span class="o">(</span><span class="s1">&#39;**/*.xml&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">duplicatesStrategy</span> <span class="s1">&#39;include&#39;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">from</span> <span class="o">(</span><span class="s1">&#39;dir2&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">duplicatesStrategy</span> <span class="s1">&#39;include&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>Gradle Wrapperはビルドスクリプトを特にいじらなくても利用可能になります <small>incubating</small></h5>
+
+<p><a href="http://www.gradle.org/docs/release-candidate/userguide/gradle_wrapper.html">Gradle Wrapper</a>は<code>Wrapper</code>タスクを定義しなくても利用できるようになります。つまり<code>Wrapper</code>のためにビルドスクリプトをいじることはありません。</p>
+
+<p><code>Wrapper</code>を利用するためには単純に次のコマンドを実行するだけです。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">gradle</span> <span class="n">wrapper</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>Wrapper</code>ファイルがこれにより生成・設定されて、現在使用しているGradleのバージョンを利用することができるようになります。</p>
+
+<p>なお、<code>wrapper</code>タスクをカスタマイズしたい場合は、ビルドスクリプトを次のように変更します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">wrapper</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">gradleVersion</span> <span class="s1">&#39;1.6&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>もし既存の<code>Wrapper</code>タイプのタスクがある場合は、そちらが使われます。それ以外の場合はデフォルトの<code>wrapper</code>タスクが使用されます。</p>
+
+<h5>Javaライブラリーテンプレートプロジェクトの生成</h5>
+
+<p>build-setupプラグインがプロジェクトタイプをサポートするようになりました。Gradle1.7ではjava-libraryタイプが利用可能です。このタイプで生成されるのは以下のとおりです。</p>
+
+<ul>
+<li></li>
+</ul>
+
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -6297,226 +6551,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/11/how-to-create-rubys-module/">初めてRubyのモジュールを書いてみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-11T02:04:00+09:00" pubdate data-updated="true">Jun 11<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>こんにちわ、みけです。</p>
-
-<p>前回の記事<a href="http://mike-neck.github.io/blog/2013/06/08/rubyfalsemixinfalsehua-wodu-ndeitara%2C-he-gu-kajavawoshu-iteita/">『Rubyのmixinの話を読んでいたら、何故かjavaを書いていた』</a>はあまりにも</p>
-
-<p>rubyに対して失礼なので、</p>
-
-<p>初心者らしく、ちゃんと<code>module</code>を作ってみました。</p>
-
-<p>ところで、僕の感心事は前回の記事でも書いたように、</p>
-
-<h2>rubyの<code>module</code>はインスタンス変数にアクセスすることができるのか？</h2>
-
-<p>ということです。</p>
-
-<p>で、結論から言えば、</p>
-
-<h2>rubyの<code>module</code>はインスタンス変数にアクセスできました</h2>
-
-<p>となります。</p>
-
-<h3><code>module</code>を作成</h3>
-
-<figure class='code'><figcaption><span>having_title.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># -*- codig: utf-8 -*-</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">module</span> <span class="nn">HavingTitle</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">title</span><span class="o">=</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@title</span> <span class="o">=</span> <span class="n">t</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">title</span>
-</span><span class='line'>    <span class="vi">@title</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>module</code>の<code>HavingTitle</code>は単純にタイトルというものに</p>
-
-<p>アクセスすることができるモジュールです。</p>
-
-<p>先程も書きましたが、僕の疑問は<code>@title</code>フィールドに、</p>
-
-<p>インスタンス化することができない<code>module</code>がアクセすることができるのか</p>
-
-<p>ということです。</p>
-
-<h3><code>module</code>を<code>include</code>した<code>class</code>を作成</h3>
-
-<figure class='code'><figcaption><span>book.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># -*- coding: utf-8 -*-</span>
-</span><span class='line'>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;./having_title&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">Book</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="no">HavingTitle</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:price</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@price</span> <span class="o">=</span> <span class="n">price</span>
-</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">print_info</span>
-</span><span class='line'>    <span class="s2">&quot;Book[title : </span><span class="si">#{</span><span class="vi">@title</span><span class="si">}</span><span class="s2">, price : </span><span class="si">#{</span><span class="vi">@price</span><span class="si">}</span><span class="s2">]&quot;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>タイトルというものを持っていそうなクラスということで</p>
-
-<p><code>Book</code>というクラスをつくりました。</p>
-
-<p>後は<code>Book</code>クラスをインスタンス化して、</p>
-
-<p>フィールド<code>@title</code>にアクセスできるかどうか確認出来れば</p>
-
-<p>僕の疑問は解決出来ます。</p>
-
-<h3>irbで動作を確認</h3>
-
-<p>あ、まだrubyでのテストの書き方知らないので、</p>
-
-<p>ここはirbで勘弁して下さい。</p>
-
-<figure class='code'><figcaption><span>book.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">001</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">&#39;./book&#39;</span>
-</span><span class='line'><span class="o">=&gt;</span> <span class="kp">true</span>
-</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">002</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">book</span> <span class="o">=</span> <span class="no">Book</span><span class="o">.</span><span class="n">new</span> <span class="s1">&#39;anti-oedipus&#39;</span><span class="p">,</span> <span class="mi">4000</span>
-</span><span class='line'><span class="o">=&gt;</span> <span class="c1">#&lt;Book:0x007f90890b6e38 @price=4000, @title=&quot;anti-oedipus&quot;&gt;</span>
-</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">003</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">book</span><span class="o">.</span><span class="n">print_info</span>
-</span><span class='line'><span class="o">=&gt;</span> <span class="s2">&quot;Book[title : anti-oedipus, price : 4000]&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というわけで、特に何のエラーも出ることなく、</p>
-
-<p>フィールド<code>@title</code>にアクセスできているようですね。</p>
-
-<h2>モジュールの機能の一つとしてのMix-in</h2>
-
-<p>まあ、<a href="http://www.amazon.co.jp/gp/product/4873113679/ref=as_li_ss_tl?ie=UTF8&amp;camp=247&amp;creative=7399&amp;creativeASIN=4873113679&amp;linkCode=as2&amp;tag=kkkjkrt-22">『初めてのRuby』</a>にはモジュールについて次のように書いてあります。</p>
-
-<blockquote><p><strong>モジュール</strong>はクラスに似ています。モジュールは「インスタンス化できないクラス」のようなものです。
-<code>Class</code>クラスは<code>Module</code>のサブクラスですから、「クラス = モジュール + インスタンス化能力」と言ってもよさそうです。
-(<a href="http://www.amazon.co.jp/gp/product/4873113679/ref=as_li_ss_tl?ie=UTF8&amp;camp=247&amp;creative=7399&amp;creativeASIN=4873113679&amp;linkCode=as2&amp;tag=kkkjkrt-22">Yugui著『初めてのRuby』</a>(オライリー・ジャパン、2008年、p.159))</p></blockquote>
-
-<p>Javaしかわからない(Javaも詳しくはわからない)僕には、</p>
-
-<p><code>abstract class</code>と考えておけばよさそうです。</p>
-
-<p>で、複数のモジュールを継承できるので、</p>
-
-<p>なんか、アレですね…</p>
-
-<table>
-<tbody>
-<tr>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4873113679" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4774151661" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-</tr>
-</tbody>
-</table>
-
-
-
-
-<!-- admax -->
-
-
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-
-
-<!-- admax -->
-
-
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -6532,6 +6566,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/06/gradle1-dot-7-release-notes-translation/">gradle1.7のリリースノート超意訳</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/02/one-of-techniques-to-use-javafx-as-headless-browser/">JavaFXをヘッドレスブラウザーとして使うための基本テク #javafx</a>
       </li>
     
@@ -6545,10 +6583,6 @@
     
       <li class="post">
         <a href="/blog/2013/06/27/java8-lambdashi-woshi-tutemita/">Java8 lambda式を使ってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/">How to publish artifacts to maven central repository via gradle maven-publish plugin (version 1.6)</a>
       </li>
     
   </ul>
