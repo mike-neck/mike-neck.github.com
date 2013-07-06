@@ -4,7 +4,7 @@
   <title><![CDATA[Category: groovy | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-07-06T23:28:56+09:00</updated>
+  <updated>2013-07-07T02:08:01+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -40,7 +40,7 @@
 
 <p>Gradle1.7ではコア・テベロップチーム以外からのコントリビュートが多いのも特徴です。Gradle1.7に貢献してくださったデベロッパーの皆様に感謝しております。</p>
 
-<h1>Table Of Contents</h1>
+<h2>Table Of Contents</h2>
 
 <h3>新機能や追加機能</h3>
 
@@ -192,9 +192,121 @@ wrapper {</p>
 <p>build-setupプラグインがプロジェクトタイプをサポートするようになりました。Gradle1.7ではjava-libraryタイプが利用可能です。このタイプで生成されるのは以下のとおりです。</p>
 
 <ul>
-<li></li>
+<li>javaプラグインが適用されたシンプルなビルドファイル</li>
+<li>サンプルのプロダクションクラスとディレクトリー</li>
+<li>サンプルのJUnitテストとディレクトリー</li>
+<li>Gradle Wrapperファイル</li>
 </ul>
 
+
+<p>Javaライブラリープロジェクトを作る場合は次のコマンドを実行するだけです(build.gradleファイルは必要ありません)。</p>
+
+<p><code>
+$ gradle setupBuild --type java-library
+</code></p>
+
+<p>詳しくはこちらを<a href="http://www.gradle.org/docs/release-candidate/userguide/build_setup_plugin.html">Build Setup plugin</a>を参照して下さい。</p>
+
+<h5>publicationのカスタマイズ &ndash; new publishingプラグインにおける <small>incubating</small></h5>
+
+<p>publishプラグインでアーカイブを発行するときにartifactの情報を明示的にカスタマイズできるようになりました。以前はartifactの情報はプロジェクトの情報から取得されていました。</p>
+
+<p><code>MavenPublication</code>では<code>groupId</code>、<code>artifactId</code>と<code>version</code>情報を設定できるようになります。Mavenの<code>pom</code>の<code>packaging</code>の値も設定可能です。</p>
+
+<p>```groovy
+publications {</p>
+
+<pre><code>mavenPub(MaenPublication) {
+    from components.java
+    groupId 'my.group.id'
+    artifactId 'my-publication'
+    version '3.1'
+    pom.packaging 'pom'
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p><code>IvyPublication</code>では<code>organisation</code>、<code>module</code>と<code>revision</code>を設定出来ます。<code>IvyModuleDescriptor</code>で<code>status</code>の値も設定可能です。</p>
+
+<p>```groovy
+publications {</p>
+
+<pre><code>ivyPub(IvyPublication) {
+    from components.java
+    organisation 'my.org'
+    module 'my-module'
+    revision '3'
+    descriptor.status 'milestone'
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>この機能のすごいところは、<code>module</code>や<code>artifactId</code>を設定することができることです。というのも、これまでは<code>project.name</code>を使っており、Gradleのビルドスクリプトで変更することができなかったためです。</p>
+
+<h5>複数のモジュールを一つのGradleプロジェクトから発行する <small>incubating</small></h5>
+
+<p>publishプラグインでは複数のモジュールを一つのGradleプロジェクトから発行することが可能になります。</p>
+
+<p>```groovy
+project.group &lsquo;org.cool.library&rsquo;
+publications {</p>
+
+<pre><code>implJar(MavenPublication) {
+    artifactId 'cool-library'
+    version '3.1'
+    artifact jar
+}
+apiJar(MavenPublication) {
+    artifactId 'cool-library-api'
+    version '3'
+    artifact apiJar
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>これまでも可能でしたが、ここに示したような簡単な方法ではできませんでした。新しい<code>ivy-publish</code>、<code>maven-publish</code>プラグインでは簡単に出来ます。</p>
+
+<h5>TestNGパラメーターがテストレポートに出力されます <small>incubating</small></h5>
+
+<p>TestNGでは<a href="http://testng.org/doc/documentation-main.html#parameters">parameterizing test methods</a>によってあるテストを複数回、異なるデータの入力でテストを行うことがサポートされています。以前のGradleのレポートでは、パラメタライズドテストは複数行にわたってレポートが出力されていましたが、そのテストの区別をすることができませんでした。テストレポートにはパラメーターの<code>toString()</code>メソッドによる値を出力できるようにし、どのデータによるテストかを区別できるようにしました。</p>
+
+<p>```java ParameterizedTest.java
+import org.testng.annotations.*;</p>
+
+<p>public class ParameterizedTest {</p>
+
+<pre><code>@Test(dataProvider = "1")
+public void aParameterizedTestCase(String var1, String var2) {
+    // do testing
+}
+
+@DataProvider(name = "1")
+public Object[][] provider1() {
+    return new Object[][] {
+       {"1", "2"},
+       {"3", "4"}
+    };
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>上記のテストに対するレポートは次のように表示されます。</p>
+
+<ul>
+<li><code>aParameterizedTestCase(1, 2)</code></li>
+<li><code>aParameterizedTestCase(3, 4)</code></li>
+</ul>
+
+
+<p>この情報はGradleのHTMLテストレポートとJUnit XMLファイルに反映されます。JUnit XMLファイルは一般的にテストの実行結果をCIサーバーに引き渡す役割を担っており、CIサーバーでパラメーターの情報を参照することが可能になります。</p>
 
 <p><!-- admax -->
 <script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>

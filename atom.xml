@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-07-06T23:28:56+09:00</updated>
+  <updated>2013-07-07T02:08:01+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -40,7 +40,7 @@
 
 <p>Gradle1.7ではコア・テベロップチーム以外からのコントリビュートが多いのも特徴です。Gradle1.7に貢献してくださったデベロッパーの皆様に感謝しております。</p>
 
-<h1>Table Of Contents</h1>
+<h2>Table Of Contents</h2>
 
 <h3>新機能や追加機能</h3>
 
@@ -209,9 +209,157 @@
 <p>build-setupプラグインがプロジェクトタイプをサポートするようになりました。Gradle1.7ではjava-libraryタイプが利用可能です。このタイプで生成されるのは以下のとおりです。</p>
 
 <ul>
-<li></li>
+<li>javaプラグインが適用されたシンプルなビルドファイル</li>
+<li>サンプルのプロダクションクラスとディレクトリー</li>
+<li>サンプルのJUnitテストとディレクトリー</li>
+<li>Gradle Wrapperファイル</li>
 </ul>
 
+
+<p>Javaライブラリープロジェクトを作る場合は次のコマンドを実行するだけです(build.gradleファイルは必要ありません)。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">gradle</span> <span class="n">setupBuild</span> <span class="o">--</span><span class="n">type</span> <span class="n">java</span><span class="o">-</span><span class="n">library</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>詳しくはこちらを<a href="http://www.gradle.org/docs/release-candidate/userguide/build_setup_plugin.html">Build Setup plugin</a>を参照して下さい。</p>
+
+<h5>publicationのカスタマイズ &ndash; new publishingプラグインにおける <small>incubating</small></h5>
+
+<p>publishプラグインでアーカイブを発行するときにartifactの情報を明示的にカスタマイズできるようになりました。以前はartifactの情報はプロジェクトの情報から取得されていました。</p>
+
+<p><code>MavenPublication</code>では<code>groupId</code>、<code>artifactId</code>と<code>version</code>情報を設定できるようになります。Mavenの<code>pom</code>の<code>packaging</code>の値も設定可能です。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">publications</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">mavenPub</span><span class="o">(</span><span class="n">MaenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">from</span> <span class="n">components</span><span class="o">.</span><span class="na">java</span>
+</span><span class='line'>        <span class="n">groupId</span> <span class="s1">&#39;my.group.id&#39;</span>
+</span><span class='line'>        <span class="n">artifactId</span> <span class="s1">&#39;my-publication&#39;</span>
+</span><span class='line'>        <span class="n">version</span> <span class="s1">&#39;3.1&#39;</span>
+</span><span class='line'>        <span class="n">pom</span><span class="o">.</span><span class="na">packaging</span> <span class="s1">&#39;pom&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>IvyPublication</code>では<code>organisation</code>、<code>module</code>と<code>revision</code>を設定出来ます。<code>IvyModuleDescriptor</code>で<code>status</code>の値も設定可能です。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">publications</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">ivyPub</span><span class="o">(</span><span class="n">IvyPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">from</span> <span class="n">components</span><span class="o">.</span><span class="na">java</span>
+</span><span class='line'>        <span class="n">organisation</span> <span class="s1">&#39;my.org&#39;</span>
+</span><span class='line'>        <span class="n">module</span> <span class="s1">&#39;my-module&#39;</span>
+</span><span class='line'>        <span class="n">revision</span> <span class="s1">&#39;3&#39;</span>
+</span><span class='line'>        <span class="n">descriptor</span><span class="o">.</span><span class="na">status</span> <span class="s1">&#39;milestone&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この機能のすごいところは、<code>module</code>や<code>artifactId</code>を設定することができることです。というのも、これまでは<code>project.name</code>を使っており、Gradleのビルドスクリプトで変更することができなかったためです。</p>
+
+<h5>複数のモジュールを一つのGradleプロジェクトから発行する <small>incubating</small></h5>
+
+<p>publishプラグインでは複数のモジュールを一つのGradleプロジェクトから発行することが可能になります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">project</span><span class="o">.</span><span class="na">group</span> <span class="s1">&#39;org.cool.library&#39;</span>
+</span><span class='line'><span class="n">publications</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">implJar</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">artifactId</span> <span class="s1">&#39;cool-library&#39;</span>
+</span><span class='line'>        <span class="n">version</span> <span class="s1">&#39;3.1&#39;</span>
+</span><span class='line'>        <span class="n">artifact</span> <span class="n">jar</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">apiJar</span><span class="o">(</span><span class="n">MavenPublication</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">artifactId</span> <span class="s1">&#39;cool-library-api&#39;</span>
+</span><span class='line'>        <span class="n">version</span> <span class="s1">&#39;3&#39;</span>
+</span><span class='line'>        <span class="n">artifact</span> <span class="n">apiJar</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これまでも可能でしたが、ここに示したような簡単な方法ではできませんでした。新しい<code>ivy-publish</code>、<code>maven-publish</code>プラグインでは簡単に出来ます。</p>
+
+<h5>TestNGパラメーターがテストレポートに出力されます <small>incubating</small></h5>
+
+<p>TestNGでは<a href="http://testng.org/doc/documentation-main.html#parameters">parameterizing test methods</a>によってあるテストを複数回、異なるデータの入力でテストを行うことがサポートされています。以前のGradleのレポートでは、パラメタライズドテストは複数行にわたってレポートが出力されていましたが、そのテストの区別をすることができませんでした。テストレポートにはパラメーターの<code>toString()</code>メソッドによる値を出力できるようにし、どのデータによるテストかを区別できるようにしました。</p>
+
+<figure class='code'><figcaption><span>ParameterizedTest.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">org.testng.annotations.*</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ParameterizedTest</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Test</span><span class="o">(</span><span class="n">dataProvider</span> <span class="o">=</span> <span class="s">&quot;1&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">aParameterizedTestCase</span><span class="o">(</span><span class="n">String</span> <span class="n">var1</span><span class="o">,</span> <span class="n">String</span> <span class="n">var2</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// do testing</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@DataProvider</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;1&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Object</span><span class="o">[][]</span> <span class="nf">provider1</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="n">Object</span><span class="o">[][]</span> <span class="o">{</span>
+</span><span class='line'>           <span class="o">{</span><span class="s">&quot;1&quot;</span><span class="o">,</span> <span class="s">&quot;2&quot;</span><span class="o">},</span>
+</span><span class='line'>           <span class="o">{</span><span class="s">&quot;3&quot;</span><span class="o">,</span> <span class="s">&quot;4&quot;</span><span class="o">}</span>
+</span><span class='line'>        <span class="o">};</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上記のテストに対するレポートは次のように表示されます。</p>
+
+<ul>
+<li><code>aParameterizedTestCase(1, 2)</code></li>
+<li><code>aParameterizedTestCase(3, 4)</code></li>
+</ul>
+
+
+<p>この情報はGradleのHTMLテストレポートとJUnit XMLファイルに反映されます。JUnit XMLファイルは一般的にテストの実行結果をCIサーバーに引き渡す役割を担っており、CIサーバーでパラメーターの情報を参照することが可能になります。</p>
 
 <!-- admax -->
 
