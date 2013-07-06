@@ -212,4 +212,8 @@
         <loc>http://mike-neck.github.io/robots.txt</loc>
         <lastmod>2013-05-08T19:28:30+09:00</lastmod>
     </url>
+    <url>
+        <loc>http://mike-neck.github.io/terms-of-service/</loc>
+        <lastmod>2013-07-07T08:01:40+09:00</lastmod>
+    </url>
 </urlset>
