@@ -6,6 +6,8 @@ comments: true
 categories: [groovy, gradle]
 ---
 
+<img src="//googledrive.com/host/0B4hhdHWLP7RRZHRNTkNwZEYtdkE"/>
+
 こんにちわ、みけです。
 
 現在、gradle1.7-rc1が利用できます。
