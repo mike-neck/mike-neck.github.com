@@ -36,12 +36,26 @@ Table Of Contents
 
 ### [新機能や追加機能](#c1)
 
-##### [より速いGradleビルド](#c1_1)
++ [より速いGradleビルド](#c1_1)
++ [Finalizer tasks](#c1_2)
++ [C++プロジェクトサポートの改善](#c1_3)
++ [JCenter レポジトリーのサポート](#c1_4)
++ [パターン・ベース・ファイル・コピー設定](#c1_5)
++ [ファイル重複時のハンドリング機能](#c1_6)
++ [Gradle Wrapperはビルドスクリプトを特にいじらなくても利用可能になります](#c1_7)
++ [Javaライブラリーテンプレートプロジェクトの生成](#c1_8)
++ [publicationのカスタマイズ - new publishingプラグインにおける](#c1_9)
++ [複数のモジュールを一つのGradleプロジェクトから発行する](#c1_10)
++ [TestNGパラメーターがテストレポートに出力されます](#c1_11)
++ [テストタスクに標準的なレポートインターフェースを採用](#c1_12)
++ [ビルドダッシュボードの改善](#c1_13)
 
 
-### 新機能や追加機能<span id="c1"></span>
+<span id="c1"></span>
+### 新機能や追加機能
 
-##### より速いGradleビルド<span id="c1_1"></span>
+<span id="c1_1"></span>
+##### より速いGradleビルド
 
 Gradle1.7でのビルドはより速くなります。
 
@@ -50,6 +64,7 @@ Gradle1.7でのビルドはより速くなります。
 + ビルドスクリプトのコンパイルが速くなります(Gradle1.6に比べて75%の時間でできるようになります)
 + 並行実行モードが高速になります
 
+<span id="c1_2"></span>
 ##### Finalizer tasks <small>incubating</small>
 
 Gradle1.7から新しいタスク実行ルールが導入され、タスク終了時に他のタスクを起動することができるようになります。この機能は[Marcin Erdmann](https://github.com/erdi)氏によるものです。
@@ -65,6 +80,7 @@ configure([integTest1, integTest2]) {
 
 この例では`integTest1`タスクと`integTest2`タスクの終了時に`stopAppServer`タスクを実行するように宣言されています。どちらか片方のタスクがビルドの最中に起動された場合もfinalizer taskが自動で実行されます。ビルドの最中に両方のタスクが起動された場合でも必ず両方のタスクの最後にfinalizer taskが実行されます。finalizer taskの`stopAppServer`はGradle実行時に起動タスクとして指定する必要はありません。
 
+<span id="c1_3"></span>
 ##### C++プロジェクトサポートの改善 <small>incubating</small>
 
 GradleはC++プロジェクトのサポートをしていました。これはGradleをネイティブコードプロジェクトのビルドツールとして最良のものにする改善になります。
@@ -75,6 +91,7 @@ GradleはC++プロジェクトのサポートをしていました。これはGr
 + Variantに基づいた依存性解決
 + その他もろもろ(詳しくは[こちら](https://github.com/gradle/gradle/blob/master/design-docs/continuous-delivery-for-c-plus-plus.md)を見て下さい(英語))
 
+<span id="c1_4"></span>
 ##### JCenter レポジトリーのサポート <small>incubating</small>
 
 [Bintray's JCenter Repository](https://bintray.com/bintray/jcenter)からdependencyを取得できるようになります。`jcenter()`レポジトリーノーテーションにより利用可能です。JCenterはコミュニティリポジトリーで、[Bintray](https://bintray.com/)から無料で配布可能です。
@@ -87,6 +104,7 @@ repositories {
 
 このスクリプトにより[http://jcenter.bintray.com](http://jcenter.bintray.com)がApache Maven repositoryと同様にリポジトリーリストに追加されます。
 
+<span id="c1_5"></span>
 ##### パターン・ベース・ファイル・コピー設定 <small>incubating</small>
 
 Gradle1.7ではきめ細かい設定によりどのファイルがコピーされるべきかを定義することができます。設定方法は"Ant Patterns"のように指定出来ます。この機能は[Kyle Marhan](https://github.com/kylewm)氏によるものです。
@@ -106,6 +124,7 @@ task copyFiles(type : Copy) {
 
 `fileMatching`メソッドではClosureを引数に取り、[`FileCopyDetails`](http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/file/FileCopyDetails.html)オブジェクトの設定を行うことができます。これと反対の動作をする[`filesNotMatching`](http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/file/CopySpec.html#filesNotMatching%28java.lang.String%2C%20org.gradle.api.Action%29)というメソッドもあり、パターンに該当しないファイルすべてを指定することもできます。
 
+<span id="c1_6"></span>
 ##### ファイル重複時のハンドリング機能 <small>incubating</small>
 
 ファイルのコピーやアーカイブするときに、よく重複することがあります。そのような重複が発生した場合の処理方法を設定できるようになります。
@@ -138,6 +157,7 @@ task zip (type : Zip) {
 }
 ```
 
+<span id="c1_7"></span>
 ##### Gradle Wrapperはビルドスクリプトを特にいじらなくても利用可能になります <small>incubating</small>
 
 [Gradle Wrapper](http://www.gradle.org/docs/release-candidate/userguide/gradle_wrapper.html)は`Wrapper`タスクを定義しなくても利用できるようになります。つまり`Wrapper`のためにビルドスクリプトをいじることはありません。
@@ -160,6 +180,7 @@ wrapper {
 
 もし既存の`Wrapper`タイプのタスクがある場合は、そちらが使われます。それ以外の場合はデフォルトの`wrapper`タスクが使用されます。
 
+<span id="c1_8"></span>
 ##### Javaライブラリーテンプレートプロジェクトの生成
 
 build-setupプラグインがプロジェクトタイプをサポートするようになりました。Gradle1.7ではjava-libraryタイプが利用可能です。このタイプで生成されるのは以下のとおりです。
@@ -177,6 +198,7 @@ $ gradle setupBuild --type java-library
 
 詳しくはこちらを[Build Setup plugin](http://www.gradle.org/docs/release-candidate/userguide/build_setup_plugin.html)を参照して下さい。
 
+<span id="c1_9"></span>
 ##### publicationのカスタマイズ - new publishingプラグインにおける <small>incubating</small>
 
 publishプラグインでアーカイブを発行するときにartifactの情報を明示的にカスタマイズできるようになりました。以前はartifactの情報はプロジェクトの情報から取得されていました。
@@ -211,6 +233,7 @@ publications {
 
 この機能のすごいところは、`module`や`artifactId`を設定することができることです。というのも、これまでは`project.name`を使っており、Gradleのビルドスクリプトで変更することができなかったためです。
 
+<span id="c1_10"></span>
 ##### 複数のモジュールを一つのGradleプロジェクトから発行する <small>incubating</small>
 
 publishプラグインでは複数のモジュールを一つのGradleプロジェクトから発行することが可能になります。
@@ -233,6 +256,7 @@ publications {
 
 これまでも可能でしたが、ここに示したような簡単な方法ではできませんでした。新しい`ivy-publish`、`maven-publish`プラグインでは簡単に出来ます。
 
+<span id="c1_11"></span>
 ##### TestNGパラメーターがテストレポートに出力されます <small>incubating</small>
 
 TestNGでは[parameterizing test methods](http://testng.org/doc/documentation-main.html#parameters)によってあるテストを複数回、異なるデータの入力でテストを行うことがサポートされています。以前のGradleのレポートでは、パラメタライズドテストは複数行にわたってレポートが出力されていましたが、そのテストの区別をすることができませんでした。テストレポートにはパラメーターの`toString()`メソッドによる値を出力できるようにし、どのデータによるテストかを区別できるようにしました。
@@ -263,6 +287,7 @@ public class ParameterizedTest {
 
 この情報はGradleのHTMLテストレポートとJUnit XMLファイルに反映されます。JUnit XMLファイルは一般的にテストの実行結果をCIサーバーに引き渡す役割を担っており、CIサーバーでパラメーターの情報を参照することが可能になります。
 
+<span id="c1_12"></span>
 ##### テストタスクに標準的なレポートインターフェースを採用
 
 レポートインターフェースによりレポートをコントロールする方法が提供されます。テストタスクではこのレポートインターフェースが採用されます。
@@ -281,6 +306,7 @@ testタスクの提供する[TestReports](http://www.gradle.org/docs/release-can
 
 これによりテストタスクも他のレポート生成タスクとAPIレベルで同等になります。また、不要であればJUnit XMLファイルの生成しないことも可能です。
 
+<span id="c1_13"></span>
 ##### ビルドダッシュボードの改善 <small>incubating</small>
 
 上記の変更(テストタスクに標準的なレポートインターフェースを採用)は言い換えると、テストレポートが[ビルドダッシュボード](http://www.gradle.org/docs/release-candidate/userguide/buildDashboard_plugin.html)に現れるということです。
