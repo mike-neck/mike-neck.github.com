@@ -258,7 +258,29 @@ public class ParameterizedTest {
 
 この情報はGradleのHTMLテストレポートとJUnit XMLファイルに反映されます。JUnit XMLファイルは一般的にテストの実行結果をCIサーバーに引き渡す役割を担っており、CIサーバーでパラメーターの情報を参照することが可能になります。
 
+##### テストタスクに標準的なレポートインターフェースを採用
 
+レポートインターフェースによりレポートをコントロールする方法が提供されます。テストタスクではこのレポートインターフェースが採用されます。
+
+```groovy
+apply plugin: 'java'
+test {
+    reports {
+        html.enabled = false
+        junitXml.destination = file("$buildDir/junit-xml")
+    }
+}
+```
+
+testタスクの提供する[TestReports](http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/tasks/testing/TestReports.html)型の[`ReportContainer`](http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/reporting/ReportContainer.html)を通じて、HTMLによるテストレポートおよびJUnit XMLファイルの出力の制御を行えるようになります(これらのファイルは通常CIサーバーやその他のツールとテスト結果を共有するために使われます)。
+
+これによりテストタスクも他のレポート生成タスクとAPIレベルで同等になります。また、不要であればJUnit XMLファイルの生成しないことも可能です。
+
+##### ビルドダッシュボードの改善 <small>incubating</small>
+
+上記の変更(テストタスクに標準的なレポートインターフェースを採用)は言い換えると、テストレポートが[ビルドダッシュボード](http://www.gradle.org/docs/release-candidate/userguide/buildDashboard_plugin.html)に現れるということです。
+
+なお、`buildDashbord`タスクは自動的にレポート系タスクと同時実行されます(Finalizerタスクの機能により実現されています)。
 
 
 
