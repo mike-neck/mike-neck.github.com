@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-07-07T08:02:03+09:00</updated>
+  <updated>2013-07-08T06:57:53+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -44,9 +44,13 @@
 
 <h2>Table Of Contents</h2>
 
-<h3>新機能や追加機能</h3>
+<h3><a href="#c1">新機能や追加機能</a></h3>
 
-<h5>より速いGradleビルド</h5>
+<h5><a href="#c1_1">より速いGradleビルド</a></h5>
+
+<h3>新機能や追加機能<span id="c1"></span></h3>
+
+<h5>より速いGradleビルド<span id="c1_1"></span></h5>
 
 <p>Gradle1.7でのビルドはより速くなります。</p>
 
@@ -362,6 +366,37 @@
 
 
 <p>この情報はGradleのHTMLテストレポートとJUnit XMLファイルに反映されます。JUnit XMLファイルは一般的にテストの実行結果をCIサーバーに引き渡す役割を担っており、CIサーバーでパラメーターの情報を参照することが可能になります。</p>
+
+<h5>テストタスクに標準的なレポートインターフェースを採用</h5>
+
+<p>レポートインターフェースによりレポートをコントロールする方法が提供されます。テストタスクではこのレポートインターフェースが採用されます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">&#39;java&#39;</span>
+</span><span class='line'><span class="n">test</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">reports</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">html</span><span class="o">.</span><span class="na">enabled</span> <span class="o">=</span> <span class="kc">false</span>
+</span><span class='line'>        <span class="n">junitXml</span><span class="o">.</span><span class="na">destination</span> <span class="o">=</span> <span class="n">file</span><span class="o">(</span><span class="s2">&quot;$buildDir/junit-xml&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>testタスクの提供する<a href="http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/tasks/testing/TestReports.html">TestReports</a>型の<a href="http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/reporting/ReportContainer.html"><code>ReportContainer</code></a>を通じて、HTMLによるテストレポートおよびJUnit XMLファイルの出力の制御を行えるようになります(これらのファイルは通常CIサーバーやその他のツールとテスト結果を共有するために使われます)。</p>
+
+<p>これによりテストタスクも他のレポート生成タスクとAPIレベルで同等になります。また、不要であればJUnit XMLファイルの生成しないことも可能です。</p>
+
+<h5>ビルドダッシュボードの改善 <small>incubating</small></h5>
+
+<p>上記の変更(テストタスクに標準的なレポートインターフェースを採用)は言い換えると、テストレポートが<a href="http://www.gradle.org/docs/release-candidate/userguide/buildDashboard_plugin.html">ビルドダッシュボード</a>に現れるということです。</p>
+
+<p>なお、<code>buildDashbord</code>タスクは自動的にレポート系タスクと同時実行されます(Finalizerタスクの機能により実現されています)。</p>
 
 <!-- admax -->
 

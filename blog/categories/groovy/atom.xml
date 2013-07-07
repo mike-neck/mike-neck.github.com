@@ -4,7 +4,7 @@
   <title><![CDATA[Category: groovy | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-07-07T08:02:03+09:00</updated>
+  <updated>2013-07-08T06:57:53+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -44,9 +44,13 @@
 
 <h2>Table Of Contents</h2>
 
-<h3>新機能や追加機能</h3>
+<h3><a href="#c1">新機能や追加機能</a></h3>
 
-<h5>より速いGradleビルド</h5>
+<h5><a href="#c1_1">より速いGradleビルド</a></h5>
+
+<h3>新機能や追加機能<span id="c1"></span></h3>
+
+<h5>より速いGradleビルド<span id="c1_1"></span></h5>
 
 <p>Gradle1.7でのビルドはより速くなります。</p>
 
@@ -309,6 +313,33 @@ public Object[][] provider1() {
 
 
 <p>この情報はGradleのHTMLテストレポートとJUnit XMLファイルに反映されます。JUnit XMLファイルは一般的にテストの実行結果をCIサーバーに引き渡す役割を担っており、CIサーバーでパラメーターの情報を参照することが可能になります。</p>
+
+<h5>テストタスクに標準的なレポートインターフェースを採用</h5>
+
+<p>レポートインターフェースによりレポートをコントロールする方法が提供されます。テストタスクではこのレポートインターフェースが採用されます。</p>
+
+<p>```groovy
+apply plugin: &lsquo;java&rsquo;
+test {</p>
+
+<pre><code>reports {
+    html.enabled = false
+    junitXml.destination = file("$buildDir/junit-xml")
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>testタスクの提供する<a href="http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/tasks/testing/TestReports.html">TestReports</a>型の<a href="http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/reporting/ReportContainer.html"><code>ReportContainer</code></a>を通じて、HTMLによるテストレポートおよびJUnit XMLファイルの出力の制御を行えるようになります(これらのファイルは通常CIサーバーやその他のツールとテスト結果を共有するために使われます)。</p>
+
+<p>これによりテストタスクも他のレポート生成タスクとAPIレベルで同等になります。また、不要であればJUnit XMLファイルの生成しないことも可能です。</p>
+
+<h5>ビルドダッシュボードの改善 <small>incubating</small></h5>
+
+<p>上記の変更(テストタスクに標準的なレポートインターフェースを採用)は言い換えると、テストレポートが<a href="http://www.gradle.org/docs/release-candidate/userguide/buildDashboard_plugin.html">ビルドダッシュボード</a>に現れるということです。</p>
+
+<p>なお、<code>buildDashbord</code>タスクは自動的にレポート系タスクと同時実行されます(Finalizerタスクの機能により実現されています)。</p>
 
 <p><!-- admax -->
 <script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
