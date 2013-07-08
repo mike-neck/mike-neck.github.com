@@ -146,8 +146,41 @@
 <li><a href="#c1_11">TestNGパラメーターがテストレポートに出力されます</a></li>
 <li><a href="#c1_12">テストタスクに標準的なレポートインターフェースを採用</a></li>
 <li><a href="#c1_13">ビルドダッシュボードの改善</a></li>
+<li><a href="#c1_14">JUnit XMLファイルでテストケースごとにテストの出力を表示するようになりました</a></li>
+<li><a href="#c1_15">ApplicationプラグインでJVMパラメーターを指定できるようになります</a></li>
+<li><a href="#c1_16">BndライブラリーのアップデートによりOSGiサポートが改善されました</a></li>
 </ul>
 
+
+<h3><a href="#c2">修正された問題</a></h3>
+
+<h3><a href="#c3">非推奨となったもの</a></h3>
+
+<ul>
+<li><a href="#c3_1">テストレポートプロパティ</a></li>
+</ul>
+
+
+<h3><a href="#c4">潜在的な互換性に関わる変更</a></h3>
+
+<ul>
+<li><a href="#c4_1">インメモリーdependencyキャッシング</a></li>
+<li><a href="#c4_2">incubatingのJaCoCoプラグインの変更</a></li>
+<li><a href="#c4_3">incubatingのbuild-setupプラグインの変更</a></li>
+<li><a href="#c4_4">incubatingのivy-publishプラグインにおけるタスク名の変更</a></li>
+<li><a href="#c4_5">IvyPublicationのデフォルト<code>status</code>値が<code>integration</code>となり、<code>project.status</code>でなくなりました</a></li>
+<li><a href="#c4_6">C++サポートの大幅な変更</a></li>
+<li><a href="#c4_7"><code>ConfigureableReport</code>が<code>ConfigurableReport</code>に名称が変わりました</a></li>
+<li><a href="#c4_8">テストがない場合テストタスクがスキップされるようになりました</a></li>
+<li><a href="#c4_9">OSGiプラグインに使われているBndライブラリーがアップデートされました</a></li>
+</ul>
+
+
+<h3><a href="#c5">コントリビューター</a></h3>
+
+<h3><a href="#c6">既知の問題</a></h3>
+
+<hr />
 
 <p><span id="c1"></span></p>
 
@@ -517,7 +550,7 @@
 
 <p>testタスクの提供する<a href="http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/tasks/testing/TestReports.html">TestReports</a>型の<a href="http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/reporting/ReportContainer.html"><code>ReportContainer</code></a>を通じて、HTMLによるテストレポートおよびJUnit XMLファイルの出力の制御を行えるようになります(これらのファイルは通常CIサーバーやその他のツールとテスト結果を共有するために使われます)。</p>
 
-<p>これによりテストタスクも他のレポート生成タスクとAPIレベルで同等になります。また、不要であればJUnit XMLファイルの生成しないことも可能です。</p>
+<p>これによりテストタスクも他のレポート生成タスクとAPIレベルで同等になります。また、不要であればJUnit XMLファイルを生成しないことも可能です。</p>
 
 <p><span id="c1_13"></span></p>
 
@@ -526,6 +559,154 @@
 <p>上記の変更(テストタスクに標準的なレポートインターフェースを採用)は言い換えると、テストレポートが<a href="http://www.gradle.org/docs/release-candidate/userguide/buildDashboard_plugin.html">ビルドダッシュボード</a>に現れるということです。</p>
 
 <p>なお、<code>buildDashbord</code>タスクは自動的にレポート系タスクと同時実行されます(Finalizerタスクの機能により実現されています)。</p>
+
+<p><span id="c1_14"></span></p>
+
+<h5>JUnit XMLファイルでテストケースごとにテストの出力を表示するようになりました</h5>
+
+<p><span id="c1_15"></span></p>
+
+<h5>ApplicationプラグインでJVMパラメーターを指定できるようになります</h5>
+
+<p><span id="c1_16"></span></p>
+
+<h5>BndライブラリーのアップデートによりOSGiサポートが改善されました</h5>
+
+<p><span id="c2"></span></p>
+
+<h3>修正された問題</h3>
+
+<p><span id="c3"></span></p>
+
+<h3>非推奨となったもの</h3>
+
+<p><span id="c3_1"></span></p>
+
+<h5>テストレポートプロパティ</h5>
+
+<p><span id="c4"></span></p>
+
+<h3>潜在的な互換性に関わる変更</h3>
+
+<p><span id="c4_1"></span></p>
+
+<h5>インメモリーdependencyキャッシング</h5>
+
+<p><span id="c4_2"></span></p>
+
+<h5>incubatingのJaCoCoプラグインの変更</h5>
+
+<p><span id="c4_3"></span></p>
+
+<h5>incubatingのbuild-setupプラグインの変更</h5>
+
+<p><span id="c4_4"></span></p>
+
+<h5>incubatingのivy-publishプラグインにおけるタスク名の変更</h5>
+
+<p><span id="c4_5"></span></p>
+
+<h5>IvyPublicationのデフォルト<code>status</code>値が<code>integration</code>となり、<code>project.status</code>でなくなりました</h5>
+
+<p><span id="c4_6"></span></p>
+
+<h5>C++サポートの大幅な変更</h5>
+
+<p><span id="c4_7"></span></p>
+
+<h5><code>ConfigureableReport</code>が<code>ConfigurableReport</code>に名称が変わりました</h5>
+
+<p><span id="c4_8"></span></p>
+
+<h5>テストがない場合テストタスクがスキップされるようになりました</h5>
+
+<p><span id="c4_9"></span></p>
+
+<h5>OSGiプラグインに使われているBndライブラリーがアップデートされました</h5>
+
+<p><span id="c5"></span></p>
+
+<h3>コントリビューター</h3>
+
+<p>Gradleコミュニティの他に、Gradleのディベロップメントチームは下記の人達にこのバージョンのGradleへの貢献に感謝します。</p>
+
+<h5><a href="https://github.com/erdi">Marchin Erdmann</a></h5>
+
+<ul>
+<li>Finalizer tasks</li>
+</ul>
+
+
+<h5><a href="https://github.com/dstine">Dan Stine</a></h5>
+
+<ul>
+<li>CodeNrcプラグインのmaxPriorityViolations setting (<a href="http://issues.gradle.org/browse/GRADLE-1742">GRADLE-1742</a>)</li>
+<li>ユーザーガイドの修正</li>
+</ul>
+
+
+<h5><a href="https://github.com/kylewm">Kyle Mahan</a></h5>
+
+<ul>
+<li>アーカイブ・コピー操作における重複への対処(<a href="http://issues.gradle.org/browse/GRADLE-2171">GRADLE-2171</a>)</li>
+<li>パターン・ベース・ファイル・コピー設定</li>
+</ul>
+
+
+<h5><a href="https://github.com/sponiro">Robert Kühne</a></h5>
+
+<ul>
+<li>ユーザーガイドのスペルミス修正</li>
+</ul>
+
+
+<h5><a href="https://github.com/Vampire">Björn Kautler</a></h5>
+
+<ul>
+<li>Build Dashboard のサンプルの修正</li>
+</ul>
+
+
+<h5><a href="https://github.com/sgoings">Seth Goings</a></h5>
+
+<ul>
+<li>ユーザーガイドの修正</li>
+</ul>
+
+
+<h5><a href="https://github.com/sbennettmcleish">Scott Bennett-McLeish</a></h5>
+
+<ul>
+<li>ユーザーガイドの修正</li>
+</ul>
+
+
+<h5><a href="https://github.com/wujek-srujek">Wujek Srujek</a></h5>
+
+<ul>
+<li>wrapperのインストールロケーションに関する-gコマンドラインオプションの処理(<a href="http://issues.gradle.org/browse/GRADLE-2802">GRADLE-2802</a>)</li>
+</ul>
+
+
+<h5><a href="https://github.com/glaforge">Guillaume Laforge</a></h5>
+
+<ul>
+<li>OSGiプラグインのBndライブラリーアップデート(<a href="http://issues.gradle.org/browse/GRADLE-2806">GRADLE-2806</a>)</li>
+</ul>
+
+
+<h5><a href="https://github.com/yoav">Yoav Landman</a></h5>
+
+<ul>
+<li><code>jcenter()</code>メソッドによるレポジトリー定義(<a href="https://bintray.com/bintray/jcenter">Bintray&rsquo;s JCenter repository</a>)</li>
+</ul>
+
+
+<p><span id="c6"></span></p>
+
+<h3>既知の問題</h3>
+
+<p>今のところGradle1.7に問題は見つかっていません。</p>
 
 <!-- admax -->
 
