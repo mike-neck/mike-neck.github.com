@@ -381,6 +381,39 @@ applicationDefaultJvmArgs = ['-Dfile.encoding=UTF-8']
 <span id="c2"></span>
 ### 修正された問題
 
+Gradle1.7で30の問題が修正されました。
+
++ [[GRADLE-642]](http://issues.gradle.org/browse/GRADLE-642) - scala toolsまたはライブラリーが登録されていない場合にscalaタスクから出力されるエラーメッセージを修正
++ [[GRADLE-1289]](http://issues.gradle.org/browse/GRADLE-1289) - "create-project"コマンドによるスケルトンプロジェクト作成機能を提供
++ [[GRADLE-1372]](http://issues.gradle.org/browse/GRADLE-1372) - wrapperタスクをビルトインタスクにしました
++ [[GRADLE-1387]](http://issues.gradle.org/browse/GRADLE-1387) - Gradle Architypes機能を提供
++ [[GRADLE-1456]](http://issues.gradle.org/browse/GRADLE-1456) - Application PluginにてJAVA_OPTS/APPL_OPTSを設定する方法を提供
++ [[GRADLE-1551]](http://issues.gradle.org/browse/GRADLE-1551) - http://www.gradle.org/build_lifecycle.htmlのtypoを修正
++ [[GRADLE-1583]](http://issues.gradle.org/browse/GRADLE-1583) - Gradleがivy configurationの表現をサポートしていない
++ [[GRADLE-1704]](http://issues.gradle.org/browse/GRADLE-1704) - "gradle --version"コマンドの日付フォーマットの修正
++ [[GRADLE-1742]](http://issues.gradle.org/browse/GRADLE-1742) - CodeNarcの警告数の上限を設定できるようにした
++ [[GRADLE-2171]](http://issues.gradle.org/browse/GRADLE-2171) - zipファイル生成する場合に重複を回避するオプションを提供
++ [[GRADLE-2519]](http://issues.gradle.org/browse/GRADLE-2519) - `testReport = false`と指定していてもテストFAILURE時に存在しないファイルのURLが表示される
++ [[GRADLE-2666]](http://issues.gradle.org/browse/GRADLE-2666) - maven2GradleでNullpointerが発生
++ [[GRADLE-2702]](http://issues.gradle.org/browse/GRADLE-2702) - testRuntime/testCompile configurationがテストがなくても解決される
++ [[GRADLE-2738]](http://issues.gradle.org/browse/GRADLE-2738) - dependenciesで同じartifactの複数のバージョンを指定している場合、一番古いバージョンで解決される
++ [[GRADLE-2752]](http://issues.gradle.org/browse/GRADLE-2752) - 自分自身のライブラリーの古いバージョンに依存している場合に
++ [[GRADLE-2760]](http://issues.gradle.org/browse/GRADLE-2760) - `--parallel-threads`が内部的に4つまでしか使えない
++ [[GRADLE-2765]](http://issues.gradle.org/browse/GRADLE-2765) - XMLテストレポートを出力できない設定を追加
++ [[GRADLE-2766]](http://issues.gradle.org/browse/GRADLE-2766) - Ivy defaultConfMappingが解決に用いられない
++ [[GRADLE-2780]](http://issues.gradle.org/browse/GRADLE-2780) - Gradle1.6でスクリプトのコンパイルが劣化
++ [[GRADLE-2790]](http://issues.gradle.org/browse/GRADLE-2790) - Ivy dependency configuration mapping `'*->@'` がターゲットモジュールからすべてのconfigurationを含んでしまう
++ [[GRADLE-2791]](http://issues.gradle.org/browse/GRADLE-2791) - Ivy dependency configuration mapping で左項`'%'`が無視される
++ [[GRADLE-2792]](http://issues.gradle.org/browse/GRADLE-2792) - Ivy dependency configuration mapping で左項`'*,!A'`がAの解決時に含まれてしまう
++ [[GRADLE-2793]](http://issues.gradle.org/browse/GRADLE-2793) - Ivy dependency configuration mapping で右項`'#'`が不適切なターゲットconfigurationに解される
++ [[GRADLE-2802]](http://issues.gradle.org/browse/GRADLE-2802) - Wrapperのインストール/ダウンロードが`-g`、`--gradle-user-home`コマンドラインフラグを考慮しない
++ [[GRADLE-2806]](http://issues.gradle.org/browse/GRADLE-2806) - OSGiプラグインにBNDライブラリーの最新版を適用
++ [[GRADLE-2808]](http://issues.gradle.org/browse/GRADLE-2808) - `setting options.forkOptions.executable`と設定をしてjoint compileすると`NotSerializableException`が発生する
++ [[GRADLE-2813]](http://issues.gradle.org/browse/GRADLE-2813) - `project.exec()`でタスクを定義した場合、DSLが反映されない
++ [[GRADLE-2815]](http://issues.gradle.org/browse/GRADLE-2815) - `@Input`が`boolean`型のgetterで`is*`という名前のメソッドには適用されない
++ [[GRADLE-2821]](http://issues.gradle.org/browse/GRADLE-2821) - テストのないテストタスクのレポート出力時にTestReportタスクがエラーを出力
++ [[GRADLE-2825]](http://issues.gradle.org/browse/GRADLE-2825) - `strategy`が`include`に設定されていてもファイル重複の警告が出力される
+
 <span id="c3"></span>
 ### 非推奨となったもの
 
