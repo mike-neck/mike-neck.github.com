@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-07-08T16:49:22+09:00</updated>
+  <updated>2013-07-08T19:16:37+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -566,9 +566,29 @@
 
 <h3>非推奨となったもの</h3>
 
+<p>Gradleの進化にともなって置き換えられたものや無駄になったものは<em>非推奨</em>になり、次のメジャーバージョン(Gradle2.0)にて廃止されます。ユーザーガイドの<a href="http://www.gradle.org/docs/release-candidate/userguide/feature_lifecycle.html">Feature Lifecycle</a>を参照して下さい。</p>
+
+<p>以下に示すのが今回非推奨となったものです。もし何かあれば<a href="http://forums.gradle.org/">Gradle Forums</a>で問題提起してください。</p>
+
 <p><span id="c3_1"></span></p>
 
 <h5>テストレポートプロパティ</h5>
+
+<p>Testタスクが<a href="http://www.gradle.org/docs/release-candidate/dsl/org.gradle.api.tasks.testing.Test.html">Reporting</a>インターフェースを実装するようになりました。現状のレポート出力に関するAPIは非推奨になりました。</p>
+
+<ul>
+<li><code>disableTestReport()</code></li>
+<li><code>enableTestReport()</code></li>
+<li><code>isTestReport()</code></li>
+<li><code>setTestReport()</code></li>
+<li><code>getTestReportDir()</code></li>
+<li><code>setTestReportDir()</code></li>
+<li><code>getTestResultsDir()</code></li>
+<li><code>setTestResultsDir()</code></li>
+</ul>
+
+
+<p>すべての非推奨となった機能は新しい<a href="http://www.gradle.org/docs/release-candidate/dsl/org.gradle.api.tasks.testing.Test.html">Reporting</a>機能でも利用可能ではあります。</p>
 
 <p><span id="c4"></span></p>
 
@@ -578,37 +598,82 @@
 
 <h5>インメモリーdependencyキャッシング</h5>
 
+<p>パフォーマンスの改善により、Gradleはdependencyの記述を<em>ビルド全般</em>にわたってメモリーにキャッシュするようになりました。つまりビルドの最中にdependencyメタデータが変わると、その変更はGradleは検知されない場合があります。このようなことが発生するパターンは確かめられていませんが、理論上想定することができます。</p>
+
+<p>詳しくは<a href="http://www.gradle.org/docs/release-candidate/release-notes#faster-gradle-builds">Faster Gradle Builds</a>を参照下さい。</p>
+
 <p><span id="c4_2"></span></p>
 
 <h5>incubatingのJaCoCoプラグインの変更</h5>
+
+<p><a href="http://www.gradle.org/docs/release-candidate/userguide/jacoco_plugin.html">JaCoCoカバレージプラグイン</a>のいくつかのクラスのプロパティの名前が適切なものに置き換わりました。</p>
+
+<ul>
+<li><code>JaCoCoTaskExtension.destPath</code>は<code>destinationFile</code>になりました。</li>
+<li><code>JaCoCoTaskExtension.classDumpPath</code>は<code>classDumpFile</code>になりました。</li>
+<li><code>JaCoCoMerge.destFile</code>は<code>destinationFile</code>になりました。</li>
+</ul>
+
 
 <p><span id="c4_3"></span></p>
 
 <h5>incubatingのbuild-setupプラグインの変更</h5>
 
+<p><code>ConvertMaven2Gradle</code>、<code>GenerateBuildScript</code>と<code>GenerateSettingsScript</code>クラスが削除されました。それらは<code>SetupBuild</code>型の<code>buildSetup</code>タスクの一部となっています。</p>
+
+<p>プラグインはbuild-setupタイプに基づいて異なるタイプ・名前のタスクを作成します。</p>
+
+<p><code>setupWrapper</code>タスクは<code>wrapper</code>となっています。</p>
+
 <p><span id="c4_4"></span></p>
 
 <h5>incubatingのivy-publishプラグインにおけるタスク名の変更</h5>
 
+<p>maven-publishプラグインとの統一性を計るため、IvyPublicationでivy.xmlを生成するタスクが変わりました。タスクの名前は<code>generateDescriptorFileFor${publication.name}Publication</code>となります。</p>
+
 <p><span id="c4_5"></span></p>
 
-<h5>IvyPublicationのデフォルト<code>status</code>値が<code>integration</code>となり、<code>project.status</code>でなくなりました</h5>
+<h5>IvyPublicationのデフォルト<code>status</code>値が<code>integration</code>となり、<code>project.status</code>でなくなりました <small>incubating</small></h5>
+
+<p>Ivy publicationモデルからGradleプロジェクトモデルを分離するために、<code>ivy-publish</code>プラグインで発行する際に<code>project.status</code>の値は使われなくなりました。</p>
+
+<p><code>IvyPublication</code>の<code>IvyModuleDescriptor</code>用に<code>status</code>の値が設定されていない場合、デフォルトのivyステータス(<code>'integration'</code>)が使われます。以前は<code>project.status</code>のデフォルト値である<code>'release'</code>が使われていました。</p>
 
 <p><span id="c4_6"></span></p>
 
 <h5>C++サポートの大幅な変更</h5>
 
+<p>GradleのincubatingなC++サポートがメジャーアップデートします。多くのプラグイン、タスク、APIクラス、DSLが変わります。この変更に伴いほとんどのシンプルなC++ビルドを変更する必要があります。</p>
+
+<p>既存のC++ビルドを今後もGradleで実行するための対策は2つあります。</p>
+
+<ol>
+<li>Gradleを1.6のままにして、C++のサポートが安定するのを待ちます。その後、更新します。</li>
+<li>最新の変更にビルドを合わせるようにします。なお、新たにリリースされた場合には変更が発生する可能性があります。</li>
+</ol>
+
+
 <p><span id="c4_7"></span></p>
 
 <h5><code>ConfigureableReport</code>が<code>ConfigurableReport</code>に名称が変わりました</h5>
+
+<p>incubatingの<code>org.gradle.api.reporting.ConfigureableReport</code>クラスは<code>org.gradle.api.reporting.ConfigurableReport</code>クラスに変更されます。ミススペルが原因です。</p>
 
 <p><span id="c4_8"></span></p>
 
 <h5>テストがない場合テストタスクがスキップされるようになりました</h5>
 
+<p>テストがない場合には、テストタスクは<em>スキップ</em>されるようになります。<a href="http://issues.gradle.org/browse/GRADLE-2702">GRADLE-2702</a></p>
+
+<p>以前はテストがない場合であっても、テストが実行されていました。その結果、dependencyの解決が実行され、何もないテストレポートが出力されていました。この変更によりビルドが高速になります。また、既存のビルドに対して大きな影響は発生しません。</p>
+
 <p><span id="c4_9"></span></p>
 
 <h5>OSGiプラグインに使われているBndライブラリーがアップデートされました</h5>
+
+<p><a href="http://www.gradle.org/docs/release-candidate/userguide/osgi_plugin.html">OSGiプラグイン</a>でbundle manifestの生成に使われていた<a href="http://www.aqute.biz/Bnd/Bnd">Bnd</a>ツールのバージョンが1.50.0から2.1.0に上がります。</p>
+
+<p>この変更は重要なアップグレードですが、後方互換性があります。</p>
 
 <p><span id="c5"></span></p>
 
