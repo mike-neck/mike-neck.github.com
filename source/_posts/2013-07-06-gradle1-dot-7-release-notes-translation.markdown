@@ -417,8 +417,25 @@ Gradle1.7で30の問題が修正されました。
 <span id="c3"></span>
 ### 非推奨となったもの
 
+Gradleの進化にともなって置き換えられたものや無駄になったものは_非推奨_になり、次のメジャーバージョン(Gradle2.0)にて廃止されます。ユーザーガイドの[Feature Lifecycle](http://www.gradle.org/docs/release-candidate/userguide/feature_lifecycle.html)を参照して下さい。
+
+以下に示すのが今回非推奨となったものです。もし何かあれば[Gradle Forums](http://forums.gradle.org/)で問題提起してください。
+
 <span id="c3_1"></span>
 ##### テストレポートプロパティ
+
+Testタスクが[Reporting](http://www.gradle.org/docs/release-candidate/dsl/org.gradle.api.tasks.testing.Test.html)インターフェースを実装するようになりました。現状のレポート出力に関するAPIは非推奨になりました。
+
++ `disableTestReport()`
++ `enableTestReport()`
++ `isTestReport()`
++ `setTestReport()`
++ `getTestReportDir()`
++ `setTestReportDir()`
++ `getTestResultsDir()`
++ `setTestResultsDir()`
+
+すべての非推奨となった機能は新しい[Reporting](http://www.gradle.org/docs/release-candidate/dsl/org.gradle.api.tasks.testing.Test.html)機能でも利用可能ではあります。
 
 <span id="c4"></span>
 ### 潜在的な互換性に関わる変更
