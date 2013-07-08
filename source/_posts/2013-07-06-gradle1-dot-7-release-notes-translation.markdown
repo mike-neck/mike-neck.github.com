@@ -443,29 +443,68 @@ Testタスクが[Reporting](http://www.gradle.org/docs/release-candidate/dsl/org
 <span id="c4_1"></span>
 ##### インメモリーdependencyキャッシング
 
+パフォーマンスの改善により、Gradleはdependencyの記述を_ビルド全般_にわたってメモリーにキャッシュするようになりました。つまりビルドの最中にdependencyメタデータが変わると、その変更はGradleは検知されない場合があります。このようなことが発生するパターンは確かめられていませんが、理論上想定することができます。
+
+詳しくは[Faster Gradle Builds](http://www.gradle.org/docs/release-candidate/release-notes#faster-gradle-builds)を参照下さい。
+
 <span id="c4_2"></span>
 ##### incubatingのJaCoCoプラグインの変更
+
+[JaCoCoカバレージプラグイン](http://www.gradle.org/docs/release-candidate/userguide/jacoco_plugin.html)のいくつかのクラスのプロパティの名前が適切なものに置き換わりました。
+
++ `JaCoCoTaskExtension.destPath`は`destinationFile`になりました。
++ `JaCoCoTaskExtension.classDumpPath`は`classDumpFile`になりました。
++ `JaCoCoMerge.destFile`は`destinationFile`になりました。
 
 <span id="c4_3"></span>
 ##### incubatingのbuild-setupプラグインの変更
 
+`ConvertMaven2Gradle`、`GenerateBuildScript`と`GenerateSettingsScript`クラスが削除されました。それらは`SetupBuild`型の`buildSetup`タスクの一部となっています。
+
+プラグインはbuild-setupタイプに基づいて異なるタイプ・名前のタスクを作成します。
+
+`setupWrapper`タスクは`wrapper`となっています。
+
 <span id="c4_4"></span>
 ##### incubatingのivy-publishプラグインにおけるタスク名の変更
 
+maven-publishプラグインとの統一性を計るため、IvyPublicationでivy.xmlを生成するタスクが変わりました。タスクの名前は`generateDescriptorFileFor${publication.name}Publication`となります。
+
 <span id="c4_5"></span>
-##### IvyPublicationのデフォルト`status`値が`integration`となり、`project.status`でなくなりました
+##### IvyPublicationのデフォルト`status`値が`integration`となり、`project.status`でなくなりました <small>incubating</small>
+
+Ivy publicationモデルからGradleプロジェクトモデルを分離するために、`ivy-publish`プラグインで発行する際に`project.status`の値は使われなくなりました。
+
+`IvyPublication`の`IvyModuleDescriptor`用に`status`の値が設定されていない場合、デフォルトのivyステータス(`'integration'`)が使われます。以前は`project.status`のデフォルト値である`'release'`が使われていました。
 
 <span id="c4_6"></span>
 ##### C++サポートの大幅な変更
 
+GradleのincubatingなC++サポートがメジャーアップデートします。多くのプラグイン、タスク、APIクラス、DSLが変わります。この変更に伴いほとんどのシンプルなC++ビルドを変更する必要があります。
+
+既存のC++ビルドを今後もGradleで実行するための対策は2つあります。
+
+1. Gradleを1.6のままにして、C++のサポートが安定するのを待ちます。その後、更新します。
+1. 最新の変更にビルドを合わせるようにします。なお、新たにリリースされた場合には変更が発生する可能性があります。
+
 <span id="c4_7"></span>
 ##### `ConfigureableReport`が`ConfigurableReport`に名称が変わりました
+
+incubatingの`org.gradle.api.reporting.ConfigureableReport`クラスは`org.gradle.api.reporting.ConfigurableReport`クラスに変更されます。ミススペルが原因です。
 
 <span id="c4_8"></span>
 ##### テストがない場合テストタスクがスキップされるようになりました
 
+テストがない場合には、テストタスクは_スキップ_されるようになります。[GRADLE-2702](http://issues.gradle.org/browse/GRADLE-2702)
+
+以前はテストがない場合であっても、テストが実行されていました。その結果、dependencyの解決が実行され、何もないテストレポートが出力されていました。この変更によりビルドが高速になります。また、既存のビルドに対して大きな影響は発生しません。
+
 <span id="c4_9"></span>
 ##### OSGiプラグインに使われているBndライブラリーがアップデートされました
+
+[OSGiプラグイン](http://www.gradle.org/docs/release-candidate/userguide/osgi_plugin.html)でbundle manifestの生成に使われていた[Bnd](http://www.aqute.biz/Bnd/Bnd)ツールのバージョンが1.50.0から2.1.0に上がります。
+
+この変更は重要なアップグレードですが、後方互換性があります。	
 
 <span id="c5"></span>
 ### コントリビューター
