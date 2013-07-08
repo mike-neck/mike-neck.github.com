@@ -49,7 +49,33 @@ Table Of Contents
 + [TestNGパラメーターがテストレポートに出力されます](#c1_11)
 + [テストタスクに標準的なレポートインターフェースを採用](#c1_12)
 + [ビルドダッシュボードの改善](#c1_13)
++ [JUnit XMLファイルでテストケースごとにテストの出力を表示するようになりました](#c1_14)
++ [ApplicationプラグインでJVMパラメーターを指定できるようになります](#c1_15)
++ [BndライブラリーのアップデートによりOSGiサポートが改善されました](#c1_16)
 
+### [修正された問題](#c2)
+
+### [非推奨となったもの](#c3)
+
++ [テストレポートプロパティ](#c3_1)
+
+### [潜在的な互換性に関わる変更](#c4)
+
++ [インメモリーdependencyキャッシング](#c4_1)
++ [incubatingのJaCoCoプラグインの変更](#c4_2)
++ [incubatingのbuild-setupプラグインの変更](#c4_3)
++ [incubatingのivy-publishプラグインにおけるタスク名の変更](#c4_4)
++ [IvyPublicationのデフォルト`status`値が`integration`となり、`project.status`でなくなりました](#c4_5)
++ [C++サポートの大幅な変更](#c4_6)
++ [`ConfigureableReport`が`ConfigurableReport`に名称が変わりました](#c4_7)
++ [テストがない場合テストタスクがスキップされるようになりました](#c4_8)
++ [OSGiプラグインに使われているBndライブラリーがアップデートされました](#c4_9)
+
+### [コントリビューター](#c5)
+
+### [既知の問題](#c6)
+
+---
 
 <span id="c1"></span>
 ### 新機能や追加機能
@@ -304,7 +330,7 @@ test {
 
 testタスクの提供する[TestReports](http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/tasks/testing/TestReports.html)型の[`ReportContainer`](http://www.gradle.org/docs/release-candidate/javadoc/org/gradle/api/reporting/ReportContainer.html)を通じて、HTMLによるテストレポートおよびJUnit XMLファイルの出力の制御を行えるようになります(これらのファイルは通常CIサーバーやその他のツールとテスト結果を共有するために使われます)。
 
-これによりテストタスクも他のレポート生成タスクとAPIレベルで同等になります。また、不要であればJUnit XMLファイルの生成しないことも可能です。
+これによりテストタスクも他のレポート生成タスクとAPIレベルで同等になります。また、不要であればJUnit XMLファイルを生成しないことも可能です。
 
 <span id="c1_13"></span>
 ##### ビルドダッシュボードの改善 <small>incubating</small>
@@ -314,6 +340,105 @@ testタスクの提供する[TestReports](http://www.gradle.org/docs/release-can
 なお、`buildDashbord`タスクは自動的にレポート系タスクと同時実行されます(Finalizerタスクの機能により実現されています)。
 
 
+<span id="c1_14"></span>
+##### JUnit XMLファイルでテストケースごとにテストの出力を表示するようになりました
+
+<span id="c1_15"></span>
+##### ApplicationプラグインでJVMパラメーターを指定できるようになります
+
+<span id="c1_16"></span>
+##### BndライブラリーのアップデートによりOSGiサポートが改善されました
+
+<span id="c2"></span>
+### 修正された問題
+
+<span id="c3"></span>
+### 非推奨となったもの
+
+<span id="c3_1"></span>
+##### テストレポートプロパティ
+
+<span id="c4"></span>
+### 潜在的な互換性に関わる変更
+
+<span id="c4_1"></span>
+##### インメモリーdependencyキャッシング
+
+<span id="c4_2"></span>
+##### incubatingのJaCoCoプラグインの変更
+
+<span id="c4_3"></span>
+##### incubatingのbuild-setupプラグインの変更
+
+<span id="c4_4"></span>
+##### incubatingのivy-publishプラグインにおけるタスク名の変更
+
+<span id="c4_5"></span>
+##### IvyPublicationのデフォルト`status`値が`integration`となり、`project.status`でなくなりました
+
+<span id="c4_6"></span>
+##### C++サポートの大幅な変更
+
+<span id="c4_7"></span>
+##### `ConfigureableReport`が`ConfigurableReport`に名称が変わりました
+
+<span id="c4_8"></span>
+##### テストがない場合テストタスクがスキップされるようになりました
+
+<span id="c4_9"></span>
+##### OSGiプラグインに使われているBndライブラリーがアップデートされました
+
+<span id="c5"></span>
+### コントリビューター
+
+Gradleコミュニティの他に、Gradleのディベロップメントチームは下記の人達にこのバージョンのGradleへの貢献に感謝します。
+
+##### [Marchin Erdmann](https://github.com/erdi)
+
++ Finalizer tasks
+
+##### [Dan Stine](https://github.com/dstine)
+
++ CodeNrcプラグインのmaxPriorityViolations setting ([GRADLE-1742](http://issues.gradle.org/browse/GRADLE-1742))
++ ユーザーガイドの修正
+
+##### [Kyle Mahan](https://github.com/kylewm)
+
++ アーカイブ・コピー操作における重複への対処([GRADLE-2171](http://issues.gradle.org/browse/GRADLE-2171))
++ パターン・ベース・ファイル・コピー設定
+
+##### [Robert Kühne](https://github.com/sponiro)
+
++ ユーザーガイドのスペルミス修正
+
+##### [Björn Kautler](https://github.com/Vampire)
+
++ Build Dashboard のサンプルの修正
+
+##### [Seth Goings](https://github.com/sgoings)
+
++ ユーザーガイドの修正
+
+##### [Scott Bennett-McLeish](https://github.com/sbennettmcleish)
+
++ ユーザーガイドの修正
+
+##### [Wujek Srujek](https://github.com/wujek-srujek)
+
++ wrapperのインストールロケーションに関する-gコマンドラインオプションの処理([GRADLE-2802](http://issues.gradle.org/browse/GRADLE-2802))
+
+##### [Guillaume Laforge](https://github.com/glaforge)
+
++ OSGiプラグインのBndライブラリーアップデート([GRADLE-2806](http://issues.gradle.org/browse/GRADLE-2806))
+
+##### [Yoav Landman](https://github.com/yoav)
+
++ `jcenter()`メソッドによるレポジトリー定義([Bintray's JCenter repository](https://bintray.com/bintray/jcenter))
+
+<span id="c6"></span>
+### 既知の問題
+
+今のところGradle1.7に問題は見つかっていません。
 
 {% render_partial _includes/post/post_footer.html %}
 
