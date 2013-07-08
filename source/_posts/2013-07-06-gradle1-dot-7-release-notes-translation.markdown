@@ -341,13 +341,42 @@ testタスクの提供する[TestReports](http://www.gradle.org/docs/release-can
 
 
 <span id="c1_14"></span>
-##### JUnit XMLファイルでテストケースごとにテストの出力を表示するようになりました
+##### JUnit XMLファイルでテストケースごとにテストの出力を表示するようになりました <small>incubating</small>
+
+この変更により[Jenkins](http://jenkins-ci.org/)などのCIサーバーでよりよいテスト結果を得ることができます。
+
+JUnit XMLファイルはテスト結果のフォーマットとしてデファクト・スタンダードです。たいていのCIサーバーはこのファイルをテストの実行結果として使っています。元々は「JUnit And Tasks」によって考えられたもので、JUnitとほぼ同時期に作られ、多くの局面で使われてきましたが、特に仕様が定められていませんでした。
+
+このファイルにはテスト中の標準出力(`System.out`と`System.err`)の内容が収められています。これまでは出力は_クラスレベル_でのみ記録されていました。つまり、テストケース毎の出力が得られなかったわけです。しかしGradleでは「テストケース毎の出力」モードを利用することができるようになりました。
+
+```groovy
+test {
+    reports {
+        junitXml.outputPerTestCase = true
+    }
+}
+```
+
+このモードを使うと、XMLレポートはテストケースごとに作成されます。Jenkins CIサーバーではテストケース毎の結果を参照できるようになります。`outputPerTestCase = true`と設定しておくと、テストケース毎の出力が画面に表示されます。以前は_テストクラス_毎の出力でした。
+
+Jenkinsの[JUnit Attachments Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Attachments+Plugin)はこの機能とともに用いることで有効活用できます。
 
 <span id="c1_15"></span>
-##### ApplicationプラグインでJVMパラメーターを指定できるようになります
+##### ApplicationプラグインでJVMパラメーターを指定できるようになります <small>incubating</small>
+
+[Olaf Kilschat](https://github.com/multi-io)により[Application Plugin](http://www.gradle.org/docs/release-candidate/userguide/application_plugin.html)はデフォルトのJVM引数を設定することができるようになります。
+
+```groovy
+apply plugin: 'application'
+applicationDefaultJvmArgs = ['-Dfile.encoding=UTF-8']
+```
 
 <span id="c1_16"></span>
 ##### BndライブラリーのアップデートによりOSGiサポートが改善されました
+
+[OSGi](http://www.gradle.org/docs/release-candidate/userguide/osgi_plugin.html)プラグインは[Bnd](http://www.aqute.biz/Bnd/Bnd)ツールを使ってbundle manifestsを作成しています。Bndツールのバージョンが1.50.0から2.1.0に変更されます。
+
+最も重要な変更点は"invokedynamic"命令を使うJavaコード用のmanifestが正確になることです。
 
 <span id="c2"></span>
 ### 修正された問題
