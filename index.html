@@ -565,19 +565,91 @@
 
 <p><span id="c1_14"></span></p>
 
-<h5>JUnit XMLファイルでテストケースごとにテストの出力を表示するようになりました</h5>
+<h5>JUnit XMLファイルでテストケースごとにテストの出力を表示するようになりました <small>incubating</small></h5>
+
+<p>この変更により<a href="http://jenkins-ci.org/">Jenkins</a>などのCIサーバーでよりよいテスト結果を得ることができます。</p>
+
+<p>JUnit XMLファイルはテスト結果のフォーマットとしてデファクト・スタンダードです。たいていのCIサーバーはこのファイルをテストの実行結果として使っています。元々は「JUnit And Tasks」によって考えられたもので、JUnitとほぼ同時期に作られ、多くの局面で使われてきましたが、特に仕様が定められていませんでした。</p>
+
+<p>このファイルにはテスト中の標準出力(<code>System.out</code>と<code>System.err</code>)の内容が収められています。これまでは出力は<em>クラスレベル</em>でのみ記録されていました。つまり、テストケース毎の出力が得られなかったわけです。しかしGradleでは「テストケース毎の出力」モードを利用することができるようになりました。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">test</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">reports</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">junitXml</span><span class="o">.</span><span class="na">outputPerTestCase</span> <span class="o">=</span> <span class="kc">true</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このモードを使うと、XMLレポートはテストケースごとに作成されます。Jenkins CIサーバーではテストケース毎の結果を参照できるようになります。<code>outputPerTestCase = true</code>と設定しておくと、テストケース毎の出力が画面に表示されます。以前は<em>テストクラス</em>毎の出力でした。</p>
+
+<p>Jenkinsの<a href="https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Attachments+Plugin">JUnit Attachments Plugin</a>はこの機能とともに用いることで有効活用できます。</p>
 
 <p><span id="c1_15"></span></p>
 
-<h5>ApplicationプラグインでJVMパラメーターを指定できるようになります</h5>
+<h5>ApplicationプラグインでJVMパラメーターを指定できるようになります <small>incubating</small></h5>
+
+<p><a href="https://github.com/multi-io">Olaf Kilschat</a>により<a href="http://www.gradle.org/docs/release-candidate/userguide/application_plugin.html">Application Plugin</a>はデフォルトのJVM引数を設定することができるようになります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">&#39;application&#39;</span>
+</span><span class='line'><span class="n">applicationDefaultJvmArgs</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;-Dfile.encoding=UTF-8&#39;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p><span id="c1_16"></span></p>
 
 <h5>BndライブラリーのアップデートによりOSGiサポートが改善されました</h5>
 
+<p><a href="http://www.gradle.org/docs/release-candidate/userguide/osgi_plugin.html">OSGi</a>プラグインは<a href="http://www.aqute.biz/Bnd/Bnd">Bnd</a>ツールを使ってbundle manifestsを作成しています。Bndツールのバージョンが1.50.0から2.1.0に変更されます。</p>
+
+<p>最も重要な変更点は&#8221;invokedynamic&#8221;命令を使うJavaコード用のmanifestが正確になることです。</p>
+
 <p><span id="c2"></span></p>
 
 <h3>修正された問題</h3>
+
+<p>Gradle1.7で30の問題が修正されました。</p>
+
+<ul>
+<li><a href="http://issues.gradle.org/browse/GRADLE-642">[GRADLE-642]</a> &ndash; scala toolsまたはライブラリーが登録されていない場合にscalaタスクから出力されるエラーメッセージを修正</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-1289">[GRADLE-1289]</a> &ndash; &ldquo;create-project&#8221;コマンドによるスケルトンプロジェクト作成機能を提供</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-1372">[GRADLE-1372]</a> &ndash; wrapperタスクをビルトインタスクにしました</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-1387">[GRADLE-1387]</a> &ndash; Gradle Architypes機能を提供</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-1456">[GRADLE-1456]</a> &ndash; Application PluginにてJAVA_OPTS/APPL_OPTSを設定する方法を提供</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-1551">[GRADLE-1551]</a> &ndash; <a href="http://www.gradle.org/build_lifecycle.html%E3%81%AEtypo%E3%82%92%E4%BF%AE%E6%AD%A3">http://www.gradle.org/build_lifecycle.html%E3%81%AEtypo%E3%82%92%E4%BF%AE%E6%AD%A3</a></li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-1583">[GRADLE-1583]</a> &ndash; Gradleがivy configurationの表現をサポートしていない</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-1704">[GRADLE-1704]</a> &ndash; &ldquo;gradle &mdash;version&#8221;コマンドの日付フォーマットの修正</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-1742">[GRADLE-1742]</a> &ndash; CodeNarcの警告数の上限を設定できるようにした</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2171">[GRADLE-2171]</a> &ndash; zipファイル生成する場合に重複を回避するオプションを提供</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2519">[GRADLE-2519]</a> &ndash; <code>testReport = false</code>と指定していてもテストFAILURE時に存在しないファイルのURLが表示される</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2666">[GRADLE-2666]</a> &ndash; maven2GradleでNullpointerが発生</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2702">[GRADLE-2702]</a> &ndash; testRuntime/testCompile configurationがテストがなくても解決される</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2738">[GRADLE-2738]</a> &ndash; dependenciesで同じartifactの複数のバージョンを指定している場合、一番古いバージョンで解決される</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2752">[GRADLE-2752]</a> &ndash; 自分自身のライブラリーの古いバージョンに依存している場合に</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2760">[GRADLE-2760]</a> &ndash; <code>--parallel-threads</code>が内部的に4つまでしか使えない</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2765">[GRADLE-2765]</a> &ndash; XMLテストレポートを出力できない設定を追加</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2766">[GRADLE-2766]</a> &ndash; Ivy defaultConfMappingが解決に用いられない</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2780">[GRADLE-2780]</a> &ndash; Gradle1.6でスクリプトのコンパイルが劣化</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2790">[GRADLE-2790]</a> &ndash; Ivy dependency configuration mapping <code>'*-&gt;@'</code> がターゲットモジュールからすべてのconfigurationを含んでしまう</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2791">[GRADLE-2791]</a> &ndash; Ivy dependency configuration mapping で左項<code>'%'</code>が無視される</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2792">[GRADLE-2792]</a> &ndash; Ivy dependency configuration mapping で左項<code>'*,!A'</code>がAの解決時に含まれてしまう</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2793">[GRADLE-2793]</a> &ndash; Ivy dependency configuration mapping で右項<code>'#'</code>が不適切なターゲットconfigurationに解される</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2802">[GRADLE-2802]</a> &ndash; Wrapperのインストール/ダウンロードが<code>-g</code>、<code>--gradle-user-home</code>コマンドラインフラグを考慮しない</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2806">[GRADLE-2806]</a> &ndash; OSGiプラグインにBNDライブラリーの最新版を適用</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2808">[GRADLE-2808]</a> &ndash; <code>setting options.forkOptions.executable</code>と設定をしてjoint compileすると<code>NotSerializableException</code>が発生する</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2813">[GRADLE-2813]</a> &ndash; <code>project.exec()</code>でタスクを定義した場合、DSLが反映されない</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2815">[GRADLE-2815]</a> &ndash; <code>@Input</code>が<code>boolean</code>型のgetterで<code>is*</code>という名前のメソッドには適用されない</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2821">[GRADLE-2821]</a> &ndash; テストのないテストタスクのレポート出力時にTestReportタスクがエラーを出力</li>
+<li><a href="http://issues.gradle.org/browse/GRADLE-2825">[GRADLE-2825]</a> &ndash; <code>strategy</code>が<code>include</code>に設定されていてもファイル重複の警告が出力される</li>
+</ul>
+
 
 <p><span id="c3"></span></p>
 
