@@ -98,3 +98,5 @@ google_analytics_tracking_id: UA-40855644-1
 
 # Facebook Like
 facebook_like: true
+facebook_app_id: 531007270298287
+facebook_og_locale: ja_JP
