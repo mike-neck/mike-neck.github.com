@@ -6,10 +6,9 @@
 <head>
   <meta charset="utf-8">
   <title>mike、mikeなるままに…</title>
-  <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="タイトルが偉そうなこと書いていますが、 大したことは書きません。 みけです。 Android Studioが出てきてgradleとは何ぞと思っている方がいると思います gradleはgroovyで記述できるビルドシステムです。 antの自由なところと、 &hellip;">
+  <meta name="description" content="こんいちわ。みけです。 またも、タイトルが仰々しくてすみません。 本当に大したこと書かないです。 で、相変わらずAndroidまたもや出て来ません。 gradleも出て来ません。 でも、Android Studioの登場や、gradle-android-pluginで &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -29,6 +28,20 @@
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+<meta property="og:title" content="mike、mikeなるままに…" />
+<meta property="og:type" content="blog" />
+<meta property="og:description" content="" />
+
+
+<meta property="og:image" content="/mike-pow.png"/>
+
+<meta property="og:url" content="http://mike-neck.github.io/blog/page/3" />
+<meta property="og:author" content="mike-neck" />
+<meta property="og:site_name" content="mike、mikeなるままに…" />
+<meta property="og:locale" content="" />
+<meta property="fb:app_id" content="" />
 
   
   <script type="text/javascript">
@@ -78,6 +91,1007 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/30/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo-2/">AndroidがJavaだと思っている人のためのGroovy講座 - 2</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-30T10:48:00+09:00" pubdate data-updated="true">May 30<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>こんいちわ。みけです。</p>
+
+<p>またも、タイトルが仰々しくてすみません。</p>
+
+<p>本当に大したこと書かないです。</p>
+
+<p>で、相変わらずAndroidまたもや出て来ません。</p>
+
+<p>gradleも出て来ません。</p>
+
+<p>でも、Android Studioの登場や、gradle-android-pluginで</p>
+
+<p>gradleに興味を持たれた方には読んで貰いたいと思います。</p>
+
+<p>以下、本題。</p>
+
+<h2><code>Closure&lt;V&gt;</code>とはなんぞや</h2>
+
+<p>Closureについて僕がなんか言うと、</p>
+
+<p>皆が混乱するので(それだけ僕もちゃんと説明できるほど理解していない…orz)</p>
+
+<p>とりあえず<a href="http://ja.wikipedia.org/wiki/%E3%82%AF%E3%83%AD%E3%83%BC%E3%82%B8%E3%83%A3">WikipediaのClosure</a>でも読んで下さい。</p>
+
+<p>Javaでいえば、<code>Callable&lt;V&gt;</code>みたいなものです。</p>
+
+<p>で、<code>Callable&lt;V&gt;</code>に比べて便利なのが</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Callable</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">callable</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">call</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// some codes</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいに書かなくてよいあたりです。</p>
+
+<p>ちなみに<code>Callable&lt;T&gt;</code>と異なるところもあります。</p>
+
+<p>それは、おいおい、説明します。</p>
+
+<h1>そろそろ<code>Closure&lt;V&gt;</code>のサンプル見せてくれよ</h1>
+
+<p>というわけで、適当にサンプルをみつくろってみました。</p>
+
+<h4>単純な値を返すだけのClosure</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">closure</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="s1">&#39;Hello, Closure!&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">assert</span> <span class="nf">closure</span><span class="o">()</span> <span class="o">==</span> <span class="s1">&#39;Hello, Closure!&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>そうそう、<strong>groovyでは<code>return</code>を省略することができます</strong>。</p>
+
+<p>その場合、最後に評価された式の値が<code>return</code>されます。</p>
+
+<p>上記のClosureではClosureの最終式<code>'Hello, Closure!'</code>が評価され、</p>
+
+<p>その値<code>'Hello, Closure!'</code>が返されます。</p>
+
+<h4>引数をとるClosure</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">hello</span> <span class="o">=</span> <span class="o">{</span><span class="n">name</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="s1">&#39;Hello, &#39;</span> <span class="o">+</span> <span class="n">name</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">assert</span> <span class="s1">&#39;Hello, mike&#39;</span> <span class="o">==</span> <span class="n">hello</span><span class="o">(</span><span class="s1">&#39;mike&#39;</span><span class="o">)</span>
+</span><span class='line'><span class="k">assert</span> <span class="s1">&#39;Hello, null&#39;</span> <span class="o">==</span> <span class="n">hello</span><span class="o">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>Closure&lt;V&gt;</code>と<code>Callable&lt;V&gt;</code>との決定的な違いが、
+(大した違いではないが)</p>
+
+<p>引数を与えることができる点です。</p>
+
+<p>これを<code>Callable&lt;V&gt;</code>でやろうとすると次のようになります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloTest</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Hello</span> <span class="kd">implements</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kd">public</span> <span class="nf">Hello</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="n">String</span> <span class="nf">call</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="s">&quot;Hello, &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testHello</span> <span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="k">new</span> <span class="n">Hello</span><span class="o">(</span><span class="s">&quot;mike&quot;</span><span class="o">).</span><span class="na">call</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;Hello, mike&quot;</span><span class="o">));</span>
+</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="k">new</span> <span class="n">Hello</span><span class="o">(</span><span class="kc">null</span><span class="o">).</span><span class="na">call</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;Hello, null&quot;</span><span class="o">));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Closureを返すClosure</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">counter</span> <span class="o">=</span> <span class="o">{</span><span class="kt">int</span> <span class="n">offset</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">offset</span><span class="o">++</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">closure</span> <span class="o">=</span> <span class="n">counter</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">(</span><span class="mi">0</span><span class="o">..</span><span class="mi">100</span><span class="o">).</span><span class="na">each</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">it</span> <span class="o">==</span> <span class="n">closure</span><span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>初期値の0からカウントするカウンターのようなクロージャーが返ってきます。</p>
+
+<p>型としては<code>Closure&lt;Closure&lt;Integer&gt;&gt;</code>といったところでしょうか…</p>
+
+<p>で、これをみると一つ気持ち悪いところがありますね。</p>
+
+<p><strong>元の値ってどうなってしまうの？</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">closure</span> <span class="o">=</span> <span class="o">{</span><span class="n">String</span> <span class="n">hello</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="o">{</span><span class="n">String</span> <span class="n">name</span> <span class="o">-&gt;</span>
+</span><span class='line'>        <span class="n">hello</span> <span class="o">+=</span> <span class="n">name</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">original</span> <span class="o">=</span> <span class="s1">&#39;Hello, &#39;</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">message</span> <span class="o">=</span> <span class="n">closure</span><span class="o">(</span><span class="n">original</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">assert</span> <span class="nf">message</span><span class="o">(</span><span class="s1">&#39;mike&#39;</span><span class="o">)</span> <span class="o">==</span> <span class="s1">&#39;Hello, mike&#39;</span>
+</span><span class='line'><span class="k">assert</span> <span class="nf">message</span><span class="o">(</span><span class="s1">&#39;!&#39;</span><span class="o">)</span> <span class="o">==</span> <span class="s1">&#39;Hello, mike!&#39;</span>
+</span><span class='line'><span class="k">assert</span> <span class="n">original</span> <span class="o">==</span> <span class="s1">&#39;Hello, &#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というように、元の値は壊れませんが、</p>
+
+<p>返されるClosureが元々持っていた値は壊れていきます。</p>
+
+<p>ところで、イテレーターとして<code>Closure&lt;V&gt;</code>を使うときに出てくる</p>
+
+<h4><code>it</code>ってなんやねん？</h4>
+
+<p>gradleのプラグイン宣言などで、ときどきこんな記述が出てきますね</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="o">[</span><span class="s1">&#39;java&#39;</span><span class="o">,</span> <span class="s1">&#39;groovy&#39;</span><span class="o">].</span><span class="na">each</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="n">it</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で、この<code>it</code>ですが、コレクションの一つ一つの要素です。</p>
+
+<p>あ、そんなこと言われなくても知ってたって(´・ω・｀)</p>
+
+<p>まあ、そんなことは言わずに、すこし試してみましょう。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="o">(</span><span class="mi">1</span><span class="o">..</span><span class="mi">4</span><span class="o">).</span><span class="na">each</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">println</span> <span class="s2">&quot;it is ${it}.&quot;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実行結果はこんな感じです。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">it</span> <span class="n">is</span> <span class="mi">1</span><span class="o">.</span>
+</span><span class='line'><span class="n">it</span> <span class="n">is</span> <span class="mi">2</span><span class="o">.</span>
+</span><span class='line'><span class="n">it</span> <span class="n">is</span> <span class="mi">3</span><span class="o">.</span>
+</span><span class='line'><span class="n">it</span> <span class="n">is</span> <span class="mi">4</span><span class="o">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これって、でもどういうふうに呼ばれているの？</p>
+
+<p>groovyの<code>DefaultGroovyMethods</code>クラスを介して呼ばれています。</p>
+
+<h5>自分でも<code>it</code>でアクセスできるイテレーター作ってみたい</h5>
+
+<p>というわけで、<code>Closure&lt;V&gt;</code>を引数にとるメソッドを書いてみました。</p>
+
+<p><code>it</code>で要素にアクセスできて、ちょっと嬉しいですね。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">Integer</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">define</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">collect</span> <span class="o">=</span> <span class="o">{</span><span class="n">Closure</span> <span class="n">closure</span> <span class="o">-&gt;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">IntRange</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">delegate</span><span class="o">).</span><span class="na">collect</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">closure</span><span class="o">(</span><span class="n">it</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">assert</span> <span class="mi">2</span><span class="o">.</span><span class="na">collect</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">it</span> <span class="o">*</span> <span class="mi">2</span>
+</span><span class='line'><span class="o">}</span> <span class="o">==</span> <span class="o">[</span><span class="mi">0</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">4</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というわけで、<code>it</code>は一つ一つの要素であることが事象として理解していただけたと思います。</p>
+
+<p>で、<code>it</code>っていつ割り当てられるの？ということで、ソースをざっと見ていたんですが、</p>
+
+<p>見つかりませんでした(´・ω・｀)</p>
+
+<p>なお調べている過程で僕も初めて知ったのですが、</p>
+
+<p><code>Closure&lt;V&gt;</code>は抽象クラスで、</p>
+
+<p>コンパイル時に実際のクラスが生成されているようです。</p>
+
+<p>まだまだ僕も勉強が足りませんね…</p>
+
+<p>で、このへんが気になりだすと、もっと気になるのが…</p>
+
+<h4>Closureのスコープってどうなのよ</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">outside</span> <span class="o">=</span> <span class="s1">&#39;This is outside&#39;</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">doSomething</span> <span class="o">=</span> <span class="o">{</span><span class="n">println</span> <span class="s1">&#39;do something&#39;</span><span class="o">}</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">closure</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">inside</span> <span class="o">=</span> <span class="s1">&#39;This is inside&#39;</span>
+</span><span class='line'>    <span class="n">doSomething</span><span class="o">()</span>
+</span><span class='line'>    <span class="n">println</span> <span class="n">outside</span>
+</span><span class='line'>    <span class="n">println</span> <span class="n">inside</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">closure</span><span class="o">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">doSomething</span><span class="o">()</span>
+</span><span class='line'><span class="n">println</span> <span class="n">outside</span>
+</span><span class='line'><span class="n">println</span> <span class="n">inside</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これを実効すると次のような結果が得られます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="k">do</span> <span class="n">something</span>
+</span><span class='line'><span class="n">This</span> <span class="n">is</span> <span class="n">outside</span>
+</span><span class='line'><span class="n">This</span> <span class="n">is</span> <span class="n">inside</span>
+</span><span class='line'><span class="k">do</span> <span class="n">something</span>
+</span><span class='line'><span class="n">This</span> <span class="n">is</span> <span class="n">outside</span>
+</span><span class='line'><span class="n">Exception</span> <span class="n">thrown</span>
+</span><span class='line'><span class="mi">5</span> <span class="mi">31</span><span class="o">,</span> <span class="mi">2013</span> <span class="mi">8</span><span class="o">:</span><span class="mi">25</span><span class="o">:</span><span class="mi">06</span> <span class="err">午後</span> <span class="n">org</span><span class="o">.</span><span class="na">codehaus</span><span class="o">.</span><span class="na">groovy</span><span class="o">.</span><span class="na">runtime</span><span class="o">.</span><span class="na">StackTraceUtils</span> <span class="n">sanitize</span>
+</span><span class='line'><span class="nl">WARNING:</span> <span class="n">Sanitizing</span> <span class="nl">stacktrace:</span>
+</span><span class='line'><span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">MissingPropertyException</span><span class="o">:</span> <span class="n">No</span> <span class="n">such</span> <span class="nl">property:</span> <span class="n">inside</span> <span class="k">for</span> <span class="nl">class:</span> <span class="n">ConsoleScript83</span>
+</span><span class='line'>  <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="na">codehaus</span><span class="o">.</span><span class="na">groovy</span><span class="o">.</span><span class="na">runtime</span><span class="o">.</span><span class="na">ScriptBytecodeAdapter</span><span class="o">.</span><span class="na">unwrap</span><span class="o">(</span><span class="n">ScriptBytecodeAdapter</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">50</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="na">codehaus</span><span class="o">.</span><span class="na">groovy</span><span class="o">.</span><span class="na">runtime</span><span class="o">.</span><span class="na">callsite</span><span class="o">.</span><span class="na">PogoGetPropertySite</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="n">PogoGetPropertySite</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">49</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="na">codehaus</span><span class="o">.</span><span class="na">groovy</span><span class="o">.</span><span class="na">runtime</span><span class="o">.</span><span class="na">callsite</span><span class="o">.</span><span class="na">AbstractCallSite</span><span class="o">.</span><span class="na">callGroovyObjectGetProperty</span><span class="o">(</span><span class="n">AbstractCallSite</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">231</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">at</span> <span class="n">ConsoleScript83</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="nl">ConsoleScript83:</span><span class="mi">14</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>Closure&lt;V&gt;</code>の<code>closure</code>の中からは、</p>
+
+<p>フィールド<code>outside</code>を参照することや、<code>doSomething</code>を実行することはできますが、</p>
+
+<p>スクリプト本体からは<code>closure</code>内部の<code>inside</code>にアクセスすることはできません。</p>
+
+<p>まあ、大体ご想像されていたとおりだと思います。</p>
+
+<h4>実は<code>Callable&lt;V&gt;</code>だった<code>Closure&lt;V&gt;</code></h4>
+
+<p>さて、ここまでは<code>Callable&lt;V&gt;</code>との対比で<code>Closure&lt;V&gt;</code>を見て来ましたが、</p>
+
+<p><code>Closure&lt;V&gt;</code>は実は<code>Callable&lt;V&gt;</code>を実装した抽象クラスです。</p>
+
+<p>まず、<code>Closure&lt;V&gt;</code>のクラスファイルを見てみましょう。</p>
+
+<figure class='code'><figcaption><span>Closure.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Closure</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">GroovyObjectSupport</span> <span class="kd">implements</span> <span class="n">Cloneable</span><span class="o">,</span> <span class="n">Runnable</span><span class="o">,</span> <span class="n">GroovyCallable</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;,</span> <span class="n">Serializable</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// some codes</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>Closure&lt;V&gt;</code>はインターフェース<code>GroovyCallable&lt;V&gt;</code>を実装しています。</p>
+
+<p>で、この<code>GroovyCallable&lt;V&gt;</code>ってなんやねんというと…</p>
+
+<figure class='code'><figcaption><span>GroovyCallable.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">GroovyCallable</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span> <span class="o">{</span> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ってことで、<code>Callable&lt;V&gt;</code>を継承しているインターフェースになります。</p>
+
+<p>まとめると<code>Closure&lt;V&gt;</code>は<code>Callable&lt;V&gt;</code>の実装クラスということになります。</p>
+
+<p>では試してみましょう。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kn">import</span> <span class="nn">java.util.concurrent.*</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">service</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newFixedThreadPool</span><span class="o">(</span><span class="mi">3</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">callable</span> <span class="o">=</span> <span class="o">{</span><span class="kt">int</span> <span class="n">sec</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">println</span> <span class="s2">&quot;${new Date().format(&#39;yyyy/MM/dd hh:mm:ss&#39;)} : Sleeping ${sec} seconds...&quot;</span>
+</span><span class='line'>        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">sec</span> <span class="o">*</span> <span class="mi">1000</span><span class="o">)</span>
+</span><span class='line'>        <span class="s2">&quot;${new Date().format(&#39;yyyy/MM/dd hh:mm:ss&#39;)} : This is ${sec}&quot;</span> <span class="k">as</span> <span class="n">String</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">assert</span> <span class="n">service</span><span class="o">.</span><span class="na">invokeAll</span><span class="o">((</span><span class="mi">10</span><span class="o">..</span><span class="mi">1</span><span class="o">).</span><span class="na">collect</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">callable</span><span class="o">(</span><span class="n">it</span><span class="o">)</span> <span class="k">as</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">}).</span><span class="na">each</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">println</span> <span class="n">it</span><span class="o">.</span><span class="na">get</span><span class="o">()</span>
+</span><span class='line'><span class="o">}.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="mi">10</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この実行結果は次のようになります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">13</span><span class="o">:</span><span class="mi">56</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">10</span> <span class="n">seconds</span><span class="o">...</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">13</span><span class="o">:</span><span class="mi">56</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">8</span> <span class="n">seconds</span><span class="o">...</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">13</span><span class="o">:</span><span class="mi">56</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">9</span> <span class="n">seconds</span><span class="o">...</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">04</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">7</span> <span class="n">seconds</span><span class="o">...</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">05</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">6</span> <span class="n">seconds</span><span class="o">...</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">06</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">5</span> <span class="n">seconds</span><span class="o">...</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">11</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">4</span> <span class="n">seconds</span><span class="o">...</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">11</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">2</span> <span class="n">seconds</span><span class="o">...</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">11</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">3</span> <span class="n">seconds</span><span class="o">...</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">13</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">1</span> <span class="n">seconds</span><span class="o">...</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">06</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">10</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">05</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">9</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">04</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">8</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">11</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">7</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">11</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">6</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">11</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">5</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">15</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">4</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">14</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">3</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">13</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">2</span>
+</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">14</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>全然、問題なく<code>Callable&lt;V&gt;</code>として動いているのが確認できると思います。</p>
+
+<p>で、別にここまではなんだjavaじゃん、というわけですが、</p>
+
+<p>ここからがほぼ本題です。</p>
+
+<h4>delegate</h4>
+
+<p>delegateがgroovyの<code>Closure&lt;V&gt;</code>の柔軟性をもたらしていることに疑いはありません。</p>
+
+<p>まずは使用例から…</p>
+
+<h5><code>groovy.xml.MarkupBuilder</code></h5>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kn">import</span> <span class="nn">groovy.xml.*</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">w</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringWriter</span><span class="o">()</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">doc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MarkupBuilder</span><span class="o">(</span><span class="n">w</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">border</span> <span class="o">=</span> <span class="s1">&#39;border : solid 1px #ccc;&#39;</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">background</span> <span class="o">=</span> <span class="s1">&#39;background-color : rgba(239, 239, 255, 0.7);&#39;</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">padding</span> <span class="o">=</span> <span class="s1">&#39;padding : 5px;&#39;</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">radius</span> <span class="o">=</span> <span class="s1">&#39;border-radius : 5px;&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">doc</span><span class="o">.</span><span class="na">html</span><span class="o">(</span><span class="n">lang</span> <span class="o">:</span> <span class="s1">&#39;ja&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">head</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">title</span> <span class="s1">&#39;test page&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">body</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">h3</span> <span class="s1">&#39;Hello Groovy!&#39;</span>
+</span><span class='line'>        <span class="n">p</span> <span class="o">(</span><span class="n">style</span> <span class="o">:</span> <span class="s2">&quot;${border}${background}${padding}${radius}&quot;</span><span class="o">,</span>
+</span><span class='line'>                <span class="s1">&#39;This document is made by groovy.&#39;</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">println</span> <span class="n">w</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これを実効すると、次のようなhtmlファイルができます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&#39;ja&#39;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;head&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;title&gt;</span>test page<span class="nt">&lt;/title&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/head&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;body&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;h3&gt;</span>Hello Groovy!<span class="nt">&lt;/h3&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;p</span> <span class="na">style=</span><span class="s">&#39;border : solid 1px #ccc;background-color : rgba(239, 239, 255, 0.7);padding : 5px;border-radius : 5px;&#39;</span><span class="nt">&gt;</span>This document is made by groovy.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/body&gt;</span>
+</span><span class='line'><span class="nt">&lt;/html&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>MarkupBuilder</code>というクラスは<code>groovy.util.BuilderSupport</code>クラスを継承していて、</p>
+
+<p>存在しないようなメソッドを実行する際に、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">protected</span> <span class="n">Object</span> <span class="nf">doInvokeMethod</span><span class="o">(</span><span class="n">String</span> <span class="n">methodName</span><span class="o">,</span> <span class="n">Object</span> <span class="n">name</span><span class="o">,</span> <span class="n">Object</span> <span class="n">args</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を介して実行します。</p>
+
+<p>そして、このメソッドが内部で<code>Node</code>を作っていきます。</p>
+
+<p>そういうわけで、上記のコードの11行目の<code>html</code>メソッドが実行されて、</p>
+
+<p><code>"html"</code>というノードが作成されるのはわかるかと思います。</p>
+
+<p>問題は<code>html</code>というメソッドが引数として受け入れた<code>Closure&lt;V&gt;</code>が</p>
+
+<p><code>head</code>というメソッドや<code>body</code>メソッドを実行しています。</p>
+
+<p>さきほどの<code>Closure</code>のスコープに戻るとこの場合、</p>
+
+<p><code>head</code>や<code>body</code>というメソッドはないので、</p>
+
+<p>ここで<code>MissingMethodException</code>が発生しそうですが、</p>
+
+<p>発生しません。</p>
+
+<p>何故でしょうか？</p>
+
+<p><strong>これの謎を解く鍵がdelegateです。</strong></p>
+
+<h5><code>Closure#setDelegate</code>と<code>Closure#setResolveStrategy</code></h5>
+
+<p><code>Closure&lt;V&gt;</code>には変数名やメソッド名をどのオブジェクトから参照するのかを決定することができます。</p>
+
+<p>そのオブジェクトへの参照がdelegateになります。</p>
+
+<p>では、delegateをわざとらしいほど強調したスクリプトを見てみます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">setProperty</span> <span class="s1">&#39;x&#39;</span><span class="o">,</span> <span class="mi">1000</span>
+</span><span class='line'><span class="n">setProperty</span> <span class="s1">&#39;y&#39;</span><span class="o">,</span> <span class="mi">500</span>
+</span><span class='line'><span class="n">setProperty</span> <span class="s1">&#39;exec&#39;</span><span class="o">,</span> <span class="o">{</span><span class="n">println</span> <span class="s2">&quot;x : ${x}, y : ${y}&quot;</span><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">map</span> <span class="o">=</span> <span class="o">[</span><span class="n">x</span> <span class="o">:</span> <span class="mi">10</span><span class="o">,</span> <span class="n">y</span> <span class="o">:</span> <span class="mi">5</span><span class="o">,</span> <span class="n">exec</span> <span class="o">:</span> <span class="o">{</span><span class="n">println</span> <span class="s2">&quot;x = ${x}, y = ${y}&quot;</span><span class="o">}]</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">closure</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">println</span> <span class="s2">&quot;x -&gt; ${x}&quot;</span>
+</span><span class='line'>    <span class="n">println</span> <span class="s2">&quot;y -&gt; ${y}&quot;</span>
+</span><span class='line'>    <span class="n">print</span> <span class="s1">&#39;delegate exec -&gt; &#39;</span>
+</span><span class='line'>    <span class="n">exec</span><span class="o">.</span><span class="na">call</span><span class="o">()</span>
+</span><span class='line'>    <span class="n">print</span> <span class="s1">&#39;owner exec -&gt; &#39;</span>
+</span><span class='line'>    <span class="n">exec</span><span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">closure</span><span class="o">.</span><span class="na">delegate</span> <span class="o">=</span> <span class="n">map</span>
+</span><span class='line'><span class="n">closure</span><span class="o">.</span><span class="na">resolveStrategy</span> <span class="o">=</span> <span class="n">Closure</span><span class="o">.</span><span class="na">DELEGATE_FIRST</span>
+</span><span class='line'><span class="n">closure</span><span class="o">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>では、実行してみましょう。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">x</span> <span class="o">-&gt;</span> <span class="mi">10</span>
+</span><span class='line'><span class="n">y</span> <span class="o">-&gt;</span> <span class="mi">5</span>
+</span><span class='line'><span class="n">delegate</span> <span class="n">exec</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1000</span><span class="o">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">500</span>
+</span><span class='line'><span class="n">owner</span> <span class="n">exec</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">:</span> <span class="mi">1000</span><span class="o">,</span> <span class="n">y</span> <span class="o">:</span> <span class="mi">500</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>面白い結果が返ってきました。</p>
+
+<p><code>closure</code>内部で<code>x</code>と<code>y</code>の値は<code>map</code>から取得されたものになっています。</p>
+
+<p>一方、<code>exec</code>に関しては二つの結果が出てきています。</p>
+
+<p>これは、15行目と16行目で行われている<code>closure</code>のdelegateの設定によって説明出来ます。</p>
+
+<p><code>closure</code>がフィールド名を解決する仕組みは下記のようになっています。</p>
+
+<ul>
+<li><code>Closure.DELEGATE_FIRST</code>でdelegateされたオブジェクトから順番に解決していく</li>
+<li>delegateされたオブジェクト<code>map</code>から変数を解決する</li>
+</ul>
+
+
+<p>ここから、7行目、8行目の<code>x</code>と<code>y</code>は<code>map</code>由来のものであることがわかります。</p>
+
+<p>また10行目と12行目の<code>exec</code>が異なる結果となっているのは、</p>
+
+<p>10行目の<code>exec</code>はフィールド名としてまず解決された後に、</p>
+
+<p><code>Closure&lt;V&gt;</code>が実行されています。</p>
+
+<p>一方、12行目の<code>exec</code>ではメソッドとして(<code>map</code>(クラスは<code>java.util.Map</code>)にはメソッド<code>exec</code>がない)</p>
+
+<p>名前解決をします。そのため<code>closure</code>の<code>OWNER</code>であるスクリプトの方の<code>exec</code>が参照されます。</p>
+
+<p>また、10行目と12行目の<code>exec</code>が参照する<code>x</code>と<code>y</code>が1行目と2行目で設定されている<code>x</code>と<code>y</code>なのは</p>
+
+<p>次の理由からです。</p>
+
+<ul>
+<li><code>map.exec</code>のdelegateが設定されてない</li>
+<li><code>exec</code>のdelegateが設定されていない</li>
+</ul>
+
+
+<h5><code>MarkupBuilder</code>再び</h5>
+
+<p>さきほどの<code>MarkupBuilder</code>に戻ります。</p>
+
+<p><code>MarkupBuilder#doInvokeMethod(String, Object, Object)</code>メソッドでは</p>
+
+<p>どのような処理がされているのかというと…</p>
+
+<figure class='code'><figcaption><span>MarkupBuilder.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// this is partial codes</span>
+</span><span class='line'><span class="kd">protected</span> <span class="n">Object</span> <span class="nf">doInvokeMethod</span><span class="o">(</span><span class="n">String</span> <span class="n">methodName</span><span class="o">,</span> <span class="n">Object</span> <span class="n">name</span><span class="o">,</span> <span class="n">Object</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Object</span> <span class="n">node</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">Closure</span> <span class="n">closure</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// creating node and attach it to variable node.</span>
+</span><span class='line'>    <span class="c1">// getting closure from arg and attach it to variable closure.</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">closure</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// stack operation</span>
+</span><span class='line'>        <span class="n">setClosureDelegate</span><span class="o">(</span><span class="n">closure</span><span class="o">,</span> <span class="n">node</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">closure</span><span class="o">.</span><span class="na">call</span><span class="o">();</span>
+</span><span class='line'>        <span class="c1">// stack operation</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="c1">// node create completion and return it</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">setClosureDelegate</span><span class="o">(</span><span class="n">Closure</span> <span class="n">closure</span><span class="o">,</span> <span class="n">Object</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">closure</span><span class="o">.</span><span class="na">setDelegate</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>9行目で<code>setClosureDelegate</code>メソッドを呼び出し、</p>
+
+<p>15行目からの<code>setClosureDelegate</code>では、</p>
+
+<p><code>closure</code>のdelegateに<code>this</code>(つまり<code>MarkupBuilder</code>のインスタンス)を割り当てています。</p>
+
+<p>その結果10行目の<code>closure.call()</code>では、</p>
+
+<p>メソッドおよびフィールドの名前解決が<code>MarkupBuilder</code>のインスタンスから行われるます。</p>
+
+<p>その結果、<code>MarkupBuilder</code>の例で<code>head</code>とか<code>body</code>といったメソッドが、</p>
+
+<p><code>MarkupBuilder</code>のインスタンスに対して呼び出されるということになります。</p>
+
+<p>さて、翻って</p>
+
+<h1>gradleのtaskメソッド…</h1>
+
+<p>でも、<code>Closure&lt;V&gt;</code>が使われていますね。</p>
+
+<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">task</span> <span class="n">myTask</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;this is myTask&#39;</span><span class="o">.</span>
+</span><span class='line'>    <span class="n">println</span> <span class="s1">&#39;this is not task, but configuration.&#39;</span>
+</span><span class='line'>    <span class="n">doLast</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">println</span> <span class="s1">&#39;finished myTask&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>gradleのandroidサポートが本格的になってからgradleを始めた人の中には</p>
+
+<p>上記のようなgradleの<code>Project</code>クラスのメソッド<code>task(Object, Closure)</code>の</p>
+
+<p><code>Closure</code>部分をタスクだと思っている人がかなりの割合でいると思いますが、</p>
+
+<p>この<code>Closure</code>部分は<strong>タスクではなく、設定です</strong>。</p>
+
+<p>こう書いた場合にタスクはgradleコマンドを書いた時に必ず実行されると</p>
+
+<p>言っていると、元からgroovyをやっている人とは話がかみあわなくなるので、</p>
+
+<p>気をつけて下さい。</p>
+
+<p>では、ちょっとソースコードを覗いてみます。</p>
+
+<figure class='code'><figcaption><span>AbstractProject.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// this is partial codes</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">Task</span> <span class="nf">task</span><span class="o">(</span><span class="n">String</span> <span class="n">task</span><span class="o">,</span> <span class="n">Closure</span> <span class="n">configureClosure</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">taskContainer</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">task</span><span class="o">).</span><span class="na">configure</span><span class="o">(</span><span class="n">configureClosure</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>AbstractProject#task(String, Closure)</code>では、まず<code>Task</code>が作成された後に、</p>
+
+<p><code>Task#configure(Closure)</code>が呼び出されます。</p>
+
+<figure class='code'><figcaption><span>AbstractTask.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// this is partial codes</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">Task</span> <span class="nf">configure</span><span class="o">(</span><span class="n">Closure</span> <span class="n">closure</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">ConfigureUtil</span><span class="o">.</span><span class="na">configure</span><span class="o">(</span><span class="n">closure</span><span class="o">,</span> <span class="k">this</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>Task#configure(Closure)</code>では<code>ConfigureUtil#configure(Closure, Task, boolean)</code>が呼び出されます。</p>
+
+<figure class='code'><figcaption><span>ConfigureUtil.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// this is partial codes</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">configure</span><span class="o">(</span><span class="n">Closure</span> <span class="n">configureClosure</span><span class="o">,</span>
+</span><span class='line'>        <span class="n">T</span> <span class="n">delegate</span><span class="o">,</span>
+</span><span class='line'>        <span class="kt">boolean</span> <span class="n">configureableAware</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nf">configure</span><span class="o">(</span><span class="n">configureClosure</span><span class="o">,</span>
+</span><span class='line'>            <span class="n">delegate</span><span class="o">,</span>
+</span><span class='line'>            <span class="n">Closure</span><span class="o">.</span><span class="na">DELEGATE_FIRST</span><span class="o">,</span>
+</span><span class='line'>            <span class="n">configureableAware</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="kd">private</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">configure</span><span class="o">(</span><span class="n">Closure</span> <span class="n">configureClosure</span><span class="o">,</span>
+</span><span class='line'>        <span class="n">T</span> <span class="n">delegate</span><span class="o">,</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">resolveStrategy</span><span class="o">,</span>
+</span><span class='line'>        <span class="kt">boolean</span> <span class="n">configureableAware</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">ClosureBackedAction</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">action</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClosureBackedAction</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;(</span>
+</span><span class='line'>            <span class="n">configureClosure</span><span class="o">,</span>
+</span><span class='line'>            <span class="n">resolveStrategy</span><span class="o">,</span>
+</span><span class='line'>            <span class="n">configureableAware</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">action</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">delegate</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">delegate</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここから、<code>org.gradle.api.internal.ClosureBackedAction&lt;T&gt;</code>により、</p>
+
+<p><code>Closure</code>が実行されます。</p>
+
+<figure class='code'><figcaption><span>ClosureBackedAction.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// this is partial codes</span>
+</span><span class='line'><span class="kd">public</span> <span class="nf">ClosureBackedAction</span><span class="o">(</span><span class="n">Closure</span> <span class="n">closure</span><span class="o">,</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">resolveStrategy</span><span class="o">,</span>
+</span><span class='line'>        <span class="kt">boolean</span> <span class="n">configureableAware</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">closure</span> <span class="o">=</span> <span class="n">closure</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">configureableAware</span> <span class="o">=</span> <span class="n">configureableAware</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">resolveStrategy</span> <span class="o">=</span> <span class="n">resolveStrategy</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">(</span><span class="n">T</span> <span class="n">delegate</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// check closure is not null</span>
+</span><span class='line'>    <span class="c1">// checking cinfgureableAware is false</span>
+</span><span class='line'>    <span class="n">Closure</span> <span class="n">copy</span> <span class="o">=</span> <span class="o">(</span><span class="n">Closure</span><span class="o">)</span> <span class="n">closure</span><span class="o">.</span><span class="na">clone</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">copy</span><span class="o">.</span><span class="na">setResolveStrategy</span><span class="o">(</span><span class="n">resolveStrategy</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">copy</span><span class="o">.</span><span class="na">setDelegate</span><span class="o">(</span><span class="n">delegate</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">copy</span><span class="o">.</span><span class="na">getMaximumNumberOfParameters</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">copy</span><span class="o">.</span><span class="na">call</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">copy</span><span class="o">.</span><span class="na">call</span><span class="o">(</span><span class="n">delegate</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>12〜14行目でdelegateの設定、16行目or17行目で<code>Closure</code>の実行がなされていますね。</p>
+
+<p>で、<code>Closure</code>のdelegateにはタスクが設定されています。</p>
+
+<p>したがって、少し前で説明した通り、</p>
+
+<p><code>Closure</code>の実行において変数名の解決は<code>Task</code>のインスタンスから順番に解決されていきます。</p>
+
+<p>で、これが最終的にタスクの設定になるわけです。</p>
+
+<p>(結構たらい回しにされていてイライライする方がいらっしゃるかもしれませんが、まあ、テスタビリティを上げるためにこうなっています。)</p>
+
+<p>というわけで、<strong>まとめ</strong></p>
+
+<h2><code>Closure&lt;V&gt;</code>の仕組みがわかると<a href="http://www.gradle.org/docs/current/dsl/">Gradle DSL</a>の理解が容易になります。</h2>
+
+<p>冒頭でgradleの話しませんって言ったな、あれは、嘘だ。</p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -2729,1155 +3743,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/14/erlangfalselistsmoziyuruwoshi-sitemiru-di-2hui/">Erlangのlistsモジュールを試してみる - 第2回</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-14T14:01:00+09:00" pubdate data-updated="true">May 14<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Erlangのlistsモジュールを試してみるの第二回は次のコマンドの結果について試していきます。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="nn">lists</span><span class="p">:</span><span class="nf">sublist</span><span class="p">(</span>
-</span><span class='line'>    <span class="nn">lists</span><span class="p">:</span><span class="nf">sort</span><span class="p">(</span>
-</span><span class='line'>        <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span>
-</span><span class='line'>            <span class="k">fun</span><span class="p">({</span><span class="nv">F</span><span class="p">,</span> <span class="nv">A</span><span class="p">})</span> <span class="o">-&gt;</span>
-</span><span class='line'>                <span class="nb">atom_to_list</span><span class="p">(</span><span class="nv">F</span><span class="p">)</span> <span class="o">++</span>
-</span><span class='line'>                <span class="s">&quot;/&quot;</span> <span class="o">++</span>
-</span><span class='line'>                <span class="nb">integer_to_list</span><span class="p">(</span><span class="nv">A</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">end</span><span class="p">,</span>
-</span><span class='line'>            <span class="nn">lists</span><span class="p">:</span><span class="nf">module_info</span><span class="p">(</span><span class="n">exports</span><span class="p">))),</span>
-</span><span class='line'>    <span class="mi">17</span><span class="p">,</span>
-</span><span class='line'>    <span class="mi">16</span><span class="p">).</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>結果</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="p">[</span>
-</span><span class='line'>  <span class="s">&quot;keydelete/3&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;keyfind/3&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;keymap/3&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;keymember/3&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;keymerge/3&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;keyreplace/4&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;keysearch/3&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;keysort/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;keystore/4&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;keytake/3&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;last/1&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;map/2&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;mapfoldl/3&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;mapfoldr/3&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;max/1&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&quot;member/2&quot;</span>
-</span><span class='line'><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>です。</p>
-
-<h3>keydelete/3</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>keydelete(Key, N, TupleList1) &ndash;> TupleList2</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Key = term()</li>
-<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
-<li>TupleList1 = TupleList2 = [Tuple]</li>
-<li>Tuple = tuple()</li>
-</ul>
-
-
-<p>Returns a copy of TupleList1 where the first occurrence of a tuple whose Nth element compares equal to Key is deleted, if there is such a tuple.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#keydelete-3">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>引数に与えられたタプルのリストのコピーを返します。ただし、リスト中のタプルで、タプルのN番目の要素が引数Keyと同じ値のもので最も先頭に近いものは取り除かれます。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keydelete</span><span class="p">(</span><span class="n">jim</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">simon</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">typist</span><span class="p">},</span> <span class="p">{</span><span class="n">dag</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="n">student</span><span class="p">},</span> <span class="p">{</span><span class="n">jack</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">]).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">mike</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">tim</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">officer</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">lod</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">dentist</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">evangelist</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">simon</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">typist</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">dag</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="n">student</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">jack</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">john</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">officer</span><span class="p">}]</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keydelete</span><span class="p">(</span><span class="n">madscientist</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">simon</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">typist</span><span class="p">},</span> <span class="p">{</span><span class="n">dag</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="n">student</span><span class="p">},</span> <span class="p">{</span><span class="n">jack</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">]).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">mike</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">tim</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">officer</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">lod</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">dentist</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">evangelist</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">simon</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">typist</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">dag</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="n">student</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">jack</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">john</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">officer</span><span class="p">}]</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keydelete</span><span class="p">(</span><span class="n">madscientist</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="p">[</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="p">]).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">mike</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">tim</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">officer</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">lod</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">dentist</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">evangelist</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">john</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">officer</span><span class="p">}]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>まず最初の例では、リストの中で一番最初に出てくるキーの位置<code>1</code>番目の値が<code>jim</code>であるタプルを削除したリストが返されます。元のリストで9番目のタプルも同様の条件ですが、こちらは削除されません。</p>
-
-<p>次の例ではリストで一致しない条件で実行しています。返されるリストは何も削除されていません。</p>
-
-<p>最後の例ではリストのタプルの要素数より多い番号を指定して削除を実施します。もちろん、返されるリストは何も削除されていません。</p>
-
-<h3>keyfind/3</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>keyfind(Key, N, TupleList) &ndash;> Tuple | false</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Key = term()</li>
-<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
-<li>TupleList = [Tuple]</li>
-<li>Tuple = tuple()</li>
-</ul>
-
-
-<p>Searches the list of tuples TupleList for a tuple whose Nth element compares equal to Key. Returns Tuple if such a tuple is found, otherwise false.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#keyfind-3">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>タプルのリストから指定位置の要素について<code>Key</code>に一致する最初のタプルを返します。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keyfind</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">simon</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">typist</span><span class="p">},</span> <span class="p">{</span><span class="n">dag</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="n">student</span><span class="p">},</span> <span class="p">{</span><span class="n">jack</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">]).</span>
-</span><span class='line'><span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">officer</span><span class="p">}</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keyfind</span><span class="p">(</span><span class="n">jim</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">simon</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">typist</span><span class="p">},</span> <span class="p">{</span><span class="n">dag</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="n">student</span><span class="p">},</span> <span class="p">{</span><span class="n">jack</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">]).</span>
-</span><span class='line'><span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">engineer</span><span class="p">}</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keyfind</span><span class="p">(</span><span class="n">madscientist</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="p">[</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">simon</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">typist</span><span class="p">},</span> <span class="p">{</span><span class="n">dag</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="n">student</span><span class="p">},</span> <span class="p">{</span><span class="n">jack</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="p">]).</span>
-</span><span class='line'><span class="n">false</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例ではタプルの二番目の値が<code>36</code>のものを探して、返します。</p>
-
-<p>次の例ではタプルの最初の値が<code>jim</code>のものを探して返しますが、9番目に現れるものは返されません。</p>
-
-<p>最後の例では一致するものがない条件で検索を行いますが、存在しないため<code>false</code>が返ってきます。</p>
-
-<h3>keymap/3</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>keymap(Fun, N, TupleList1) &ndash;> TupleList2</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Fun = fun((Term1 :: term()) &ndash;> Term2 :: term())</li>
-<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
-<li>TupleList1 = TupleList2 = [Tuple]</li>
-<li>Tuple = tuple()</li>
-</ul>
-
-
-<p>Returns a list of tuples where, for each tuple in TupleList1, the Nth element Term1 of the tuple has been replaced with the result of calling Fun(Term1).</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#keymap-3">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>タプルに対して指定した位置の要素に、引数で渡した関数を実行した結果が入れられた、新しいタプルのリストが返されます。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nv">IsProgrammer</span> <span class="o">=</span> <span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">X</span> <span class="o">=:=</span> <span class="n">programmer</span> <span class="k">end</span><span class="p">.</span>
-</span><span class='line'><span class="err">#</span><span class="nv">Fun</span><span class="o">&lt;</span><span class="n">erl_eval</span><span class="p">.</span><span class="mi">6</span><span class="p">.</span><span class="mi">17052888</span><span class="o">&gt;</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keymap</span><span class="p">(</span><span class="nv">IsProgrammer</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">simon</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">typist</span><span class="p">},</span> <span class="p">{</span><span class="n">dag</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="n">student</span><span class="p">},</span> <span class="p">{</span><span class="n">jack</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">]).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">mike</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="n">true</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">tim</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">lod</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">simon</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">dag</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">jack</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">true</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">john</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">false</span><span class="p">}]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>この例ではタプルの3番目の要素がprogrammerならtrueに変換し、そうでなければfalseに変換した新しいタプルのリストを返します。</p>
-
-<h3>keymember/3</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>keymember(Key, N, TupleList) &ndash;> boolean()</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Key = term()</li>
-<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
-<li>TupleList = [Tuple]</li>
-<li>Tuple = tuple()</li>
-</ul>
-
-
-<p>Returns true if there is a tuple in TupleList whose Nth element compares equal to Key, otherwise false.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#keymember-3">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>指定位置に<code>Key</code>を含むタプルがリスト中にあれば<code>true</code>、なければ<code>false</code>が返ってきます。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keymember</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[{</span><span class="n">mike</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">tim</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">officer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">lod</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">dentist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">iwan</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">evangelist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">simon</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">typist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">dag</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="n">student</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">jack</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">john</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">officer</span><span class="p">}</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">]).</span>
-</span><span class='line'><span class="n">true</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keymember</span><span class="p">(</span><span class="n">madscientist</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">tim</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">officer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">lod</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">dentist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">iwan</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">evangelist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">simon</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">typist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">dag</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="n">student</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">jack</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">john</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">officer</span><span class="p">}</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">]).</span>
-</span><span class='line'><span class="n">false</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例では、1番目の要素が<code>bob</code>であるタプルがリスト中に含まれていますので、<code>true</code>が返されます。</p>
-
-<p>次の例では、3番目の要素が<code>madscientist</code>のタプルはリスト中に含まれていないので、<code>false</code>が返されます。</p>
-
-<h3>keymerge/3</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>keymerge(N, TupleList1, TupleList2) &ndash;> TupleList3</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
-<li>TupleList1 = [T1]</li>
-<li>TupleList2 = [T2]</li>
-<li>TupleList3 = [(T1 | T2)]</li>
-<li>T1 = T2 = Tuple</li>
-<li>Tuple = tuple()</li>
-</ul>
-
-
-<p>Returns the sorted list formed by merging TupleList1 and TupleList2. The merge is performed on the Nth element of each tuple. Both TupleList1 and TupleList2 must be key-sorted prior to evaluating this function. When two tuples compare equal, the tuple from TupleList1 is picked before the tuple from TupleList2.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#keymerge-3">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>この関数は引数で与えられた二つのタプルリストをソートしてマージした状態で返します。ソートのキーは引数の<code>N</code>番目の要素になります。引数に与えられるタプルリストは事前にソートされていることが求められます。双方のタプルでキーの値が一致する場合、左側の引数のリストから取られたタプルが右のものに優先されます。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keymerge</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">}],</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="mi">2</span><span class="p">}]).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">d</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">d</span><span class="p">,</span><span class="mi">2</span><span class="p">}]</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keymerge</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">e</span><span class="p">,</span> <span class="mi">1</span><span class="p">}],</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">t</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="mi">2</span><span class="p">}]).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">t</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">d</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">x</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">d</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">e</span><span class="p">,</span><span class="mi">1</span><span class="p">}]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例では、事前にソートされたタプルリストが引数として与えられ、マージされたリストが返されます。また、<code>[{d, 1}, {d, 2}]</code>のようにキーの値が一致するものは左側の引数に与えられたものが優先されています。</p>
-
-<p>次の例では、事前にソートされていないタプルリストが引数として与えられていますが、返されるリストはマージされていない状態で返ってきます。</p>
-
-<h3>keyreplace/4</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>keyreplace(Key, N, TupleList1, NewTuple) &ndash;> TupleList2</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Key = term()</li>
-<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
-<li>TupleList1 = TupleList2 = [Tuple]</li>
-<li>NewTuple = Tuple</li>
-<li>Tuple = tuple()</li>
-</ul>
-
-
-<p>Returns a copy of TupleList1 where the first occurrence of a T tuple whose Nth element compares equal to Key is replaced with NewTuple, if there is such a tuple T.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#keyreplace-4">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>タプルリストの中で最も最初に現れた<code>N</code>番目の要素が<code>Key</code>であるタプルを引数で指定されたタプルに変更したリストを返します。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keyreplace</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">not_change</span><span class="p">}],</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">changed</span><span class="p">}).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="n">original</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">b</span><span class="p">,</span><span class="n">changed</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">c</span><span class="p">,</span><span class="n">original</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">d</span><span class="p">,</span><span class="n">original</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">b</span><span class="p">,</span><span class="n">not_change</span><span class="p">}]</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keyreplace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="n">original</span><span class="p">}],</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">{</span><span class="n">x</span><span class="p">,</span> <span class="n">not_appear</span><span class="p">}).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="n">original</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="n">original</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="n">original</span><span class="p">}]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例では最も最初に現れる1番目の要素が<code>b</code>であるタプルが引数で与えられたタプルと交換されて返されます。最後に現れる同じ<code>Key</code>をもつタプルは変わっていません。</p>
-
-<p>次の例では<code>Key</code>に一致するタプルが存在しないため、元のリストと同じ物が返ってきます。</p>
-
-<h3>keysearch/3</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>keysearch(Key, N, TupleList) &ndash;> {value, Tuple} | false</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Key = term()</li>
-<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
-<li>TupleList = [Tuple]</li>
-<li>Tuple = tuple()</li>
-</ul>
-
-
-<p>Searches the list of tuples TupleList for a tuple whose Nth element compares equal to Key. Returns {value, Tuple} if such a tuple is found, otherwise false.</p>
-
-<blockquote><p>This function is retained for backward compatibility. The function lists:keyfind/3 (introduced in R13A) is in most cases more convenient.</p></blockquote>
-
-<p><a href="http://erlang.org/doc/man/lists.html#keysearch-3">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>タプルリストの中で<code>N</code>番目の要素が<code>Key</code>である最初のタプルを探して、<code>{value, Tuple}</code>の形式で返します。見つからない場合は、<code>false</code>を返します。</p>
-
-<p>なお、この関数は下位互換のために残っているものであり、R13Aより導入された<code>lists:keyfind/3</code>関数の方が便利です。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keysearch</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">2</span><span class="p">}]).</span>
-</span><span class='line'><span class="p">{</span><span class="n">value</span><span class="p">,{</span><span class="n">c</span><span class="p">,</span><span class="mi">1</span><span class="p">}}</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keysearch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">2</span><span class="p">}]).</span>
-</span><span class='line'><span class="n">false</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例では1番目の要素が<code>c</code>であるタプルを探して<code>{value, {c, 1}}</code>のように返します。二番目に現れるものは返しません。</p>
-
-<p>次の例では条件に該当するタプルがないために<code>false</code>が返ってきます。</p>
-
-<h3>keysort/2</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>keysort(N, TupleList1) &ndash;> TupleList2</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
-<li>TupleList1 = TupleList2 = [Tuple]</li>
-<li>Tuple = tuple()</li>
-</ul>
-
-
-<p>Returns a list containing the sorted elements of the list TupleList1. Sorting is performed on the Nth element of the tuples. The sort is stable.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#keysort-2">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>引数に渡されたタプルリストを<code>N</code>番目の要素でソートしたリストを返します。ソートは安定ソートです。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keysort</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">r</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">t</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">s</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">r</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">x</span><span class="p">,</span> <span class="mi">3</span><span class="p">}]).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">r</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">r</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">s</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">t</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">x</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="p">}]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ソートされた結果が返ってきます。安定ソートのため、重複するキーに対しては元の順番が維持されます。</p>
-
-<h3>keystore/4</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>keystore(Key, N, TupleList1, NewTuple) &ndash;> TupleList2</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Key = term()</li>
-<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
-<li>TupleList1 = [Tuple]</li>
-<li>TupleList2 = [Tuple, &hellip;]</li>
-<li>NewTuple = Tuple</li>
-<li>Tuple = tuple()</li>
-</ul>
-
-
-<p>Returns a copy of TupleList1 where the first occurrence of a tuple T whose Nth element compares equal to Key is replaced with NewTuple, if there is such a tuple T. If there is no such tuple T a copy of TupleList1 where [NewTuple] has been appended to the end is returned.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#keystore-4">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>タプルリストの中で一番最初に出てくる<code>N</code>番目の要素が<code>Key</code>であるタプルを、引数のタプルと交換したリストを返します。<code>Key</code>に一致するリストがない場合は、リストの最後に追加されて返されます。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keystore</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">not_store</span><span class="p">}],</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">new_tuple</span><span class="p">}).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="n">origin</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="n">new_tuple</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="n">origin</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="n">not_store</span><span class="p">}]</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keystore</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">not_store</span><span class="p">}],</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">x</span><span class="p">,</span> <span class="n">not_found</span><span class="p">}).</span>
-</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="n">origin</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">b</span><span class="p">,</span><span class="n">origin</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">c</span><span class="p">,</span><span class="n">origin</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">b</span><span class="p">,</span><span class="n">not_store</span><span class="p">},</span>
-</span><span class='line'> <span class="p">{</span><span class="n">x</span><span class="p">,</span><span class="n">not_found</span><span class="p">}]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例では、1番目の要素が<code>b</code>であるタプルが、引数に与えられた新しいタプルに交換されたリストが返ってきます。</p>
-
-<p>次の例では、該当するタプルが存在しないため、引数に与えられた新しいタプルがリストの最後に追加されて返ってきます。</p>
-
-<h3>keytake/3</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>keytake(Key, N, TupleList1) &ndash;> {value, Tuple, TupleList2} | false</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Key = term()</li>
-<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
-<li>TupleList1 = TupleList2 = [Tuple]</li>
-<li>Tuple = tuple()</li>
-</ul>
-
-
-<p>Searches the list of tuples TupleList1 for a tuple whose Nth element compares equal to Key. Returns {value, Tuple, TupleList2} if such a tuple is found, otherwise false. TupleList2 is a copy of TupleList1 where the first occurrence of Tuple has been removed.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#keytake-3">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>タプルリストの中から初めて現れる<code>N</code>番目の要素が<code>Key</code>であるタプルを取り出し、<code>{value, Tuple, TupleList2}</code>の形式で返します。戻されるタプルリストには条件に一致したタプルは含まれていません。一致するものがない場合は、<code>false</code>が返されます。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keytake</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">}]).</span>
-</span><span class='line'><span class="p">{</span><span class="n">value</span><span class="p">,{</span><span class="n">b</span><span class="p">,</span><span class="mi">1</span><span class="p">},[{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">2</span><span class="p">}]}</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keytake</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">}]).</span>
-</span><span class='line'><span class="n">false</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例では一番最初に現れる1番目の要素が<code>b</code>のタプルが取り出され、後から現れるものは残ったリストとともに返されています。</p>
-
-<p>次の例では、条件に一致するタプルがないため、<code>false</code>が返されます。</p>
-
-<h3>last/1</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>last(List) &ndash;> Last</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>List = [T, &hellip;]</li>
-<li>Last = T</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns the last element in List.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#last-1">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>リストの最後の要素を返します。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">last</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]).</span>
-</span><span class='line'><span class="mi">5</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">last</span><span class="p">([</span><span class="mi">1</span><span class="p">]).</span>
-</span><span class='line'><span class="mi">1</span>
-</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">last</span><span class="p">([]).</span>
-</span><span class='line'><span class="o">**</span> <span class="n">exception</span> <span class="nn">error</span><span class="p">:</span> <span class="n">no</span> <span class="n">function</span> <span class="n">clause</span> <span class="n">matching</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">last</span><span class="p">([])</span> <span class="p">(</span><span class="n">lists</span><span class="p">.</span><span class="n">erl</span><span class="p">,</span> <span class="n">line</span> <span class="mi">213</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例ではリストの最後の要素<code>5</code>が返されます。</p>
-
-<p>次の例では長さ1のリストを引数として渡して、最後の要素=たったひとつの要素である<code>1</code>が返されます。</p>
-
-<p>最後の例では長さ0のリストを引数として渡します。この場合は例外が発生します。</p>
-
-<h3>map/2</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>map(Fun, List1) &ndash;> List2</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Fun = fun((A) &ndash;> B)</li>
-<li>List1 = [A]</li>
-<li>List2 = [B]</li>
-<li>A = B = term()</li>
-</ul>
-
-
-<p>Takes a function from As to Bs, and a list of As and produces a list of Bs by applying the function to every element in the list. This function is used to obtain the return values. The evaluation order is implementation dependent.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#map-2">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>要素を返還する関数を引数に取ります。そしてリストの要素１つずつに関数を適用した結果が入ったリストが返されます。なお、実行順序は実装に依存しています。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">X</span> <span class="ow">rem</span> <span class="mi">2</span> <span class="o">=:=</span> <span class="mi">0</span> <span class="k">end</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]).</span>
-</span><span class='line'><span class="p">[</span><span class="n">false</span><span class="p">,</span><span class="n">true</span><span class="p">,</span><span class="n">false</span><span class="p">,</span><span class="n">true</span><span class="p">,</span><span class="n">false</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>引数に偶数かどうか判定する関数を渡します。引数のリストは1から5までの整数ですので、<code>false</code>と<code>true</code>が繰り返されるリストが返ってきます。</p>
-
-<h3>mapfoldl/3</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>mapfoldl(Fun, Acc0, List1) &ndash;> {List2, Acc1}</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Fun = fun((A, AccIn) &ndash;> {B, AccOut})</li>
-<li>Acc0 = Acc1 = AccIn = AccOut = term()</li>
-<li>List1 = [A]</li>
-<li>List2 = [B]</li>
-<li>A = B = term()</li>
-</ul>
-
-
-<p>mapfoldl combines the operations of map/2 and foldl/3 into one pass.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#mapfoldl-3">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p><code>mapfoldl/3</code>関数は<code>map/2</code>関数と<code>foldl/3</code>関数を一つにまとめたような関数です。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nv">Multiply</span> <span class="o">=</span> <span class="k">fun</span> <span class="p">({</span><span class="nv">R1</span><span class="p">,</span> <span class="nv">I1</span><span class="p">},</span> <span class="p">{</span><span class="nv">R2</span><span class="p">,</span> <span class="nv">I2</span><span class="p">})</span> <span class="o">-&gt;</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="nv">R1</span> <span class="o">*</span> <span class="nv">R2</span> <span class="o">-</span> <span class="nv">I1</span> <span class="o">*</span> <span class="nv">I2</span><span class="p">,</span> <span class="nv">R1</span> <span class="o">*</span> <span class="nv">I2</span> <span class="o">+</span> <span class="nv">I1</span> <span class="o">*</span> <span class="nv">R2</span><span class="p">}</span> <span class="k">end</span><span class="p">.</span>
-</span><span class='line'><span class="err">#</span><span class="nv">Fun</span><span class="o">&lt;</span><span class="n">erl_eval</span><span class="p">.</span><span class="mi">12</span><span class="p">.</span><span class="mi">17052888</span><span class="o">&gt;</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">mapfoldl</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">A</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">Res</span> <span class="o">=</span> <span class="nv">Multiply</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">A</span><span class="p">),</span> <span class="p">{</span><span class="nv">Res</span><span class="p">,</span> <span class="nv">Res</span><span class="p">}</span> <span class="k">end</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[{</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">}]).</span>
-</span><span class='line'><span class="p">{[{</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">},{</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">},{</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">}],{</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">}}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>複素数<code>{R, I}</code>に対して、掛け算をする関数<code>Multiply</code>を定義し、<code>lists:mapfoldl/3</code>で初期値<code>{1, 0}</code>から左から順繰りに掛け算をしていきます。返されたタプルの左要素には掛け算の経過が、タプルの右側の要素には最終的な掛け算の結果が返っています。</p>
-
-<h3>mapfoldr/3</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>mapfoldr(Fun, Acc0, List1) &ndash;> {List2, Acc1}</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Fun = fun((A, AccIn) &ndash;> {B, AccOut})</li>
-<li>Acc0 = Acc1 = AccIn = AccOut = term()</li>
-<li>List1 = [A]</li>
-<li>List2 = [B]</li>
-<li>A = B = term()</li>
-</ul>
-
-
-<p>mapfoldr combines the operations of map/2 and foldr/3 into one pass.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#mapfoldr-3">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p><code>mapfoldr</code>関数は<code>map/2</code>関数と<code>foldr/3</code>関数を組み合わせた関数です。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nv">Multiply</span> <span class="o">=</span> <span class="k">fun</span> <span class="p">({</span><span class="nv">R1</span><span class="p">,</span> <span class="nv">I1</span><span class="p">},</span> <span class="p">{</span><span class="nv">R2</span><span class="p">,</span> <span class="nv">I2</span><span class="p">})</span> <span class="o">-&gt;</span>
-</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="nv">R1</span> <span class="o">*</span> <span class="nv">R2</span> <span class="o">-</span> <span class="nv">I1</span> <span class="o">*</span> <span class="nv">I2</span><span class="p">,</span> <span class="nv">R1</span> <span class="o">*</span> <span class="nv">I2</span> <span class="o">+</span> <span class="nv">I1</span> <span class="o">*</span> <span class="nv">R2</span><span class="p">}</span> <span class="k">end</span><span class="p">.</span>
-</span><span class='line'><span class="err">#</span><span class="nv">Fun</span><span class="o">&lt;</span><span class="n">erl_eval</span><span class="p">.</span><span class="mi">12</span><span class="p">.</span><span class="mi">17052888</span><span class="o">&gt;</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">mapfoldr</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">A</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">Res</span> <span class="o">=</span> <span class="nv">Multiply</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">A</span><span class="p">),</span> <span class="p">{</span><span class="nv">Res</span><span class="p">,</span> <span class="nv">Res</span><span class="p">}</span> <span class="k">end</span><span class="p">,</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[{</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">}]).</span>
-</span><span class='line'><span class="p">{[{</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">},{</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">},{</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">}],{</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">}}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>先ほどと同じく複素数の計算をしています。返されたタプルの左側の順序が先ほどの<code>mapfoldl/3</code>関数と異なっていることがわかると思います。</p>
-
-<h3>max/1</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>max(List) &ndash;> Max</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>List = [T, &hellip;]</li>
-<li>Max = T</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns the first element of List that compares greater than or equal to all other elements of List.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#max-1">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>他のすべての要素より大きい最初の要素を返します。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">max</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">6</span><span class="p">]).</span>
-</span><span class='line'><span class="mi">4</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>リストの中の最大値である<code>4</code>が返されます。</p>
-
-<h3>member/2</h3>
-
-<h4>Erlang公式ドキュメント</h4>
-
-<blockquote><h4>member(Elem, List) &ndash;> boolean()</h4>
-
-<h4>Types</h4>
-
-<ul>
-<li>Elem = T</li>
-<li>List = [T]</li>
-<li>T = term()</li>
-</ul>
-
-
-<p>Returns true if Elem matches some element of List, otherwise false.</p>
-
-<p><a href="http://erlang.org/doc/man/lists.html#member-2">参照元</a></p></blockquote>
-
-<h4>Explain</h4>
-
-<p>指定した要素と一致する要素があれば<code>true</code>を、なければ<code>false</code>を返します。</p>
-
-<h4>Example</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">member</span><span class="p">({</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span> <span class="p">[{</span><span class="n">b</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">d</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">}]).</span>
-</span><span class='line'><span class="n">true</span>
-</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">member</span><span class="p">({</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span> <span class="p">[{</span><span class="n">b</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">d</span><span class="p">,</span><span class="mi">1</span><span class="p">}]).</span>
-</span><span class='line'><span class="n">false</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最初の例では指定した要素<code>{a,1}</code>に一致する要素がリストにあるため<code>true</code>が返ってきます。</p>
-
-<p>次の例では指定した要素<code>{a,1}</code>に一致する要素がリストにないため<code>false</code>が返ってきます。</p>
-
-<h2>次回</h2>
-
-<p>次回は次の式の結果をやっていきます。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="nn">lists</span><span class="p">:</span><span class="nf">sublist</span><span class="p">(</span>
-</span><span class='line'>    <span class="nn">lists</span><span class="p">:</span><span class="nf">sort</span><span class="p">(</span>
-</span><span class='line'>        <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span>
-</span><span class='line'>            <span class="k">fun</span><span class="p">({</span><span class="nv">F</span><span class="p">,</span> <span class="nv">A</span><span class="p">})</span> <span class="o">-&gt;</span>
-</span><span class='line'>                <span class="nb">atom_to_list</span><span class="p">(</span><span class="nv">F</span><span class="p">)</span> <span class="o">++</span>
-</span><span class='line'>                <span class="s">&quot;/&quot;</span> <span class="o">++</span>
-</span><span class='line'>                <span class="nb">integer_to_list</span><span class="p">(</span><span class="nv">A</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">end</span><span class="p">,</span>
-</span><span class='line'>            <span class="nn">lists</span><span class="p">:</span><span class="nf">module_info</span><span class="p">(</span><span class="n">exports</span><span class="p">))),</span>
-</span><span class='line'>    <span class="mi">17</span><span class="p">,</span>
-</span><span class='line'>    <span class="mi">16</span><span class="p">).</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!-- admax -->
-
-
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-
-
-<!-- admax -->
-
-
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -3895,6 +3760,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/09/trying-gradle-setupbuild-task-of-gradle-1-dot-7-rc1/">GradleのsetupBuildタスクを試してみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/06/gradle1-dot-7-release-notes-translation/">gradle1.7のリリースノート超意訳</a>
       </li>
     
@@ -3908,10 +3777,6 @@
     
       <li class="post">
         <a href="/blog/2013/06/30/first-shibuya-java/">第一回渋谷javaに行ってきた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/27/java8-lambdashi-woshi-tutemita/">Java8 lambda式を使ってみた</a>
       </li>
     
   </ul>

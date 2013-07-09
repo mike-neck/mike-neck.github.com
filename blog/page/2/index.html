@@ -6,10 +6,9 @@
 <head>
   <meta charset="utf-8">
   <title>mike、mikeなるままに…</title>
-  <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="こんにちわ、みけです。 前回の記事『Rubyのmixinの話を読んでいたら、何故かjavaを書いていた』はあまりにも rubyに対して失礼なので、 初心者らしく、ちゃんとmoduleを作ってみました。 ところで、僕の感心事は前回の記事でも書いたように、 &hellip;">
+  <meta name="description" content="みけです。 最近、Java開発者のgradleへの注目には眼を見張るものがあります。 gradle1.0-m2くらいから使っていた僕も、 参考になるような記事がたくさんあります。 みなさんありがとうございます。 gradleのすばらしさ 僕はgradleいいよという時に、いつも聞かれるのですが &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -29,6 +28,20 @@
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+<meta property="og:title" content="mike、mikeなるままに…" />
+<meta property="og:type" content="blog" />
+<meta property="og:description" content="" />
+
+
+<meta property="og:image" content="/mike-pow.png"/>
+
+<meta property="og:url" content="http://mike-neck.github.io/blog/page/2" />
+<meta property="og:author" content="mike-neck" />
+<meta property="og:site_name" content="mike、mikeなるままに…" />
+<meta property="og:locale" content="" />
+<meta property="fb:app_id" content="" />
 
   
   <script type="text/javascript">
@@ -78,6 +91,345 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/13/opening-gradle-slash-gradle-with-gradle-will-fail-please-use-gradlew/">Gradleプロジェクトは、gradleを使うよりも、gradlewを使うことがオススメです</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-13T02:41:00+09:00" pubdate data-updated="true">Jun 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://www.gradle.org/img/gradle_logo.gif"/></p>
+
+<p>みけです。</p>
+
+<p>最近、Java開発者のgradleへの注目には眼を見張るものがあります。</p>
+
+<p>gradle1.0-m2くらいから使っていた僕も、</p>
+
+<p>参考になるような記事がたくさんあります。</p>
+
+<p>みなさんありがとうございます。</p>
+
+<h1>gradleのすばらしさ</h1>
+
+<p>僕はgradleいいよという時に、いつも聞かれるのですが、</p>
+
+<h3>AntとMavenにくらべてgradleの何がいいの？</h3>
+
+<p>という質問があります。</p>
+
+<p>DSLで書けるとか、</p>
+
+<p>dependencyの指定が簡単とか、</p>
+
+<p>まあ、各種ツールに精通すれば、</p>
+
+<p>別にantでもmavenでも変わりません。</p>
+
+<p>あえてそれでもgradleを選ぶ理由を上げるなら、</p>
+
+<p><strong>gradle wrapper</strong>の存在です。</p>
+
+<p>チームで開発する場合、開発環境をチーム内で同じにしておくことが重要です。</p>
+
+<p>メンバーの開発マシンの</p>
+
+<p>antのバーション、mavenのバージョン、</p>
+
+<p>これらが違ったということでビルドに失敗して、</p>
+
+<p>その原因追求のために時間がかかるということも</p>
+
+<p>よくある話です。</p>
+
+<p>一方で、gradleでは</p>
+
+<p><strong>gradle wrapper</strong>を用いれば、</p>
+
+<p>ビルドツールのバージョンに振り回されることはありません。</p>
+
+<p>あまりピンとこないかもしれませんが、</p>
+
+<p>実例をあげてみます。</p>
+
+<h2>gradle本体をIntelliJ IDEAに取り込む</h2>
+
+<p>gradle DSLを読んでいて、どうしてもわからないことがある場合、</p>
+
+<p>gradle本体のソースを読むことがあります。</p>
+
+<p>最新(2013/06/12時点)のソースを落としてきて、</p>
+
+<p><code>gradle idea</code>タスクを実行してみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ gradle --version
+</span><span class='line'>
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>Gradle 1.6
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>
+</span><span class='line'>Gradle build time: 2013年5月7日 9時12分14秒 UTC
+</span><span class='line'>Groovy: 1.8.6
+</span><span class='line'>Ant: Apache Ant(TM) version 1.8.4 compiled on May 22 2012
+</span><span class='line'>Ivy: 2.2.0
+</span><span class='line'>JVM: 1.7.0_13 (Oracle Corporation 23.7-b01)
+</span><span class='line'>OS: Mac OS X 10.8.4 x86_64
+</span><span class='line'>
+</span><span class='line'>$ gradle idea
+</span><span class='line'>:buildSrc:clean
+</span><span class='line'>:buildSrc:compileJava UP-TO-DATE
+</span><span class='line'>:buildSrc:compileGroovy
+</span><span class='line'>:buildSrc:processResources
+</span><span class='line'>:buildSrc:classes
+</span><span class='line'>:buildSrc:jar
+</span><span class='line'>:buildSrc:assemble
+</span><span class='line'>:buildSrc:checkstyleMain
+</span><span class='line'>:buildSrc:compileTestJava UP-TO-DATE
+</span><span class='line'>:buildSrc:compileTestGroovy
+</span><span class='line'>:buildSrc:processTestResources
+</span><span class='line'>:buildSrc:testClasses
+</span><span class='line'>:buildSrc:checkstyleTest UP-TO-DATE
+</span><span class='line'>:buildSrc:codenarcMain
+</span><span class='line'>:buildSrc:codenarcTest
+</span><span class='line'>:buildSrc:test
+</span><span class='line'>:buildSrc:check
+</span><span class='line'>:buildSrc:build
+</span><span class='line'>
+</span><span class='line'>FAILURE: Build failed with an exception.
+</span><span class='line'>
+</span><span class='line'>* Where:
+</span><span class='line'>Script '/Users/mike/IdeaProjects/gradle/gradle/gradle/integTest.gradle' line: 32
+</span><span class='line'>
+</span><span class='line'>* What went wrong:
+</span><span class='line'>A problem occurred evaluating script.
+</span><span class='line'>&gt; Failed to notify action.
+</span><span class='line'>   &gt; Could not find property 'reports' on task ':announce:integTest'.
+</span><span class='line'>
+</span><span class='line'>* Try:
+</span><span class='line'>Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+</span><span class='line'>
+</span><span class='line'>BUILD FAILED
+</span><span class='line'>
+</span><span class='line'>Total time: 54.695 secs</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最新のgradle(バージョン1.6)でエラーが発生します。</p>
+
+<p>ビルドスクリプト:buildSrcプロジェクトのテスト中に落ちてしまいます。</p>
+
+<p>一方、プロジェクトに付属している<strong>wapper</strong>で実行してみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ./gradlew --version
+</span><span class='line'>
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>Gradle 1.7-20130519231153+0000
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>
+</span><span class='line'>Build time:   2013-05-19 23:11:53 UTC
+</span><span class='line'>Build number: none
+</span><span class='line'>Revision:     9a7199efaf72c620b33f9767874f0ebced135d83
+</span><span class='line'>
+</span><span class='line'>Groovy:       1.8.6
+</span><span class='line'>Ant:          Apache Ant(TM) version 1.8.4 compiled on May 22 2012
+</span><span class='line'>Ivy:          2.2.0
+</span><span class='line'>JVM:          1.7.0_13 (Oracle Corporation 23.7-b01)
+</span><span class='line'>OS:           Mac OS X 10.8.4 x86_64
+</span><span class='line'>
+</span><span class='line'>$ ./gradlew idea
+</span><span class='line'>Deleting directory /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee/gradle-1.7-20130519231153+0000
+</span><span class='line'>Unzipping /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee/gradle-1.7-20130519231153+0000-bin.zip to /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee
+</span><span class='line'>Set executable permissions for: /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee/gradle-1.7-20130519231153+0000/bin/gradle
+</span><span class='line'>:buildSrc:clean
+</span><span class='line'>:buildSrc:compileJava UP-TO-DATE
+</span><span class='line'>:buildSrc:compileGroovy
+</span><span class='line'>:buildSrc:processResources
+</span><span class='line'>:buildSrc:classes
+</span><span class='line'>:buildSrc:jar
+</span><span class='line'>:buildSrc:assemble
+</span><span class='line'>:buildSrc:checkstyleMain
+</span><span class='line'>:buildSrc:compileTestJava UP-TO-DATE
+</span><span class='line'>:buildSrc:compileTestGroovy
+</span><span class='line'>:buildSrc:processTestResources
+</span><span class='line'>:buildSrc:testClasses
+</span><span class='line'>:buildSrc:checkstyleTest UP-TO-DATE
+</span><span class='line'>:buildSrc:codenarcMain
+</span><span class='line'>:buildSrc:codenarcTest
+</span><span class='line'>:buildSrc:test
+</span><span class='line'>:buildSrc:check
+</span><span class='line'>:buildSrc:build
+</span><span class='line'>:ideaModule
+</span><span class='line'>
+</span><span class='line'>## 途中長いので略
+</span><span class='line'>
+</span><span class='line'>:ui:ideaModule
+</span><span class='line'>:ui:idea
+</span><span class='line'>:wrapper:buildReceiptResource
+</span><span class='line'>:wrapper:ideaModule
+</span><span class='line'>:wrapper:idea
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 2 mins 11.981 secs</span></code></pre></td></tr></table></div></figure>
+
+
+<p>という形で、</p>
+
+<p>マシンにインストールされているgradleのバージョンの如何にかかわらず、</p>
+
+<p>プロジェクトごとに最適化されたビルドを提供してくれます。</p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1958,1007 +2310,6 @@ long sum = integers.reduce(0, Long::sum);
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/30/androidgajavadatosi-tuteiruren-falsetamefalsegroovyjiang-zuo-2/">AndroidがJavaだと思っている人のためのGroovy講座 - 2</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-30T10:48:00+09:00" pubdate data-updated="true">May 30<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>こんいちわ。みけです。</p>
-
-<p>またも、タイトルが仰々しくてすみません。</p>
-
-<p>本当に大したこと書かないです。</p>
-
-<p>で、相変わらずAndroidまたもや出て来ません。</p>
-
-<p>gradleも出て来ません。</p>
-
-<p>でも、Android Studioの登場や、gradle-android-pluginで</p>
-
-<p>gradleに興味を持たれた方には読んで貰いたいと思います。</p>
-
-<p>以下、本題。</p>
-
-<h2><code>Closure&lt;V&gt;</code>とはなんぞや</h2>
-
-<p>Closureについて僕がなんか言うと、</p>
-
-<p>皆が混乱するので(それだけ僕もちゃんと説明できるほど理解していない…orz)</p>
-
-<p>とりあえず<a href="http://ja.wikipedia.org/wiki/%E3%82%AF%E3%83%AD%E3%83%BC%E3%82%B8%E3%83%A3">WikipediaのClosure</a>でも読んで下さい。</p>
-
-<p>Javaでいえば、<code>Callable&lt;V&gt;</code>みたいなものです。</p>
-
-<p>で、<code>Callable&lt;V&gt;</code>に比べて便利なのが</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Callable</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">callable</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">call</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="c1">// some codes</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">};</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいに書かなくてよいあたりです。</p>
-
-<p>ちなみに<code>Callable&lt;T&gt;</code>と異なるところもあります。</p>
-
-<p>それは、おいおい、説明します。</p>
-
-<h1>そろそろ<code>Closure&lt;V&gt;</code>のサンプル見せてくれよ</h1>
-
-<p>というわけで、適当にサンプルをみつくろってみました。</p>
-
-<h4>単純な値を返すだけのClosure</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">closure</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="s1">&#39;Hello, Closure!&#39;</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">assert</span> <span class="nf">closure</span><span class="o">()</span> <span class="o">==</span> <span class="s1">&#39;Hello, Closure!&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>そうそう、<strong>groovyでは<code>return</code>を省略することができます</strong>。</p>
-
-<p>その場合、最後に評価された式の値が<code>return</code>されます。</p>
-
-<p>上記のClosureではClosureの最終式<code>'Hello, Closure!'</code>が評価され、</p>
-
-<p>その値<code>'Hello, Closure!'</code>が返されます。</p>
-
-<h4>引数をとるClosure</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">hello</span> <span class="o">=</span> <span class="o">{</span><span class="n">name</span> <span class="o">-&gt;</span>
-</span><span class='line'>    <span class="s1">&#39;Hello, &#39;</span> <span class="o">+</span> <span class="n">name</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">assert</span> <span class="s1">&#39;Hello, mike&#39;</span> <span class="o">==</span> <span class="n">hello</span><span class="o">(</span><span class="s1">&#39;mike&#39;</span><span class="o">)</span>
-</span><span class='line'><span class="k">assert</span> <span class="s1">&#39;Hello, null&#39;</span> <span class="o">==</span> <span class="n">hello</span><span class="o">()</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>Closure&lt;V&gt;</code>と<code>Callable&lt;V&gt;</code>との決定的な違いが、
-(大した違いではないが)</p>
-
-<p>引数を与えることができる点です。</p>
-
-<p>これを<code>Callable&lt;V&gt;</code>でやろうとすると次のようになります。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloTest</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Hello</span> <span class="kd">implements</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="kd">public</span> <span class="nf">Hello</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="nd">@Override</span>
-</span><span class='line'>        <span class="kd">public</span> <span class="n">String</span> <span class="nf">call</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="s">&quot;Hello, &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Test</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testHello</span> <span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="k">new</span> <span class="n">Hello</span><span class="o">(</span><span class="s">&quot;mike&quot;</span><span class="o">).</span><span class="na">call</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;Hello, mike&quot;</span><span class="o">));</span>
-</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="k">new</span> <span class="n">Hello</span><span class="o">(</span><span class="kc">null</span><span class="o">).</span><span class="na">call</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;Hello, null&quot;</span><span class="o">));</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Closureを返すClosure</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">counter</span> <span class="o">=</span> <span class="o">{</span><span class="kt">int</span> <span class="n">offset</span> <span class="o">-&gt;</span>
-</span><span class='line'>    <span class="k">return</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">offset</span><span class="o">++</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="kt">def</span> <span class="n">closure</span> <span class="o">=</span> <span class="n">counter</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">(</span><span class="mi">0</span><span class="o">..</span><span class="mi">100</span><span class="o">).</span><span class="na">each</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">assert</span> <span class="n">it</span> <span class="o">==</span> <span class="n">closure</span><span class="o">()</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>初期値の0からカウントするカウンターのようなクロージャーが返ってきます。</p>
-
-<p>型としては<code>Closure&lt;Closure&lt;Integer&gt;&gt;</code>といったところでしょうか…</p>
-
-<p>で、これをみると一つ気持ち悪いところがありますね。</p>
-
-<p><strong>元の値ってどうなってしまうの？</strong></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">closure</span> <span class="o">=</span> <span class="o">{</span><span class="n">String</span> <span class="n">hello</span> <span class="o">-&gt;</span>
-</span><span class='line'>    <span class="k">return</span> <span class="o">{</span><span class="n">String</span> <span class="n">name</span> <span class="o">-&gt;</span>
-</span><span class='line'>        <span class="n">hello</span> <span class="o">+=</span> <span class="n">name</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="kt">def</span> <span class="n">original</span> <span class="o">=</span> <span class="s1">&#39;Hello, &#39;</span>
-</span><span class='line'><span class="kt">def</span> <span class="n">message</span> <span class="o">=</span> <span class="n">closure</span><span class="o">(</span><span class="n">original</span><span class="o">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">assert</span> <span class="nf">message</span><span class="o">(</span><span class="s1">&#39;mike&#39;</span><span class="o">)</span> <span class="o">==</span> <span class="s1">&#39;Hello, mike&#39;</span>
-</span><span class='line'><span class="k">assert</span> <span class="nf">message</span><span class="o">(</span><span class="s1">&#39;!&#39;</span><span class="o">)</span> <span class="o">==</span> <span class="s1">&#39;Hello, mike!&#39;</span>
-</span><span class='line'><span class="k">assert</span> <span class="n">original</span> <span class="o">==</span> <span class="s1">&#39;Hello, &#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というように、元の値は壊れませんが、</p>
-
-<p>返されるClosureが元々持っていた値は壊れていきます。</p>
-
-<p>ところで、イテレーターとして<code>Closure&lt;V&gt;</code>を使うときに出てくる</p>
-
-<h4><code>it</code>ってなんやねん？</h4>
-
-<p>gradleのプラグイン宣言などで、ときどきこんな記述が出てきますね</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="o">[</span><span class="s1">&#39;java&#39;</span><span class="o">,</span> <span class="s1">&#39;groovy&#39;</span><span class="o">].</span><span class="na">each</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="n">it</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で、この<code>it</code>ですが、コレクションの一つ一つの要素です。</p>
-
-<p>あ、そんなこと言われなくても知ってたって(´・ω・｀)</p>
-
-<p>まあ、そんなことは言わずに、すこし試してみましょう。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="o">(</span><span class="mi">1</span><span class="o">..</span><span class="mi">4</span><span class="o">).</span><span class="na">each</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">println</span> <span class="s2">&quot;it is ${it}.&quot;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実行結果はこんな感じです。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">it</span> <span class="n">is</span> <span class="mi">1</span><span class="o">.</span>
-</span><span class='line'><span class="n">it</span> <span class="n">is</span> <span class="mi">2</span><span class="o">.</span>
-</span><span class='line'><span class="n">it</span> <span class="n">is</span> <span class="mi">3</span><span class="o">.</span>
-</span><span class='line'><span class="n">it</span> <span class="n">is</span> <span class="mi">4</span><span class="o">.</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これって、でもどういうふうに呼ばれているの？</p>
-
-<p>groovyの<code>DefaultGroovyMethods</code>クラスを介して呼ばれています。</p>
-
-<h5>自分でも<code>it</code>でアクセスできるイテレーター作ってみたい</h5>
-
-<p>というわけで、<code>Closure&lt;V&gt;</code>を引数にとるメソッドを書いてみました。</p>
-
-<p><code>it</code>で要素にアクセスできて、ちょっと嬉しいですね。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">Integer</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">define</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">collect</span> <span class="o">=</span> <span class="o">{</span><span class="n">Closure</span> <span class="n">closure</span> <span class="o">-&gt;</span>
-</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">IntRange</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">delegate</span><span class="o">).</span><span class="na">collect</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">closure</span><span class="o">(</span><span class="n">it</span><span class="o">)</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">assert</span> <span class="mi">2</span><span class="o">.</span><span class="na">collect</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">it</span> <span class="o">*</span> <span class="mi">2</span>
-</span><span class='line'><span class="o">}</span> <span class="o">==</span> <span class="o">[</span><span class="mi">0</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">4</span><span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というわけで、<code>it</code>は一つ一つの要素であることが事象として理解していただけたと思います。</p>
-
-<p>で、<code>it</code>っていつ割り当てられるの？ということで、ソースをざっと見ていたんですが、</p>
-
-<p>見つかりませんでした(´・ω・｀)</p>
-
-<p>なお調べている過程で僕も初めて知ったのですが、</p>
-
-<p><code>Closure&lt;V&gt;</code>は抽象クラスで、</p>
-
-<p>コンパイル時に実際のクラスが生成されているようです。</p>
-
-<p>まだまだ僕も勉強が足りませんね…</p>
-
-<p>で、このへんが気になりだすと、もっと気になるのが…</p>
-
-<h4>Closureのスコープってどうなのよ</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">outside</span> <span class="o">=</span> <span class="s1">&#39;This is outside&#39;</span>
-</span><span class='line'><span class="kt">def</span> <span class="n">doSomething</span> <span class="o">=</span> <span class="o">{</span><span class="n">println</span> <span class="s1">&#39;do something&#39;</span><span class="o">}</span>
-</span><span class='line'><span class="kt">def</span> <span class="n">closure</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kt">def</span> <span class="n">inside</span> <span class="o">=</span> <span class="s1">&#39;This is inside&#39;</span>
-</span><span class='line'>    <span class="n">doSomething</span><span class="o">()</span>
-</span><span class='line'>    <span class="n">println</span> <span class="n">outside</span>
-</span><span class='line'>    <span class="n">println</span> <span class="n">inside</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">closure</span><span class="o">()</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">doSomething</span><span class="o">()</span>
-</span><span class='line'><span class="n">println</span> <span class="n">outside</span>
-</span><span class='line'><span class="n">println</span> <span class="n">inside</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これを実効すると次のような結果が得られます。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="k">do</span> <span class="n">something</span>
-</span><span class='line'><span class="n">This</span> <span class="n">is</span> <span class="n">outside</span>
-</span><span class='line'><span class="n">This</span> <span class="n">is</span> <span class="n">inside</span>
-</span><span class='line'><span class="k">do</span> <span class="n">something</span>
-</span><span class='line'><span class="n">This</span> <span class="n">is</span> <span class="n">outside</span>
-</span><span class='line'><span class="n">Exception</span> <span class="n">thrown</span>
-</span><span class='line'><span class="mi">5</span> <span class="mi">31</span><span class="o">,</span> <span class="mi">2013</span> <span class="mi">8</span><span class="o">:</span><span class="mi">25</span><span class="o">:</span><span class="mi">06</span> <span class="err">午後</span> <span class="n">org</span><span class="o">.</span><span class="na">codehaus</span><span class="o">.</span><span class="na">groovy</span><span class="o">.</span><span class="na">runtime</span><span class="o">.</span><span class="na">StackTraceUtils</span> <span class="n">sanitize</span>
-</span><span class='line'><span class="nl">WARNING:</span> <span class="n">Sanitizing</span> <span class="nl">stacktrace:</span>
-</span><span class='line'><span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">MissingPropertyException</span><span class="o">:</span> <span class="n">No</span> <span class="n">such</span> <span class="nl">property:</span> <span class="n">inside</span> <span class="k">for</span> <span class="nl">class:</span> <span class="n">ConsoleScript83</span>
-</span><span class='line'>  <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="na">codehaus</span><span class="o">.</span><span class="na">groovy</span><span class="o">.</span><span class="na">runtime</span><span class="o">.</span><span class="na">ScriptBytecodeAdapter</span><span class="o">.</span><span class="na">unwrap</span><span class="o">(</span><span class="n">ScriptBytecodeAdapter</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">50</span><span class="o">)</span>
-</span><span class='line'>  <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="na">codehaus</span><span class="o">.</span><span class="na">groovy</span><span class="o">.</span><span class="na">runtime</span><span class="o">.</span><span class="na">callsite</span><span class="o">.</span><span class="na">PogoGetPropertySite</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="n">PogoGetPropertySite</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">49</span><span class="o">)</span>
-</span><span class='line'>  <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="na">codehaus</span><span class="o">.</span><span class="na">groovy</span><span class="o">.</span><span class="na">runtime</span><span class="o">.</span><span class="na">callsite</span><span class="o">.</span><span class="na">AbstractCallSite</span><span class="o">.</span><span class="na">callGroovyObjectGetProperty</span><span class="o">(</span><span class="n">AbstractCallSite</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">231</span><span class="o">)</span>
-</span><span class='line'>  <span class="n">at</span> <span class="n">ConsoleScript83</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="nl">ConsoleScript83:</span><span class="mi">14</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>Closure&lt;V&gt;</code>の<code>closure</code>の中からは、</p>
-
-<p>フィールド<code>outside</code>を参照することや、<code>doSomething</code>を実行することはできますが、</p>
-
-<p>スクリプト本体からは<code>closure</code>内部の<code>inside</code>にアクセスすることはできません。</p>
-
-<p>まあ、大体ご想像されていたとおりだと思います。</p>
-
-<h4>実は<code>Callable&lt;V&gt;</code>だった<code>Closure&lt;V&gt;</code></h4>
-
-<p>さて、ここまでは<code>Callable&lt;V&gt;</code>との対比で<code>Closure&lt;V&gt;</code>を見て来ましたが、</p>
-
-<p><code>Closure&lt;V&gt;</code>は実は<code>Callable&lt;V&gt;</code>を実装した抽象クラスです。</p>
-
-<p>まず、<code>Closure&lt;V&gt;</code>のクラスファイルを見てみましょう。</p>
-
-<figure class='code'><figcaption><span>Closure.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Closure</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">GroovyObjectSupport</span> <span class="kd">implements</span> <span class="n">Cloneable</span><span class="o">,</span> <span class="n">Runnable</span><span class="o">,</span> <span class="n">GroovyCallable</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;,</span> <span class="n">Serializable</span> <span class="o">{</span>
-</span><span class='line'>    <span class="c1">// some codes</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>Closure&lt;V&gt;</code>はインターフェース<code>GroovyCallable&lt;V&gt;</code>を実装しています。</p>
-
-<p>で、この<code>GroovyCallable&lt;V&gt;</code>ってなんやねんというと…</p>
-
-<figure class='code'><figcaption><span>GroovyCallable.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">GroovyCallable</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span> <span class="o">{</span> <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ってことで、<code>Callable&lt;V&gt;</code>を継承しているインターフェースになります。</p>
-
-<p>まとめると<code>Closure&lt;V&gt;</code>は<code>Callable&lt;V&gt;</code>の実装クラスということになります。</p>
-
-<p>では試してみましょう。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kn">import</span> <span class="nn">java.util.concurrent.*</span>
-</span><span class='line'>
-</span><span class='line'><span class="kt">def</span> <span class="n">service</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newFixedThreadPool</span><span class="o">(</span><span class="mi">3</span><span class="o">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="kt">def</span> <span class="n">callable</span> <span class="o">=</span> <span class="o">{</span><span class="kt">int</span> <span class="n">sec</span> <span class="o">-&gt;</span>
-</span><span class='line'>    <span class="k">return</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">println</span> <span class="s2">&quot;${new Date().format(&#39;yyyy/MM/dd hh:mm:ss&#39;)} : Sleeping ${sec} seconds...&quot;</span>
-</span><span class='line'>        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">sec</span> <span class="o">*</span> <span class="mi">1000</span><span class="o">)</span>
-</span><span class='line'>        <span class="s2">&quot;${new Date().format(&#39;yyyy/MM/dd hh:mm:ss&#39;)} : This is ${sec}&quot;</span> <span class="k">as</span> <span class="n">String</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">assert</span> <span class="n">service</span><span class="o">.</span><span class="na">invokeAll</span><span class="o">((</span><span class="mi">10</span><span class="o">..</span><span class="mi">1</span><span class="o">).</span><span class="na">collect</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">callable</span><span class="o">(</span><span class="n">it</span><span class="o">)</span> <span class="k">as</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span>
-</span><span class='line'><span class="o">}).</span><span class="na">each</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">println</span> <span class="n">it</span><span class="o">.</span><span class="na">get</span><span class="o">()</span>
-</span><span class='line'><span class="o">}.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="mi">10</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>この実行結果は次のようになります。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">13</span><span class="o">:</span><span class="mi">56</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">10</span> <span class="n">seconds</span><span class="o">...</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">13</span><span class="o">:</span><span class="mi">56</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">8</span> <span class="n">seconds</span><span class="o">...</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">13</span><span class="o">:</span><span class="mi">56</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">9</span> <span class="n">seconds</span><span class="o">...</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">04</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">7</span> <span class="n">seconds</span><span class="o">...</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">05</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">6</span> <span class="n">seconds</span><span class="o">...</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">06</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">5</span> <span class="n">seconds</span><span class="o">...</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">11</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">4</span> <span class="n">seconds</span><span class="o">...</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">11</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">2</span> <span class="n">seconds</span><span class="o">...</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">11</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">3</span> <span class="n">seconds</span><span class="o">...</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">13</span> <span class="o">:</span> <span class="n">Sleeping</span> <span class="mi">1</span> <span class="n">seconds</span><span class="o">...</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">06</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">10</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">05</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">9</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">04</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">8</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">11</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">7</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">11</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">6</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">11</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">5</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">15</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">4</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">14</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">3</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">13</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">2</span>
-</span><span class='line'><span class="mi">2013</span><span class="s">/05/</span><span class="mi">31</span> <span class="mi">02</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">14</span> <span class="o">:</span> <span class="n">This</span> <span class="n">is</span> <span class="mi">1</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>全然、問題なく<code>Callable&lt;V&gt;</code>として動いているのが確認できると思います。</p>
-
-<p>で、別にここまではなんだjavaじゃん、というわけですが、</p>
-
-<p>ここからがほぼ本題です。</p>
-
-<h4>delegate</h4>
-
-<p>delegateがgroovyの<code>Closure&lt;V&gt;</code>の柔軟性をもたらしていることに疑いはありません。</p>
-
-<p>まずは使用例から…</p>
-
-<h5><code>groovy.xml.MarkupBuilder</code></h5>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kn">import</span> <span class="nn">groovy.xml.*</span>
-</span><span class='line'>
-</span><span class='line'><span class="kt">def</span> <span class="n">w</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringWriter</span><span class="o">()</span>
-</span><span class='line'><span class="kt">def</span> <span class="n">doc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MarkupBuilder</span><span class="o">(</span><span class="n">w</span><span class="o">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="kt">def</span> <span class="n">border</span> <span class="o">=</span> <span class="s1">&#39;border : solid 1px #ccc;&#39;</span>
-</span><span class='line'><span class="kt">def</span> <span class="n">background</span> <span class="o">=</span> <span class="s1">&#39;background-color : rgba(239, 239, 255, 0.7);&#39;</span>
-</span><span class='line'><span class="kt">def</span> <span class="n">padding</span> <span class="o">=</span> <span class="s1">&#39;padding : 5px;&#39;</span>
-</span><span class='line'><span class="kt">def</span> <span class="n">radius</span> <span class="o">=</span> <span class="s1">&#39;border-radius : 5px;&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">doc</span><span class="o">.</span><span class="na">html</span><span class="o">(</span><span class="n">lang</span> <span class="o">:</span> <span class="s1">&#39;ja&#39;</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">head</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">title</span> <span class="s1">&#39;test page&#39;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="n">body</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">h3</span> <span class="s1">&#39;Hello Groovy!&#39;</span>
-</span><span class='line'>        <span class="n">p</span> <span class="o">(</span><span class="n">style</span> <span class="o">:</span> <span class="s2">&quot;${border}${background}${padding}${radius}&quot;</span><span class="o">,</span>
-</span><span class='line'>                <span class="s1">&#39;This document is made by groovy.&#39;</span><span class="o">)</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">println</span> <span class="n">w</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これを実効すると、次のようなhtmlファイルができます。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&#39;ja&#39;</span><span class="nt">&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;head&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;title&gt;</span>test page<span class="nt">&lt;/title&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/head&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;body&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;h3&gt;</span>Hello Groovy!<span class="nt">&lt;/h3&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;p</span> <span class="na">style=</span><span class="s">&#39;border : solid 1px #ccc;background-color : rgba(239, 239, 255, 0.7);padding : 5px;border-radius : 5px;&#39;</span><span class="nt">&gt;</span>This document is made by groovy.<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/body&gt;</span>
-</span><span class='line'><span class="nt">&lt;/html&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>MarkupBuilder</code>というクラスは<code>groovy.util.BuilderSupport</code>クラスを継承していて、</p>
-
-<p>存在しないようなメソッドを実行する際に、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">protected</span> <span class="n">Object</span> <span class="nf">doInvokeMethod</span><span class="o">(</span><span class="n">String</span> <span class="n">methodName</span><span class="o">,</span> <span class="n">Object</span> <span class="n">name</span><span class="o">,</span> <span class="n">Object</span> <span class="n">args</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を介して実行します。</p>
-
-<p>そして、このメソッドが内部で<code>Node</code>を作っていきます。</p>
-
-<p>そういうわけで、上記のコードの11行目の<code>html</code>メソッドが実行されて、</p>
-
-<p><code>"html"</code>というノードが作成されるのはわかるかと思います。</p>
-
-<p>問題は<code>html</code>というメソッドが引数として受け入れた<code>Closure&lt;V&gt;</code>が</p>
-
-<p><code>head</code>というメソッドや<code>body</code>メソッドを実行しています。</p>
-
-<p>さきほどの<code>Closure</code>のスコープに戻るとこの場合、</p>
-
-<p><code>head</code>や<code>body</code>というメソッドはないので、</p>
-
-<p>ここで<code>MissingMethodException</code>が発生しそうですが、</p>
-
-<p>発生しません。</p>
-
-<p>何故でしょうか？</p>
-
-<p><strong>これの謎を解く鍵がdelegateです。</strong></p>
-
-<h5><code>Closure#setDelegate</code>と<code>Closure#setResolveStrategy</code></h5>
-
-<p><code>Closure&lt;V&gt;</code>には変数名やメソッド名をどのオブジェクトから参照するのかを決定することができます。</p>
-
-<p>そのオブジェクトへの参照がdelegateになります。</p>
-
-<p>では、delegateをわざとらしいほど強調したスクリプトを見てみます。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">setProperty</span> <span class="s1">&#39;x&#39;</span><span class="o">,</span> <span class="mi">1000</span>
-</span><span class='line'><span class="n">setProperty</span> <span class="s1">&#39;y&#39;</span><span class="o">,</span> <span class="mi">500</span>
-</span><span class='line'><span class="n">setProperty</span> <span class="s1">&#39;exec&#39;</span><span class="o">,</span> <span class="o">{</span><span class="n">println</span> <span class="s2">&quot;x : ${x}, y : ${y}&quot;</span><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="kt">def</span> <span class="n">map</span> <span class="o">=</span> <span class="o">[</span><span class="n">x</span> <span class="o">:</span> <span class="mi">10</span><span class="o">,</span> <span class="n">y</span> <span class="o">:</span> <span class="mi">5</span><span class="o">,</span> <span class="n">exec</span> <span class="o">:</span> <span class="o">{</span><span class="n">println</span> <span class="s2">&quot;x = ${x}, y = ${y}&quot;</span><span class="o">}]</span>
-</span><span class='line'><span class="kt">def</span> <span class="n">closure</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">println</span> <span class="s2">&quot;x -&gt; ${x}&quot;</span>
-</span><span class='line'>    <span class="n">println</span> <span class="s2">&quot;y -&gt; ${y}&quot;</span>
-</span><span class='line'>    <span class="n">print</span> <span class="s1">&#39;delegate exec -&gt; &#39;</span>
-</span><span class='line'>    <span class="n">exec</span><span class="o">.</span><span class="na">call</span><span class="o">()</span>
-</span><span class='line'>    <span class="n">print</span> <span class="s1">&#39;owner exec -&gt; &#39;</span>
-</span><span class='line'>    <span class="n">exec</span><span class="o">()</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="n">closure</span><span class="o">.</span><span class="na">delegate</span> <span class="o">=</span> <span class="n">map</span>
-</span><span class='line'><span class="n">closure</span><span class="o">.</span><span class="na">resolveStrategy</span> <span class="o">=</span> <span class="n">Closure</span><span class="o">.</span><span class="na">DELEGATE_FIRST</span>
-</span><span class='line'><span class="n">closure</span><span class="o">()</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>では、実行してみましょう。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">x</span> <span class="o">-&gt;</span> <span class="mi">10</span>
-</span><span class='line'><span class="n">y</span> <span class="o">-&gt;</span> <span class="mi">5</span>
-</span><span class='line'><span class="n">delegate</span> <span class="n">exec</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1000</span><span class="o">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">500</span>
-</span><span class='line'><span class="n">owner</span> <span class="n">exec</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">:</span> <span class="mi">1000</span><span class="o">,</span> <span class="n">y</span> <span class="o">:</span> <span class="mi">500</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>面白い結果が返ってきました。</p>
-
-<p><code>closure</code>内部で<code>x</code>と<code>y</code>の値は<code>map</code>から取得されたものになっています。</p>
-
-<p>一方、<code>exec</code>に関しては二つの結果が出てきています。</p>
-
-<p>これは、15行目と16行目で行われている<code>closure</code>のdelegateの設定によって説明出来ます。</p>
-
-<p><code>closure</code>がフィールド名を解決する仕組みは下記のようになっています。</p>
-
-<ul>
-<li><code>Closure.DELEGATE_FIRST</code>でdelegateされたオブジェクトから順番に解決していく</li>
-<li>delegateされたオブジェクト<code>map</code>から変数を解決する</li>
-</ul>
-
-
-<p>ここから、7行目、8行目の<code>x</code>と<code>y</code>は<code>map</code>由来のものであることがわかります。</p>
-
-<p>また10行目と12行目の<code>exec</code>が異なる結果となっているのは、</p>
-
-<p>10行目の<code>exec</code>はフィールド名としてまず解決された後に、</p>
-
-<p><code>Closure&lt;V&gt;</code>が実行されています。</p>
-
-<p>一方、12行目の<code>exec</code>ではメソッドとして(<code>map</code>(クラスは<code>java.util.Map</code>)にはメソッド<code>exec</code>がない)</p>
-
-<p>名前解決をします。そのため<code>closure</code>の<code>OWNER</code>であるスクリプトの方の<code>exec</code>が参照されます。</p>
-
-<p>また、10行目と12行目の<code>exec</code>が参照する<code>x</code>と<code>y</code>が1行目と2行目で設定されている<code>x</code>と<code>y</code>なのは</p>
-
-<p>次の理由からです。</p>
-
-<ul>
-<li><code>map.exec</code>のdelegateが設定されてない</li>
-<li><code>exec</code>のdelegateが設定されていない</li>
-</ul>
-
-
-<h5><code>MarkupBuilder</code>再び</h5>
-
-<p>さきほどの<code>MarkupBuilder</code>に戻ります。</p>
-
-<p><code>MarkupBuilder#doInvokeMethod(String, Object, Object)</code>メソッドでは</p>
-
-<p>どのような処理がされているのかというと…</p>
-
-<figure class='code'><figcaption><span>MarkupBuilder.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// this is partial codes</span>
-</span><span class='line'><span class="kd">protected</span> <span class="n">Object</span> <span class="nf">doInvokeMethod</span><span class="o">(</span><span class="n">String</span> <span class="n">methodName</span><span class="o">,</span> <span class="n">Object</span> <span class="n">name</span><span class="o">,</span> <span class="n">Object</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">Object</span> <span class="n">node</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">Closure</span> <span class="n">closure</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">// creating node and attach it to variable node.</span>
-</span><span class='line'>    <span class="c1">// getting closure from arg and attach it to variable closure.</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">closure</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="c1">// stack operation</span>
-</span><span class='line'>        <span class="n">setClosureDelegate</span><span class="o">(</span><span class="n">closure</span><span class="o">,</span> <span class="n">node</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">closure</span><span class="o">.</span><span class="na">call</span><span class="o">();</span>
-</span><span class='line'>        <span class="c1">// stack operation</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="c1">// node create completion and return it</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">setClosureDelegate</span><span class="o">(</span><span class="n">Closure</span> <span class="n">closure</span><span class="o">,</span> <span class="n">Object</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">closure</span><span class="o">.</span><span class="na">setDelegate</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>9行目で<code>setClosureDelegate</code>メソッドを呼び出し、</p>
-
-<p>15行目からの<code>setClosureDelegate</code>では、</p>
-
-<p><code>closure</code>のdelegateに<code>this</code>(つまり<code>MarkupBuilder</code>のインスタンス)を割り当てています。</p>
-
-<p>その結果10行目の<code>closure.call()</code>では、</p>
-
-<p>メソッドおよびフィールドの名前解決が<code>MarkupBuilder</code>のインスタンスから行われるます。</p>
-
-<p>その結果、<code>MarkupBuilder</code>の例で<code>head</code>とか<code>body</code>といったメソッドが、</p>
-
-<p><code>MarkupBuilder</code>のインスタンスに対して呼び出されるということになります。</p>
-
-<p>さて、翻って</p>
-
-<h1>gradleのtaskメソッド…</h1>
-
-<p>でも、<code>Closure&lt;V&gt;</code>が使われていますね。</p>
-
-<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">task</span> <span class="n">myTask</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;this is myTask&#39;</span><span class="o">.</span>
-</span><span class='line'>    <span class="n">println</span> <span class="s1">&#39;this is not task, but configuration.&#39;</span>
-</span><span class='line'>    <span class="n">doLast</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">println</span> <span class="s1">&#39;finished myTask&#39;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>gradleのandroidサポートが本格的になってからgradleを始めた人の中には</p>
-
-<p>上記のようなgradleの<code>Project</code>クラスのメソッド<code>task(Object, Closure)</code>の</p>
-
-<p><code>Closure</code>部分をタスクだと思っている人がかなりの割合でいると思いますが、</p>
-
-<p>この<code>Closure</code>部分は<strong>タスクではなく、設定です</strong>。</p>
-
-<p>こう書いた場合にタスクはgradleコマンドを書いた時に必ず実行されると</p>
-
-<p>言っていると、元からgroovyをやっている人とは話がかみあわなくなるので、</p>
-
-<p>気をつけて下さい。</p>
-
-<p>では、ちょっとソースコードを覗いてみます。</p>
-
-<figure class='code'><figcaption><span>AbstractProject.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// this is partial codes</span>
-</span><span class='line'><span class="kd">public</span> <span class="n">Task</span> <span class="nf">task</span><span class="o">(</span><span class="n">String</span> <span class="n">task</span><span class="o">,</span> <span class="n">Closure</span> <span class="n">configureClosure</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">taskContainer</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">task</span><span class="o">).</span><span class="na">configure</span><span class="o">(</span><span class="n">configureClosure</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>AbstractProject#task(String, Closure)</code>では、まず<code>Task</code>が作成された後に、</p>
-
-<p><code>Task#configure(Closure)</code>が呼び出されます。</p>
-
-<figure class='code'><figcaption><span>AbstractTask.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// this is partial codes</span>
-</span><span class='line'><span class="kd">public</span> <span class="n">Task</span> <span class="nf">configure</span><span class="o">(</span><span class="n">Closure</span> <span class="n">closure</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">ConfigureUtil</span><span class="o">.</span><span class="na">configure</span><span class="o">(</span><span class="n">closure</span><span class="o">,</span> <span class="k">this</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>Task#configure(Closure)</code>では<code>ConfigureUtil#configure(Closure, Task, boolean)</code>が呼び出されます。</p>
-
-<figure class='code'><figcaption><span>ConfigureUtil.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// this is partial codes</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">configure</span><span class="o">(</span><span class="n">Closure</span> <span class="n">configureClosure</span><span class="o">,</span>
-</span><span class='line'>        <span class="n">T</span> <span class="n">delegate</span><span class="o">,</span>
-</span><span class='line'>        <span class="kt">boolean</span> <span class="n">configureableAware</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nf">configure</span><span class="o">(</span><span class="n">configureClosure</span><span class="o">,</span>
-</span><span class='line'>            <span class="n">delegate</span><span class="o">,</span>
-</span><span class='line'>            <span class="n">Closure</span><span class="o">.</span><span class="na">DELEGATE_FIRST</span><span class="o">,</span>
-</span><span class='line'>            <span class="n">configureableAware</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="kd">private</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">configure</span><span class="o">(</span><span class="n">Closure</span> <span class="n">configureClosure</span><span class="o">,</span>
-</span><span class='line'>        <span class="n">T</span> <span class="n">delegate</span><span class="o">,</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">resolveStrategy</span><span class="o">,</span>
-</span><span class='line'>        <span class="kt">boolean</span> <span class="n">configureableAware</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">ClosureBackedAction</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">action</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClosureBackedAction</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;(</span>
-</span><span class='line'>            <span class="n">configureClosure</span><span class="o">,</span>
-</span><span class='line'>            <span class="n">resolveStrategy</span><span class="o">,</span>
-</span><span class='line'>            <span class="n">configureableAware</span><span class="o">);</span>
-</span><span class='line'>    <span class="n">action</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">delegate</span><span class="o">);</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">delegate</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ここから、<code>org.gradle.api.internal.ClosureBackedAction&lt;T&gt;</code>により、</p>
-
-<p><code>Closure</code>が実行されます。</p>
-
-<figure class='code'><figcaption><span>ClosureBackedAction.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// this is partial codes</span>
-</span><span class='line'><span class="kd">public</span> <span class="nf">ClosureBackedAction</span><span class="o">(</span><span class="n">Closure</span> <span class="n">closure</span><span class="o">,</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">resolveStrategy</span><span class="o">,</span>
-</span><span class='line'>        <span class="kt">boolean</span> <span class="n">configureableAware</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">closure</span> <span class="o">=</span> <span class="n">closure</span><span class="o">;</span>
-</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">configureableAware</span> <span class="o">=</span> <span class="n">configureableAware</span><span class="o">;</span>
-</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">resolveStrategy</span> <span class="o">=</span> <span class="n">resolveStrategy</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">(</span><span class="n">T</span> <span class="n">delegate</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="c1">// check closure is not null</span>
-</span><span class='line'>    <span class="c1">// checking cinfgureableAware is false</span>
-</span><span class='line'>    <span class="n">Closure</span> <span class="n">copy</span> <span class="o">=</span> <span class="o">(</span><span class="n">Closure</span><span class="o">)</span> <span class="n">closure</span><span class="o">.</span><span class="na">clone</span><span class="o">();</span>
-</span><span class='line'>    <span class="n">copy</span><span class="o">.</span><span class="na">setResolveStrategy</span><span class="o">(</span><span class="n">resolveStrategy</span><span class="o">);</span>
-</span><span class='line'>    <span class="n">copy</span><span class="o">.</span><span class="na">setDelegate</span><span class="o">(</span><span class="n">delegate</span><span class="o">);</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">copy</span><span class="o">.</span><span class="na">getMaximumNumberOfParameters</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">copy</span><span class="o">.</span><span class="na">call</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">copy</span><span class="o">.</span><span class="na">call</span><span class="o">(</span><span class="n">delegate</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>12〜14行目でdelegateの設定、16行目or17行目で<code>Closure</code>の実行がなされていますね。</p>
-
-<p>で、<code>Closure</code>のdelegateにはタスクが設定されています。</p>
-
-<p>したがって、少し前で説明した通り、</p>
-
-<p><code>Closure</code>の実行において変数名の解決は<code>Task</code>のインスタンスから順番に解決されていきます。</p>
-
-<p>で、これが最終的にタスクの設定になるわけです。</p>
-
-<p>(結構たらい回しにされていてイライライする方がいらっしゃるかもしれませんが、まあ、テスタビリティを上げるためにこうなっています。)</p>
-
-<p>というわけで、<strong>まとめ</strong></p>
-
-<h2><code>Closure&lt;V&gt;</code>の仕組みがわかると<a href="http://www.gradle.org/docs/current/dsl/">Gradle DSL</a>の理解が容易になります。</h2>
-
-<p>冒頭でgradleの話しませんって言ったな、あれは、嘘だ。</p>
-
-<!-- admax -->
-
-
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-
-
-<!-- admax -->
-
-
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -2976,6 +2327,10 @@ long sum = integers.reduce(0, Long::sum);
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/09/trying-gradle-setupbuild-task-of-gradle-1-dot-7-rc1/">GradleのsetupBuildタスクを試してみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/06/gradle1-dot-7-release-notes-translation/">gradle1.7のリリースノート超意訳</a>
       </li>
     
@@ -2989,10 +2344,6 @@ long sum = integers.reduce(0, Long::sum);
     
       <li class="post">
         <a href="/blog/2013/06/30/first-shibuya-java/">第一回渋谷javaに行ってきた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/27/java8-lambdashi-woshi-tutemita/">Java8 lambda式を使ってみた</a>
       </li>
     
   </ul>

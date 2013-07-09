@@ -6,10 +6,9 @@
 <head>
   <meta charset="utf-8">
   <title>mike、mikeなるままに…</title>
-  <meta name="author" content="mike-neck">
 
   
-  <meta name="description" content="みけです。 Erlangのlistsモジュールを試してみるの第一回になります。 なお、最初の16個は 1
+  <meta name="description" content="Erlangのlistsモジュールを試してみるの第二回は次のコマンドの結果について試していきます。 1
 2
 3
 4
@@ -40,6 +39,20 @@ lists:sublist( lists:sort( lists:map( fun({F, A}) -&gt; atom_to_list(F &hellip;"
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+<meta property="og:title" content="mike、mikeなるままに…" />
+<meta property="og:type" content="blog" />
+<meta property="og:description" content="" />
+
+
+<meta property="og:image" content="/mike-pow.png"/>
+
+<meta property="og:url" content="http://mike-neck.github.io/blog/page/4" />
+<meta property="og:author" content="mike-neck" />
+<meta property="og:site_name" content="mike、mikeなるままに…" />
+<meta property="og:locale" content="" />
+<meta property="fb:app_id" content="" />
 
   
   <script type="text/javascript">
@@ -89,6 +102,1155 @@ lists:sublist( lists:sort( lists:map( fun({F, A}) -&gt; atom_to_list(F &hellip;"
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/14/erlangfalselistsmoziyuruwoshi-sitemiru-di-2hui/">Erlangのlistsモジュールを試してみる - 第2回</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-14T14:01:00+09:00" pubdate data-updated="true">May 14<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Erlangのlistsモジュールを試してみるの第二回は次のコマンドの結果について試していきます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="nn">lists</span><span class="p">:</span><span class="nf">sublist</span><span class="p">(</span>
+</span><span class='line'>    <span class="nn">lists</span><span class="p">:</span><span class="nf">sort</span><span class="p">(</span>
+</span><span class='line'>        <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span>
+</span><span class='line'>            <span class="k">fun</span><span class="p">({</span><span class="nv">F</span><span class="p">,</span> <span class="nv">A</span><span class="p">})</span> <span class="o">-&gt;</span>
+</span><span class='line'>                <span class="nb">atom_to_list</span><span class="p">(</span><span class="nv">F</span><span class="p">)</span> <span class="o">++</span>
+</span><span class='line'>                <span class="s">&quot;/&quot;</span> <span class="o">++</span>
+</span><span class='line'>                <span class="nb">integer_to_list</span><span class="p">(</span><span class="nv">A</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">end</span><span class="p">,</span>
+</span><span class='line'>            <span class="nn">lists</span><span class="p">:</span><span class="nf">module_info</span><span class="p">(</span><span class="n">exports</span><span class="p">))),</span>
+</span><span class='line'>    <span class="mi">17</span><span class="p">,</span>
+</span><span class='line'>    <span class="mi">16</span><span class="p">).</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>結果</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="p">[</span>
+</span><span class='line'>  <span class="s">&quot;keydelete/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keyfind/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keymap/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keymember/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keymerge/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keyreplace/4&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keysearch/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keysort/2&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keystore/4&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;keytake/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;last/1&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;map/2&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;mapfoldl/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;mapfoldr/3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;max/1&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&quot;member/2&quot;</span>
+</span><span class='line'><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>です。</p>
+
+<h3>keydelete/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>keydelete(Key, N, TupleList1) &ndash;> TupleList2</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Key = term()</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList1 = TupleList2 = [Tuple]</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Returns a copy of TupleList1 where the first occurrence of a tuple whose Nth element compares equal to Key is deleted, if there is such a tuple.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keydelete-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>引数に与えられたタプルのリストのコピーを返します。ただし、リスト中のタプルで、タプルのN番目の要素が引数Keyと同じ値のもので最も先頭に近いものは取り除かれます。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keydelete</span><span class="p">(</span><span class="n">jim</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">simon</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">typist</span><span class="p">},</span> <span class="p">{</span><span class="n">dag</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="n">student</span><span class="p">},</span> <span class="p">{</span><span class="n">jack</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">]).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">mike</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">tim</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">officer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">lod</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">dentist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">simon</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">typist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">dag</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="n">student</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jack</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">john</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">officer</span><span class="p">}]</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keydelete</span><span class="p">(</span><span class="n">madscientist</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">simon</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">typist</span><span class="p">},</span> <span class="p">{</span><span class="n">dag</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="n">student</span><span class="p">},</span> <span class="p">{</span><span class="n">jack</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">]).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">mike</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">tim</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">officer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">lod</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">dentist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">simon</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">typist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">dag</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="n">student</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jack</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">john</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">officer</span><span class="p">}]</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keydelete</span><span class="p">(</span><span class="n">madscientist</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="p">]).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">mike</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">tim</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">officer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">lod</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">dentist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">john</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">officer</span><span class="p">}]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>まず最初の例では、リストの中で一番最初に出てくるキーの位置<code>1</code>番目の値が<code>jim</code>であるタプルを削除したリストが返されます。元のリストで9番目のタプルも同様の条件ですが、こちらは削除されません。</p>
+
+<p>次の例ではリストで一致しない条件で実行しています。返されるリストは何も削除されていません。</p>
+
+<p>最後の例ではリストのタプルの要素数より多い番号を指定して削除を実施します。もちろん、返されるリストは何も削除されていません。</p>
+
+<h3>keyfind/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>keyfind(Key, N, TupleList) &ndash;> Tuple | false</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Key = term()</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList = [Tuple]</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Searches the list of tuples TupleList for a tuple whose Nth element compares equal to Key. Returns Tuple if such a tuple is found, otherwise false.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keyfind-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>タプルのリストから指定位置の要素について<code>Key</code>に一致する最初のタプルを返します。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keyfind</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">simon</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">typist</span><span class="p">},</span> <span class="p">{</span><span class="n">dag</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="n">student</span><span class="p">},</span> <span class="p">{</span><span class="n">jack</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">]).</span>
+</span><span class='line'><span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">officer</span><span class="p">}</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keyfind</span><span class="p">(</span><span class="n">jim</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">simon</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">typist</span><span class="p">},</span> <span class="p">{</span><span class="n">dag</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="n">student</span><span class="p">},</span> <span class="p">{</span><span class="n">jack</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">]).</span>
+</span><span class='line'><span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">engineer</span><span class="p">}</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keyfind</span><span class="p">(</span><span class="n">madscientist</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">simon</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">typist</span><span class="p">},</span> <span class="p">{</span><span class="n">dag</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="n">student</span><span class="p">},</span> <span class="p">{</span><span class="n">jack</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="p">]).</span>
+</span><span class='line'><span class="n">false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最初の例ではタプルの二番目の値が<code>36</code>のものを探して、返します。</p>
+
+<p>次の例ではタプルの最初の値が<code>jim</code>のものを探して返しますが、9番目に現れるものは返されません。</p>
+
+<p>最後の例では一致するものがない条件で検索を行いますが、存在しないため<code>false</code>が返ってきます。</p>
+
+<h3>keymap/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>keymap(Fun, N, TupleList1) &ndash;> TupleList2</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Fun = fun((Term1 :: term()) &ndash;> Term2 :: term())</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList1 = TupleList2 = [Tuple]</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Returns a list of tuples where, for each tuple in TupleList1, the Nth element Term1 of the tuple has been replaced with the result of calling Fun(Term1).</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keymap-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>タプルに対して指定した位置の要素に、引数で渡した関数を実行した結果が入れられた、新しいタプルのリストが返されます。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nv">IsProgrammer</span> <span class="o">=</span> <span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">X</span> <span class="o">=:=</span> <span class="n">programmer</span> <span class="k">end</span><span class="p">.</span>
+</span><span class='line'><span class="err">#</span><span class="nv">Fun</span><span class="o">&lt;</span><span class="n">erl_eval</span><span class="p">.</span><span class="mi">6</span><span class="p">.</span><span class="mi">17052888</span><span class="o">&gt;</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keymap</span><span class="p">(</span><span class="nv">IsProgrammer</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">tim</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">bob</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">officer</span><span class="p">},</span> <span class="p">{</span><span class="n">lod</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="n">dentist</span><span class="p">},</span> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">simon</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">typist</span><span class="p">},</span> <span class="p">{</span><span class="n">dag</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="n">student</span><span class="p">},</span> <span class="p">{</span><span class="n">jack</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>     <span class="p">{</span><span class="n">john</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="n">engineer</span><span class="p">},</span> <span class="p">{</span><span class="n">mike</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="n">scientist</span><span class="p">},</span> <span class="p">{</span><span class="n">jim</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">officer</span><span class="p">}</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">]).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">mike</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="n">true</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">tim</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">lod</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">iwan</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">simon</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">dag</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jack</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">true</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">john</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">false</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">false</span><span class="p">}]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この例ではタプルの3番目の要素がprogrammerならtrueに変換し、そうでなければfalseに変換した新しいタプルのリストを返します。</p>
+
+<h3>keymember/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>keymember(Key, N, TupleList) &ndash;> boolean()</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Key = term()</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList = [Tuple]</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Returns true if there is a tuple in TupleList whose Nth element compares equal to Key, otherwise false.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keymember-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>指定位置に<code>Key</code>を含むタプルがリスト中にあれば<code>true</code>、なければ<code>false</code>が返ってきます。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keymember</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[{</span><span class="n">mike</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">tim</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">officer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">lod</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">dentist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">iwan</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">simon</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">typist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">dag</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="n">student</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">jack</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">john</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">officer</span><span class="p">}</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">]).</span>
+</span><span class='line'><span class="n">true</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keymember</span><span class="p">(</span><span class="n">madscientist</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">tim</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">bob</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">officer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">lod</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="n">dentist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">iwan</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">evangelist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">simon</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">typist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">dag</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="n">student</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">jack</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">programmer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">john</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">engineer</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">mike</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">scientist</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">jim</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">officer</span><span class="p">}</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">]).</span>
+</span><span class='line'><span class="n">false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最初の例では、1番目の要素が<code>bob</code>であるタプルがリスト中に含まれていますので、<code>true</code>が返されます。</p>
+
+<p>次の例では、3番目の要素が<code>madscientist</code>のタプルはリスト中に含まれていないので、<code>false</code>が返されます。</p>
+
+<h3>keymerge/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>keymerge(N, TupleList1, TupleList2) &ndash;> TupleList3</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList1 = [T1]</li>
+<li>TupleList2 = [T2]</li>
+<li>TupleList3 = [(T1 | T2)]</li>
+<li>T1 = T2 = Tuple</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Returns the sorted list formed by merging TupleList1 and TupleList2. The merge is performed on the Nth element of each tuple. Both TupleList1 and TupleList2 must be key-sorted prior to evaluating this function. When two tuples compare equal, the tuple from TupleList1 is picked before the tuple from TupleList2.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keymerge-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>この関数は引数で与えられた二つのタプルリストをソートしてマージした状態で返します。ソートのキーは引数の<code>N</code>番目の要素になります。引数に与えられるタプルリストは事前にソートされていることが求められます。双方のタプルでキーの値が一致する場合、左側の引数のリストから取られたタプルが右のものに優先されます。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keymerge</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">}],</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="mi">2</span><span class="p">}]).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">d</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">d</span><span class="p">,</span><span class="mi">2</span><span class="p">}]</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keymerge</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">e</span><span class="p">,</span> <span class="mi">1</span><span class="p">}],</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">t</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="mi">2</span><span class="p">}]).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">t</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">d</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">x</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">d</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">e</span><span class="p">,</span><span class="mi">1</span><span class="p">}]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最初の例では、事前にソートされたタプルリストが引数として与えられ、マージされたリストが返されます。また、<code>[{d, 1}, {d, 2}]</code>のようにキーの値が一致するものは左側の引数に与えられたものが優先されています。</p>
+
+<p>次の例では、事前にソートされていないタプルリストが引数として与えられていますが、返されるリストはマージされていない状態で返ってきます。</p>
+
+<h3>keyreplace/4</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>keyreplace(Key, N, TupleList1, NewTuple) &ndash;> TupleList2</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Key = term()</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList1 = TupleList2 = [Tuple]</li>
+<li>NewTuple = Tuple</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Returns a copy of TupleList1 where the first occurrence of a T tuple whose Nth element compares equal to Key is replaced with NewTuple, if there is such a tuple T.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keyreplace-4">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>タプルリストの中で最も最初に現れた<code>N</code>番目の要素が<code>Key</code>であるタプルを引数で指定されたタプルに変更したリストを返します。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keyreplace</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">not_change</span><span class="p">}],</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">changed</span><span class="p">}).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="n">original</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">b</span><span class="p">,</span><span class="n">changed</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">c</span><span class="p">,</span><span class="n">original</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">d</span><span class="p">,</span><span class="n">original</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">b</span><span class="p">,</span><span class="n">not_change</span><span class="p">}]</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keyreplace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">original</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>  <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="n">original</span><span class="p">}],</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">{</span><span class="n">x</span><span class="p">,</span> <span class="n">not_appear</span><span class="p">}).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="n">original</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="n">original</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="n">original</span><span class="p">}]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最初の例では最も最初に現れる1番目の要素が<code>b</code>であるタプルが引数で与えられたタプルと交換されて返されます。最後に現れる同じ<code>Key</code>をもつタプルは変わっていません。</p>
+
+<p>次の例では<code>Key</code>に一致するタプルが存在しないため、元のリストと同じ物が返ってきます。</p>
+
+<h3>keysearch/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>keysearch(Key, N, TupleList) &ndash;> {value, Tuple} | false</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Key = term()</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList = [Tuple]</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Searches the list of tuples TupleList for a tuple whose Nth element compares equal to Key. Returns {value, Tuple} if such a tuple is found, otherwise false.</p>
+
+<blockquote><p>This function is retained for backward compatibility. The function lists:keyfind/3 (introduced in R13A) is in most cases more convenient.</p></blockquote>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keysearch-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>タプルリストの中で<code>N</code>番目の要素が<code>Key</code>である最初のタプルを探して、<code>{value, Tuple}</code>の形式で返します。見つからない場合は、<code>false</code>を返します。</p>
+
+<p>なお、この関数は下位互換のために残っているものであり、R13Aより導入された<code>lists:keyfind/3</code>関数の方が便利です。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keysearch</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">2</span><span class="p">}]).</span>
+</span><span class='line'><span class="p">{</span><span class="n">value</span><span class="p">,{</span><span class="n">c</span><span class="p">,</span><span class="mi">1</span><span class="p">}}</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keysearch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">2</span><span class="p">}]).</span>
+</span><span class='line'><span class="n">false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最初の例では1番目の要素が<code>c</code>であるタプルを探して<code>{value, {c, 1}}</code>のように返します。二番目に現れるものは返しません。</p>
+
+<p>次の例では条件に該当するタプルがないために<code>false</code>が返ってきます。</p>
+
+<h3>keysort/2</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>keysort(N, TupleList1) &ndash;> TupleList2</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList1 = TupleList2 = [Tuple]</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Returns a list containing the sorted elements of the list TupleList1. Sorting is performed on the Nth element of the tuples. The sort is stable.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keysort-2">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>引数に渡されたタプルリストを<code>N</code>番目の要素でソートしたリストを返します。ソートは安定ソートです。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keysort</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">r</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">t</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">s</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">r</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">x</span><span class="p">,</span> <span class="mi">3</span><span class="p">}]).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">r</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">r</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">s</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">t</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">x</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="p">}]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ソートされた結果が返ってきます。安定ソートのため、重複するキーに対しては元の順番が維持されます。</p>
+
+<h3>keystore/4</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>keystore(Key, N, TupleList1, NewTuple) &ndash;> TupleList2</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Key = term()</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList1 = [Tuple]</li>
+<li>TupleList2 = [Tuple, &hellip;]</li>
+<li>NewTuple = Tuple</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Returns a copy of TupleList1 where the first occurrence of a tuple T whose Nth element compares equal to Key is replaced with NewTuple, if there is such a tuple T. If there is no such tuple T a copy of TupleList1 where [NewTuple] has been appended to the end is returned.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keystore-4">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>タプルリストの中で一番最初に出てくる<code>N</code>番目の要素が<code>Key</code>であるタプルを、引数のタプルと交換したリストを返します。<code>Key</code>に一致するリストがない場合は、リストの最後に追加されて返されます。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keystore</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">not_store</span><span class="p">}],</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">new_tuple</span><span class="p">}).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="n">origin</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="n">new_tuple</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="n">origin</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="n">not_store</span><span class="p">}]</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keystore</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="n">origin</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="n">not_store</span><span class="p">}],</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="n">x</span><span class="p">,</span> <span class="n">not_found</span><span class="p">}).</span>
+</span><span class='line'><span class="p">[{</span><span class="n">a</span><span class="p">,</span><span class="n">origin</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">b</span><span class="p">,</span><span class="n">origin</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">c</span><span class="p">,</span><span class="n">origin</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">b</span><span class="p">,</span><span class="n">not_store</span><span class="p">},</span>
+</span><span class='line'> <span class="p">{</span><span class="n">x</span><span class="p">,</span><span class="n">not_found</span><span class="p">}]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最初の例では、1番目の要素が<code>b</code>であるタプルが、引数に与えられた新しいタプルに交換されたリストが返ってきます。</p>
+
+<p>次の例では、該当するタプルが存在しないため、引数に与えられた新しいタプルがリストの最後に追加されて返ってきます。</p>
+
+<h3>keytake/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>keytake(Key, N, TupleList1) &ndash;> {value, Tuple, TupleList2} | false</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Key = term()</li>
+<li>N = integer() >= 1 (1..tuple_size(Tuple))</li>
+<li>TupleList1 = TupleList2 = [Tuple]</li>
+<li>Tuple = tuple()</li>
+</ul>
+
+
+<p>Searches the list of tuples TupleList1 for a tuple whose Nth element compares equal to Key. Returns {value, Tuple, TupleList2} if such a tuple is found, otherwise false. TupleList2 is a copy of TupleList1 where the first occurrence of Tuple has been removed.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#keytake-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>タプルリストの中から初めて現れる<code>N</code>番目の要素が<code>Key</code>であるタプルを取り出し、<code>{value, Tuple, TupleList2}</code>の形式で返します。戻されるタプルリストには条件に一致したタプルは含まれていません。一致するものがない場合は、<code>false</code>が返されます。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keytake</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">}]).</span>
+</span><span class='line'><span class="p">{</span><span class="n">value</span><span class="p">,{</span><span class="n">b</span><span class="p">,</span><span class="mi">1</span><span class="p">},[{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">b</span><span class="p">,</span><span class="mi">2</span><span class="p">}]}</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">keytake</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[{</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">}]).</span>
+</span><span class='line'><span class="n">false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最初の例では一番最初に現れる1番目の要素が<code>b</code>のタプルが取り出され、後から現れるものは残ったリストとともに返されています。</p>
+
+<p>次の例では、条件に一致するタプルがないため、<code>false</code>が返されます。</p>
+
+<h3>last/1</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>last(List) &ndash;> Last</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>List = [T, &hellip;]</li>
+<li>Last = T</li>
+<li>T = term()</li>
+</ul>
+
+
+<p>Returns the last element in List.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#last-1">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>リストの最後の要素を返します。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">last</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]).</span>
+</span><span class='line'><span class="mi">5</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">last</span><span class="p">([</span><span class="mi">1</span><span class="p">]).</span>
+</span><span class='line'><span class="mi">1</span>
+</span><span class='line'><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">last</span><span class="p">([]).</span>
+</span><span class='line'><span class="o">**</span> <span class="n">exception</span> <span class="nn">error</span><span class="p">:</span> <span class="n">no</span> <span class="n">function</span> <span class="n">clause</span> <span class="n">matching</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">last</span><span class="p">([])</span> <span class="p">(</span><span class="n">lists</span><span class="p">.</span><span class="n">erl</span><span class="p">,</span> <span class="n">line</span> <span class="mi">213</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最初の例ではリストの最後の要素<code>5</code>が返されます。</p>
+
+<p>次の例では長さ1のリストを引数として渡して、最後の要素=たったひとつの要素である<code>1</code>が返されます。</p>
+
+<p>最後の例では長さ0のリストを引数として渡します。この場合は例外が発生します。</p>
+
+<h3>map/2</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>map(Fun, List1) &ndash;> List2</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Fun = fun((A) &ndash;> B)</li>
+<li>List1 = [A]</li>
+<li>List2 = [B]</li>
+<li>A = B = term()</li>
+</ul>
+
+
+<p>Takes a function from As to Bs, and a list of As and produces a list of Bs by applying the function to every element in the list. This function is used to obtain the return values. The evaluation order is implementation dependent.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#map-2">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>要素を返還する関数を引数に取ります。そしてリストの要素１つずつに関数を適用した結果が入ったリストが返されます。なお、実行順序は実装に依存しています。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">X</span> <span class="ow">rem</span> <span class="mi">2</span> <span class="o">=:=</span> <span class="mi">0</span> <span class="k">end</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]).</span>
+</span><span class='line'><span class="p">[</span><span class="n">false</span><span class="p">,</span><span class="n">true</span><span class="p">,</span><span class="n">false</span><span class="p">,</span><span class="n">true</span><span class="p">,</span><span class="n">false</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>引数に偶数かどうか判定する関数を渡します。引数のリストは1から5までの整数ですので、<code>false</code>と<code>true</code>が繰り返されるリストが返ってきます。</p>
+
+<h3>mapfoldl/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>mapfoldl(Fun, Acc0, List1) &ndash;> {List2, Acc1}</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Fun = fun((A, AccIn) &ndash;> {B, AccOut})</li>
+<li>Acc0 = Acc1 = AccIn = AccOut = term()</li>
+<li>List1 = [A]</li>
+<li>List2 = [B]</li>
+<li>A = B = term()</li>
+</ul>
+
+
+<p>mapfoldl combines the operations of map/2 and foldl/3 into one pass.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#mapfoldl-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p><code>mapfoldl/3</code>関数は<code>map/2</code>関数と<code>foldl/3</code>関数を一つにまとめたような関数です。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nv">Multiply</span> <span class="o">=</span> <span class="k">fun</span> <span class="p">({</span><span class="nv">R1</span><span class="p">,</span> <span class="nv">I1</span><span class="p">},</span> <span class="p">{</span><span class="nv">R2</span><span class="p">,</span> <span class="nv">I2</span><span class="p">})</span> <span class="o">-&gt;</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="nv">R1</span> <span class="o">*</span> <span class="nv">R2</span> <span class="o">-</span> <span class="nv">I1</span> <span class="o">*</span> <span class="nv">I2</span><span class="p">,</span> <span class="nv">R1</span> <span class="o">*</span> <span class="nv">I2</span> <span class="o">+</span> <span class="nv">I1</span> <span class="o">*</span> <span class="nv">R2</span><span class="p">}</span> <span class="k">end</span><span class="p">.</span>
+</span><span class='line'><span class="err">#</span><span class="nv">Fun</span><span class="o">&lt;</span><span class="n">erl_eval</span><span class="p">.</span><span class="mi">12</span><span class="p">.</span><span class="mi">17052888</span><span class="o">&gt;</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">mapfoldl</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">A</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">Res</span> <span class="o">=</span> <span class="nv">Multiply</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">A</span><span class="p">),</span> <span class="p">{</span><span class="nv">Res</span><span class="p">,</span> <span class="nv">Res</span><span class="p">}</span> <span class="k">end</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[{</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">}]).</span>
+</span><span class='line'><span class="p">{[{</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">},{</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">},{</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">}],{</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">}}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>複素数<code>{R, I}</code>に対して、掛け算をする関数<code>Multiply</code>を定義し、<code>lists:mapfoldl/3</code>で初期値<code>{1, 0}</code>から左から順繰りに掛け算をしていきます。返されたタプルの左要素には掛け算の経過が、タプルの右側の要素には最終的な掛け算の結果が返っています。</p>
+
+<h3>mapfoldr/3</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>mapfoldr(Fun, Acc0, List1) &ndash;> {List2, Acc1}</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Fun = fun((A, AccIn) &ndash;> {B, AccOut})</li>
+<li>Acc0 = Acc1 = AccIn = AccOut = term()</li>
+<li>List1 = [A]</li>
+<li>List2 = [B]</li>
+<li>A = B = term()</li>
+</ul>
+
+
+<p>mapfoldr combines the operations of map/2 and foldr/3 into one pass.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#mapfoldr-3">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p><code>mapfoldr</code>関数は<code>map/2</code>関数と<code>foldr/3</code>関数を組み合わせた関数です。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nv">Multiply</span> <span class="o">=</span> <span class="k">fun</span> <span class="p">({</span><span class="nv">R1</span><span class="p">,</span> <span class="nv">I1</span><span class="p">},</span> <span class="p">{</span><span class="nv">R2</span><span class="p">,</span> <span class="nv">I2</span><span class="p">})</span> <span class="o">-&gt;</span>
+</span><span class='line'><span class="mi">1</span><span class="o">&gt;</span>     <span class="p">{</span><span class="nv">R1</span> <span class="o">*</span> <span class="nv">R2</span> <span class="o">-</span> <span class="nv">I1</span> <span class="o">*</span> <span class="nv">I2</span><span class="p">,</span> <span class="nv">R1</span> <span class="o">*</span> <span class="nv">I2</span> <span class="o">+</span> <span class="nv">I1</span> <span class="o">*</span> <span class="nv">R2</span><span class="p">}</span> <span class="k">end</span><span class="p">.</span>
+</span><span class='line'><span class="err">#</span><span class="nv">Fun</span><span class="o">&lt;</span><span class="n">erl_eval</span><span class="p">.</span><span class="mi">12</span><span class="p">.</span><span class="mi">17052888</span><span class="o">&gt;</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">mapfoldr</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">A</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">Res</span> <span class="o">=</span> <span class="nv">Multiply</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">A</span><span class="p">),</span> <span class="p">{</span><span class="nv">Res</span><span class="p">,</span> <span class="nv">Res</span><span class="p">}</span> <span class="k">end</span><span class="p">,</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span>   <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="p">[{</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">}]).</span>
+</span><span class='line'><span class="p">{[{</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">},{</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">},{</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">}],{</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">}}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>先ほどと同じく複素数の計算をしています。返されたタプルの左側の順序が先ほどの<code>mapfoldl/3</code>関数と異なっていることがわかると思います。</p>
+
+<h3>max/1</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>max(List) &ndash;> Max</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>List = [T, &hellip;]</li>
+<li>Max = T</li>
+<li>T = term()</li>
+</ul>
+
+
+<p>Returns the first element of List that compares greater than or equal to all other elements of List.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#max-1">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>他のすべての要素より大きい最初の要素を返します。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">max</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">6</span><span class="p">]).</span>
+</span><span class='line'><span class="mi">4</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>リストの中の最大値である<code>4</code>が返されます。</p>
+
+<h3>member/2</h3>
+
+<h4>Erlang公式ドキュメント</h4>
+
+<blockquote><h4>member(Elem, List) &ndash;> boolean()</h4>
+
+<h4>Types</h4>
+
+<ul>
+<li>Elem = T</li>
+<li>List = [T]</li>
+<li>T = term()</li>
+</ul>
+
+
+<p>Returns true if Elem matches some element of List, otherwise false.</p>
+
+<p><a href="http://erlang.org/doc/man/lists.html#member-2">参照元</a></p></blockquote>
+
+<h4>Explain</h4>
+
+<p>指定した要素と一致する要素があれば<code>true</code>を、なければ<code>false</code>を返します。</p>
+
+<h4>Example</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">member</span><span class="p">({</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span> <span class="p">[{</span><span class="n">b</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">d</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">}]).</span>
+</span><span class='line'><span class="n">true</span>
+</span><span class='line'><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">member</span><span class="p">({</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span> <span class="p">[{</span><span class="n">b</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">c</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">a</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">d</span><span class="p">,</span><span class="mi">1</span><span class="p">}]).</span>
+</span><span class='line'><span class="n">false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最初の例では指定した要素<code>{a,1}</code>に一致する要素がリストにあるため<code>true</code>が返ってきます。</p>
+
+<p>次の例では指定した要素<code>{a,1}</code>に一致する要素がリストにないため<code>false</code>が返ってきます。</p>
+
+<h2>次回</h2>
+
+<p>次回は次の式の結果をやっていきます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="nn">lists</span><span class="p">:</span><span class="nf">sublist</span><span class="p">(</span>
+</span><span class='line'>    <span class="nn">lists</span><span class="p">:</span><span class="nf">sort</span><span class="p">(</span>
+</span><span class='line'>        <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span>
+</span><span class='line'>            <span class="k">fun</span><span class="p">({</span><span class="nv">F</span><span class="p">,</span> <span class="nv">A</span><span class="p">})</span> <span class="o">-&gt;</span>
+</span><span class='line'>                <span class="nb">atom_to_list</span><span class="p">(</span><span class="nv">F</span><span class="p">)</span> <span class="o">++</span>
+</span><span class='line'>                <span class="s">&quot;/&quot;</span> <span class="o">++</span>
+</span><span class='line'>                <span class="nb">integer_to_list</span><span class="p">(</span><span class="nv">A</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">end</span><span class="p">,</span>
+</span><span class='line'>            <span class="nn">lists</span><span class="p">:</span><span class="nf">module_info</span><span class="p">(</span><span class="n">exports</span><span class="p">))),</span>
+</span><span class='line'>    <span class="mi">17</span><span class="p">,</span>
+</span><span class='line'>    <span class="mi">16</span><span class="p">).</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -2114,6 +3276,10 @@ Githubでブログを書くことにしました。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/09/trying-gradle-setupbuild-task-of-gradle-1-dot-7-rc1/">GradleのsetupBuildタスクを試してみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/06/gradle1-dot-7-release-notes-translation/">gradle1.7のリリースノート超意訳</a>
       </li>
     
@@ -2127,10 +3293,6 @@ Githubでブログを書くことにしました。</p>
     
       <li class="post">
         <a href="/blog/2013/06/30/first-shibuya-java/">第一回渋谷javaに行ってきた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/27/java8-lambdashi-woshi-tutemita/">Java8 lambda式を使ってみた</a>
       </li>
     
   </ul>

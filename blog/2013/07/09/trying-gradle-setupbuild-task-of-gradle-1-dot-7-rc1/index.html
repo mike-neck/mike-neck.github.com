@@ -5,10 +5,10 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="ja"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>gradleプロジェクトは、gradleを使うよりも、gradlewを使うことがオススメです - mike、mikeなるままに…</title>
+  <title>GradleのsetupBuildタスクを試してみた - mike、mikeなるままに…</title>
 
   
-  <meta name="description" content="みけです。 最近、Java開発者のgradleへの注目には眼を見張るものがあります。 gradle1.0-m2くらいから使っていた僕も、 参考になるような記事がたくさんあります。 みなさんありがとうございます。 gradleのすばらしさ 僕はgradleいいよという時に、いつも聞かれるのですが &hellip;">
+  <meta name="description" content="こんにちわ。みけです。 前回の記事、gradle1.7のリリースノート超意訳で、 いくつか気になる機能があったので試してみることにしました。 今回は、setupBuildタスクを試してみます。 リリースノートでは javaプラグインが適用されたシンプルなビルドファイル &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -17,7 +17,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/06/13/opening-gradle-slash-gradle-with-gradle-will-fail-please-use-gradlew">
+  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/07/09/trying-gradle-setupbuild-task-of-gradle-1-dot-7-rc1">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="mike、mikeなるままに…" type="application/atom+xml">
@@ -30,14 +30,14 @@
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
   
-<meta property="og:title" content="gradleプロジェクトは、gradleを使うよりも、gradlewを使うことがオススメです - mike、mikeなるままに…" />
+<meta property="og:title" content="GradleのsetupBuildタスクを試してみた - mike、mikeなるままに…" />
 <meta property="og:type" content="article" />
-<meta property="og:description" content="みけです。 最近、Java開発者のgradleへの注目には眼を見張るものがあります。 gradle1.0-m2くらいから使っていた僕も、 参考になるような記事がたくさんあります。 みなさんありがとうございます。 gradleのすばらしさ 僕はgradleいいよという時に、いつも聞かれるのですが &hellip;" />
+<meta property="og:description" content="こんにちわ。みけです。 前回の記事、gradle1.7のリリースノート超意訳で、 いくつか気になる機能があったので試してみることにしました。 今回は、setupBuildタスクを試してみます。 リリースノートでは javaプラグインが適用されたシンプルなビルドファイル &hellip;" />
 
 
-<meta property="og:image" content="/mike-pow.png"/>
+<meta property="og:image" content="http://googledrive.com/host/0B4hhdHWLP7RRZHRNTkNwZEYtdkE"/>
 
-<meta property="og:url" content="http://mike-neck.github.io/blog/2013/06/13/opening-gradle-slash-gradle-with-gradle-will-fail-please-use-gradlew" />
+<meta property="og:url" content="http://mike-neck.github.io/blog/2013/07/09/trying-gradle-setupbuild-task-of-gradle-1-dot-7-rc1" />
 <meta property="og:author" content="mike-neck" />
 <meta property="og:site_name" content="mike、mikeなるままに…" />
 <meta property="og:locale" content="" />
@@ -94,7 +94,7 @@
   
   <header>
     
-      <h1 class="entry-title">Gradleプロジェクトは、gradleを使うよりも、gradlewを使うことがオススメです</h1>
+      <h1 class="entry-title">GradleのsetupBuildタスクを試してみた</h1>
     
     
       <p class="meta">
@@ -110,76 +110,36 @@
   
 
 
-<time datetime="2013-06-13T02:41:00+09:00" pubdate data-updated="true">Jun 13<span>th</span>, 2013</time>
+<time datetime="2013-07-09T10:54:00+09:00" pubdate data-updated="true">Jul 9<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><img src="http://www.gradle.org/img/gradle_logo.gif"/></p>
+<div class="entry-content"><p>こんにちわ。みけです。</p>
 
-<p>みけです。</p>
+<p>前回の記事、<a href="http://mike-neck.github.io/blog/2013/07/06/gradle1-dot-7-release-notes-translation/">gradle1.7のリリースノート超意訳</a>で、</p>
 
-<p>最近、Java開発者のgradleへの注目には眼を見張るものがあります。</p>
+<p>いくつか気になる機能があったので試してみることにしました。</p>
 
-<p>gradle1.0-m2くらいから使っていた僕も、</p>
+<hr />
 
-<p>参考になるような記事がたくさんあります。</p>
+<p>今回は、<a href="http://mike-neck.github.io/blog/2013/07/06/gradle1-dot-7-release-notes-translation/#c1_8">setupBuildタスク</a>を試してみます。</p>
 
-<p>みなさんありがとうございます。</p>
+<p>リリースノートでは</p>
 
-<h1>gradleのすばらしさ</h1>
+<ul>
+<li>javaプラグインが適用されたシンプルなビルドファイル</li>
+<li>サンプルのプロダクションクラスとディレクトリー</li>
+<li>サンプルのJUnitテストとディレクトリー</li>
+<li>Gradle Wrapperファイル</li>
+</ul>
 
-<p>僕はgradleいいよという時に、いつも聞かれるのですが、</p>
 
-<h3>AntとMavenにくらべてgradleの何がいいの？</h3>
+<p>が生成されるとありました。</p>
 
-<p>という質問があります。</p>
-
-<p>DSLで書けるとか、</p>
-
-<p>dependencyの指定が簡単とか、</p>
-
-<p>まあ、各種ツールに精通すれば、</p>
-
-<p>別にantでもmavenでも変わりません。</p>
-
-<p>あえてそれでもgradleを選ぶ理由を上げるなら、</p>
-
-<p><strong>gradle wrapper</strong>の存在です。</p>
-
-<p>チームで開発する場合、開発環境をチーム内で同じにしておくことが重要です。</p>
-
-<p>メンバーの開発マシンの</p>
-
-<p>antのバーション、mavenのバージョン、</p>
-
-<p>これらが違ったということでビルドに失敗して、</p>
-
-<p>その原因追求のために時間がかかるということも</p>
-
-<p>よくある話です。</p>
-
-<p>一方で、gradleでは</p>
-
-<p><strong>gradle wrapper</strong>を用いれば、</p>
-
-<p>ビルドツールのバージョンに振り回されることはありません。</p>
-
-<p>あまりピンとこないかもしれませんが、</p>
-
-<p>実例をあげてみます。</p>
-
-<h2>gradle本体をIntelliJ IDEAに取り込む</h2>
-
-<p>gradle DSLを読んでいて、どうしてもわからないことがある場合、</p>
-
-<p>gradle本体のソースを読むことがあります。</p>
-
-<p>最新(2013/06/12時点)のソースを落としてきて、</p>
-
-<p><code>gradle idea</code>タスクを実行してみます。</p>
+<p>では実際に試してみたいと思います。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -205,197 +165,192 @@
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
 <span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ gradle --version
-</span><span class='line'>
-</span><span class='line'>------------------------------------------------------------
-</span><span class='line'>Gradle 1.6
-</span><span class='line'>------------------------------------------------------------
-</span><span class='line'>
-</span><span class='line'>Gradle build time: 2013年5月7日 9時12分14秒 UTC
-</span><span class='line'>Groovy: 1.8.6
-</span><span class='line'>Ant: Apache Ant(TM) version 1.8.4 compiled on May 22 2012
-</span><span class='line'>Ivy: 2.2.0
-</span><span class='line'>JVM: 1.7.0_13 (Oracle Corporation 23.7-b01)
-</span><span class='line'>OS: Mac OS X 10.8.4 x86_64
-</span><span class='line'>
-</span><span class='line'>$ gradle idea
-</span><span class='line'>:buildSrc:clean
-</span><span class='line'>:buildSrc:compileJava UP-TO-DATE
-</span><span class='line'>:buildSrc:compileGroovy
-</span><span class='line'>:buildSrc:processResources
-</span><span class='line'>:buildSrc:classes
-</span><span class='line'>:buildSrc:jar
-</span><span class='line'>:buildSrc:assemble
-</span><span class='line'>:buildSrc:checkstyleMain
-</span><span class='line'>:buildSrc:compileTestJava UP-TO-DATE
-</span><span class='line'>:buildSrc:compileTestGroovy
-</span><span class='line'>:buildSrc:processTestResources
-</span><span class='line'>:buildSrc:testClasses
-</span><span class='line'>:buildSrc:checkstyleTest UP-TO-DATE
-</span><span class='line'>:buildSrc:codenarcMain
-</span><span class='line'>:buildSrc:codenarcTest
-</span><span class='line'>:buildSrc:test
-</span><span class='line'>:buildSrc:check
-</span><span class='line'>:buildSrc:build
-</span><span class='line'>
-</span><span class='line'>FAILURE: Build failed with an exception.
-</span><span class='line'>
-</span><span class='line'>* Where:
-</span><span class='line'>Script '/Users/mike/IdeaProjects/gradle/gradle/gradle/integTest.gradle' line: 32
-</span><span class='line'>
-</span><span class='line'>* What went wrong:
-</span><span class='line'>A problem occurred evaluating script.
-</span><span class='line'>&gt; Failed to notify action.
-</span><span class='line'>   &gt; Could not find property 'reports' on task ':announce:integTest'.
-</span><span class='line'>
-</span><span class='line'>* Try:
-</span><span class='line'>Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
-</span><span class='line'>
-</span><span class='line'>BUILD FAILED
-</span><span class='line'>
-</span><span class='line'>Total time: 54.695 secs</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最新のgradle(バージョン1.6)でエラーが発生します。</p>
-
-<p>ビルドスクリプト:buildSrcプロジェクトのテスト中に落ちてしまいます。</p>
-
-<p>一方、プロジェクトに付属している<strong>wapper</strong>で実行してみます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ ./gradlew --version
-</span><span class='line'>
-</span><span class='line'>------------------------------------------------------------
-</span><span class='line'>Gradle 1.7-20130519231153+0000
-</span><span class='line'>------------------------------------------------------------
-</span><span class='line'>
-</span><span class='line'>Build time:   2013-05-19 23:11:53 UTC
-</span><span class='line'>Build number: none
-</span><span class='line'>Revision:     9a7199efaf72c620b33f9767874f0ebced135d83
-</span><span class='line'>
-</span><span class='line'>Groovy:       1.8.6
-</span><span class='line'>Ant:          Apache Ant(TM) version 1.8.4 compiled on May 22 2012
-</span><span class='line'>Ivy:          2.2.0
-</span><span class='line'>JVM:          1.7.0_13 (Oracle Corporation 23.7-b01)
-</span><span class='line'>OS:           Mac OS X 10.8.4 x86_64
-</span><span class='line'>
-</span><span class='line'>$ ./gradlew idea
-</span><span class='line'>Deleting directory /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee/gradle-1.7-20130519231153+0000
-</span><span class='line'>Unzipping /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee/gradle-1.7-20130519231153+0000-bin.zip to /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee
-</span><span class='line'>Set executable permissions for: /Users/mike/.gradle/wrapper/dists/gradle-1.7-20130519231153+0000-bin/1cbtqldhq0muu2cto5pdcq66ee/gradle-1.7-20130519231153+0000/bin/gradle
-</span><span class='line'>:buildSrc:clean
-</span><span class='line'>:buildSrc:compileJava UP-TO-DATE
-</span><span class='line'>:buildSrc:compileGroovy
-</span><span class='line'>:buildSrc:processResources
-</span><span class='line'>:buildSrc:classes
-</span><span class='line'>:buildSrc:jar
-</span><span class='line'>:buildSrc:assemble
-</span><span class='line'>:buildSrc:checkstyleMain
-</span><span class='line'>:buildSrc:compileTestJava UP-TO-DATE
-</span><span class='line'>:buildSrc:compileTestGroovy
-</span><span class='line'>:buildSrc:processTestResources
-</span><span class='line'>:buildSrc:testClasses
-</span><span class='line'>:buildSrc:checkstyleTest UP-TO-DATE
-</span><span class='line'>:buildSrc:codenarcMain
-</span><span class='line'>:buildSrc:codenarcTest
-</span><span class='line'>:buildSrc:test
-</span><span class='line'>:buildSrc:check
-</span><span class='line'>:buildSrc:build
-</span><span class='line'>:ideaModule
-</span><span class='line'>
-</span><span class='line'>## 途中長いので略
-</span><span class='line'>
-</span><span class='line'>:ui:ideaModule
-</span><span class='line'>:ui:idea
-</span><span class='line'>:wrapper:buildReceiptResource
-</span><span class='line'>:wrapper:ideaModule
-</span><span class='line'>:wrapper:idea
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir sample
+</span><span class='line'>$ cd sample/
+</span><span class='line'>$ ll
+</span><span class='line'>total 0
+</span><span class='line'>drwxr-xr-x  2 mike  staff    68B  7  9 11:19 .
+</span><span class='line'>drwxr-xr-x  3 mike  staff   102B  7  9 11:16 ..
+</span><span class='line'>$ gradle setupBuild --type java-library
+</span><span class='line'>:wrapper
+</span><span class='line'>:setupBuild
 </span><span class='line'>
 </span><span class='line'>BUILD SUCCESSFUL
 </span><span class='line'>
-</span><span class='line'>Total time: 2 mins 11.981 secs</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>Total time: 6.362 secs
+</span><span class='line'>$ ll
+</span><span class='line'>total 40
+</span><span class='line'>drwxr-xr-x  9 mike  staff   306B  7  9 11:19 .
+</span><span class='line'>drwxr-xr-x  3 mike  staff   102B  7  9 11:16 ..
+</span><span class='line'>drwxr-xr-x  3 mike  staff   102B  7  9 11:19 .gradle
+</span><span class='line'>-rw-r--r--  1 mike  staff   1.2K  7  9 11:19 build.gradle
+</span><span class='line'>drwxr-xr-x  3 mike  staff   102B  7  9 11:19 gradle
+</span><span class='line'>-rwxr-xr-x  1 mike  staff   5.0K  7  9 11:19 gradlew
+</span><span class='line'>-rw-r--r--  1 mike  staff   2.3K  7  9 11:19 gradlew.bat
+</span><span class='line'>-rw-r--r--  1 mike  staff   645B  7  9 11:19 settings.gradle
+</span><span class='line'>drwxr-xr-x  4 mike  staff   136B  7  9 11:19 src</span></code></pre></td></tr></table></div></figure>
 
 
-<p>という形で、</p>
+<p>お、見事プロジェクトが作成されています。</p>
 
-<p>マシンにインストールされているgradleのバージョンの如何にかかわらず、</p>
+<p>また、wrapperタスクを実行した後の状態になっていることもわかります。</p>
 
-<p>プロジェクトごとに最適化されたビルドを提供してくれます。</p>
+<p>(gradleディレクトリー、gradlewファイルとgradlew.batファイルが生成されている)</p>
+
+<p>では、build.gradleの中身を見てみたいと思います。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cat build.gradle 
+</span><span class='line'>/*
+</span><span class='line'> * This build file was auto generated by running the Gradle 'buildSetup' task
+</span><span class='line'> * by 'mike' at '13/07/09 11:19' with Gradle 1.7-rc-1
+</span><span class='line'> *
+</span><span class='line'> * This generated file contains a sample Java project to get you started.
+</span><span class='line'> * For more details take a look at the Java Quickstart chapter in the Gradle
+</span><span class='line'> * user guide available at http://gradle.org/docs/1.7-rc-1/userguide/tutorial_java_projects.html
+</span><span class='line'> */
+</span><span class='line'>
+</span><span class='line'>// Apply the java plugin to add support for Java
+</span><span class='line'>apply plugin: 'java'
+</span><span class='line'>
+</span><span class='line'>// In this section you declare where to find the dependencies of your project
+</span><span class='line'>repositories {
+</span><span class='line'>    // Use 'maven central' for resolving your dependencies.
+</span><span class='line'>    // You can declare any Maven/Ivy/file repository here.
+</span><span class='line'>    mavenCentral()
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>// In this section you declare the dependencies for your production and test code
+</span><span class='line'>dependencies {
+</span><span class='line'>    // The production code uses the SLF4J logging API at compile time
+</span><span class='line'>    compile 'org.slf4j:slf4j-api:1.7.5'
+</span><span class='line'>
+</span><span class='line'>    // Declare the dependency for your favourite test framework you want to use in your tests.
+</span><span class='line'>    // TestNG is also supported by the Gradle Test task. Just change the
+</span><span class='line'>    // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
+</span><span class='line'>    // 'test.useTestNG()' to your build script.
+</span><span class='line'>    testCompile "junit:junit:4.11"
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>作成されたbuild.gradleファイルでは</p>
+
+<ul>
+<li>javaプラグインが適用されている</li>
+<li>slf4jがコンパイル用のライブラリーとして登録されている</li>
+<li>JUnitがテスト用のライブラリーとして登録されている</li>
+</ul>
+
+
+<p>ようです。</p>
+
+<p>また、サンプルのプロダクションコードとテストコードが生成されるということですが、</p>
+
+<ul>
+<li><code>src/main/java/Library.java</code></li>
+<li><code>src/test/java/LibraryTest.java</code></li>
+</ul>
+
+
+<p>の二つのファイルが作成されています。</p>
+
+<p>それぞれの中身は次のようになっています。</p>
+
+<figure class='code'><figcaption><span>Library.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/*</span>
+</span><span class='line'><span class="cm"> * This Java source file was auto generated by running &#39;gradle buildSetup --type java-library&#39;</span>
+</span><span class='line'><span class="cm"> * by &#39;mike&#39; at &#39;13/07/09 11:19&#39; with Gradle 1.7-rc-1</span>
+</span><span class='line'><span class="cm"> *</span>
+</span><span class='line'><span class="cm"> * @author mike, @date 13/07/09 11:19</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Library</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">someLibraryMethod</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>LibraryTest.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.*;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/*</span>
+</span><span class='line'><span class="cm"> * This Java source file was auto generated by running &#39;gradle buildSetup --type java-library&#39;</span>
+</span><span class='line'><span class="cm"> * by &#39;mike&#39; at &#39;13/07/09 11:19&#39; with Gradle 1.7-rc-1</span>
+</span><span class='line'><span class="cm"> *</span>
+</span><span class='line'><span class="cm"> * @author mike, @date 13/07/09 11:19</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LibraryTest</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Test</span> <span class="kd">public</span> <span class="kt">void</span> <span class="n">testSomeLibraryMethod</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Library</span> <span class="n">classUnderTest</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Library</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">assertTrue</span><span class="o">(</span><span class="s">&quot;someLibraryMethod should return &#39;true&#39;&quot;</span><span class="o">,</span> <span class="n">classUnderTest</span><span class="o">.</span><span class="na">someLibraryMethod</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実際にこのコードを使うことはないと思いますが、</p>
+
+<p>これまでmavenライクなディレクトリーを作るのが面倒だったので、</p>
+
+<p>この<code>setupBuild</code>タスクができたことはGradleユーザーには朗報ですね。</p>
 
 <!-- admax -->
 
@@ -443,12 +398,12 @@
   
 
 
-<time datetime="2013-06-13T02:41:00+09:00" pubdate data-updated="true">Jun 13<span>th</span>, 2013</time>
+<time datetime="2013-07-09T10:54:00+09:00" pubdate data-updated="true">Jul 9<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/groovy/'>groovy</a>, <a class='category' href='/blog/categories/java/'>java</a>
+    <a class='category' href='/blog/categories/gradle/'>gradle</a>, <a class='category' href='/blog/categories/groovy/'>groovy</a>
   
 </span>
 
@@ -457,7 +412,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/06/13/opening-gradle-slash-gradle-with-gradle-will-fail-please-use-gradlew/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/06/13/opening-gradle-slash-gradle-with-gradle-will-fail-please-use-gradlew/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/07/09/trying-gradle-setupbuild-task-of-gradle-1-dot-7-rc1/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/07/09/trying-gradle-setupbuild-task-of-gradle-1-dot-7-rc1/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -471,10 +426,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/06/11/how-to-create-rubys-module/" title="Previous Post: 初めてRubyのモジュールを書いてみた">&laquo; 初めてRubyのモジュールを書いてみた</a>
+        <a class="basic-alignment left" href="/blog/2013/07/06/gradle1-dot-7-release-notes-translation/" title="Previous Post: gradle1.7のリリースノート超意訳">&laquo; gradle1.7のリリースノート超意訳</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/06/13/how-to-generate-javadoc-in-english-on-japanese-environment/" title="Next Post: gradleのjavadocタスクでjavadocを英語で出力する方法">gradleのjavadocタスクでjavadocを英語で出力する方法 &raquo;</a>
       
     </p>
   </footer>
