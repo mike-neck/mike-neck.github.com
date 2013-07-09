@@ -3,6 +3,7 @@ layout: post
 title: "gradle1.7のリリースノート超意訳"
 date: 2013-07-06 19:23
 comments: true
+image: http://googledrive.com/host/0B4hhdHWLP7RRZHRNTkNwZEYtdkE
 categories: [groovy, gradle]
 ---
 
