@@ -8,7 +8,7 @@
   <title>mike、mikeなるままに…</title>
 
   
-  <meta name="description" content="こんいちわ。みけです。 またも、タイトルが仰々しくてすみません。 本当に大したこと書かないです。 で、相変わらずAndroidまたもや出て来ません。 gradleも出て来ません。 でも、Android Studioの登場や、gradle-android-pluginで &hellip;">
+  <meta name="description" content="こんにちは。 みけです。 また仰々しいタイトルですみません。 Androidのsdkが5月16日近辺にrevision22に更新されたようです リリースノートを一部抜粋、翻訳(意訳)するとこんな感じです。 既存のplatfomr-toolsを元にSDKの構造を変更して、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -91,6 +91,235 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/01/androidgajavadenaili-you-1/">AndroidがJavaでない理由 - 1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-01T02:22:00+09:00" pubdate data-updated="true">Jun 1<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>こんにちは。</p>
+
+<p>みけです。</p>
+
+<p>また仰々しいタイトルですみません。</p>
+
+<h2>Androidのsdkが5月16日近辺にrevision22に更新されたようです</h2>
+
+<p>リリースノートを一部抜粋、翻訳(意訳)するとこんな感じです。</p>
+
+<ul>
+<li>既存の<code>platfomr-tools</code>を元にSDKの構造を変更して、新しいビルドツール等を追加しました。この変更により、ビルドツールのバージョンとIDEのバージョンを切り離すことが可能になります。その結果、IDEの更新なしにツールの更新が可能になりました。</li>
+</ul>
+
+
+<p>さて、僕はAndroidに関しては情弱なので、この変更が意味するところをあまり気にせず、</p>
+
+<p>本題である<strong>「JavaがAndroidでない理由」</strong>ことの実例コードを書こうとして</p>
+
+<p>サンプルプロジェクトを作って、実行しようとした時にそれは起こりました。</p>
+
+<h2>android-apt-compiler: Cannot run program &ldquo;/Users/name/Android/sdk/android-sdk-macosx/platform-tools/aapt&rdquo;: error=2, No such file or directory</h2>
+
+<p><img src="https://pbs.twimg.com/media/BLlghpZCAAA8qOp.png:large" style="width : 504px;"/></p>
+
+<p>うん？コンパイル用のツールが見つからない？</p>
+
+<p>というわけで、件のディレクトリーに移動、ファイル探してみると…</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>:~ mike$ cd ~/Android/sdk/android-sdk-macosx/platform-tools/
+</span><span class='line'>:platform-tools mike$ ll
+</span><span class='line'>total 3664
+</span><span class='line'>drwxr-xr-x   7 mike  staff   238B  5 31 19:05 .
+</span><span class='line'>drwxr-x---  14 mike  staff   476B  5 31 18:31 ..
+</span><span class='line'>-rw-r--r--   1 mike  staff   396K  5 31 18:30 NOTICE.txt
+</span><span class='line'>-rwxr-xr-x   1 mike  staff   1.2M  5 31 18:30 adb
+</span><span class='line'>drwxr-xr-x   3 mike  staff   102B  5 31 18:30 api
+</span><span class='line'>-rwxr-xr-x   1 mike  staff   185K  5 31 18:30 fastboot
+</span><span class='line'>-rw-r--r--   1 mike  staff    16K  5 31 18:30 source.properties</span></code></pre></td></tr></table></div></figure>
+
+
+<p>うむ、確かにそんなものはない…</p>
+
+<p>で、いろいろとディレクトリーを漁ってみると</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>:~ mike$ cd ~/Android/sdk/android-sdk-macosx/build-tools/17.0.0/
+</span><span class='line'>:17.0.0 mike$ ll
+</span><span class='line'>total 61624
+</span><span class='line'>drwxr-xr-x  11 mike  staff   374B  5 31 18:30 .
+</span><span class='line'>drwxr-xr-x   3 mike  staff   102B  5 31 18:30 ..
+</span><span class='line'>-rw-r--r--   1 mike  staff    11K  5 31 18:30 NOTICE.txt
+</span><span class='line'>-rwxr-xr-x   1 mike  staff   1.2M  5 31 18:30 aapt
+</span><span class='line'>-rwxr-xr-x   1 mike  staff   273K  5 31 18:30 aidl
+</span><span class='line'>-rwxr-xr-x   1 mike  staff   141K  5 31 18:30 dexdump
+</span><span class='line'>-rwxr-xr-x   1 mike  staff   2.5K  5 31 18:30 dx
+</span><span class='line'>drwxr-xr-x   3 mike  staff   102B  5 31 18:30 lib
+</span><span class='line'>-rwxr-xr-x   1 mike  staff    28M  5 31 18:30 llvm-rs-cc
+</span><span class='line'>drwxr-xr-x   4 mike  staff   136B  5 31 18:30 renderscript
+</span><span class='line'>-rw-r--r--   1 mike  staff    16K  5 31 18:30 source.properties</span></code></pre></td></tr></table></div></figure>
+
+
+<p>お、あった。</p>
+
+<p>…あったはいいよ。</p>
+
+<p>でも、このディレクトリーは何？</p>
+
+<p><strong><code>17.0.0</code></strong></p>
+
+<p>何、このディレクトリー。</p>
+
+<p>数字ディレクトリー。</p>
+
+<p><strong>どこのSIerの作業ですか？</strong></p>
+
+<p>え、じゃあ、君は新しいAPIバージョン(例えば18)が出たら、</p>
+
+<p><strong><code>18.0.0</code>ディレクトリーでも作ってくれるんです？</strong></p>
+
+<p>これ、ビルドスクリプトとか、ビルド関連のちょっとした作業とか</p>
+
+<p>ぶっ壊れるよね…え、ぶっ壊れない？なら、いいんだけど、</p>
+
+<p><strong>IntelliJ IDEA様</strong>を欺いているよね…</p>
+
+<p>これじゃ</p>
+
+<h2>Androidって<strong>write once, run once upon a time</strong>ってことだよね</h2>
+
+<p>Javaの最も貫徹したコンセプトである</p>
+
+<h2>write once run anywhere</h2>
+
+<p>を破っているよね。</p>
+
+<p>というわけで、結論</p>
+
+<h2>AndroidはJavaではなかった、決して</h2>
+
+<p><strong>p.s.</strong></p>
+
+<p>最初この問題にあたった時にStack Overflowを調べました。</p>
+
+<p>すでに、先駆者がいました。</p>
+
+<p><a href="http://stackoverflow.com/questions/16588969/android-hello-world-compile-error-intellij-cannot-find-aapt">Android Hello-World compile error: Intellij cannot find aapt</a></p>
+
+<p>で、解決方法のアドバイスとして</p>
+
+<ul>
+<li><strong>JetBrains様がIDEをアップデートしてくれるのを待つしかないんじゃない？</strong></li>
+<li>シンボリックリンクを貼ればいいんじゃない</li>
+<li>ツール類を<code>platform-tools</code>にコピペすればいいんじゃない</li>
+</ul>
+
+
+<p>と有りました。</p>
+
+<p>当面の解決策としては2番目が採択されそうですが、</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>:17.0.0 mike$ ln -s aapt ../../platform-tools/aapt
+</span><span class='line'>:17.0.0 mike$ ln -s aidl ../../platform-tools/aidl
+</span><span class='line'>:17.0.0 mike$ ln -s lib ../../platform-tools/lib</span></code></pre></td></tr></table></div></figure>
+
+
+<p>をやった後ですが、</p>
+
+<p><img src="https://googledrive.com/host/0B4hhdHWLP7RReVgzYzJvOHZJS2s" style="width : 488px;" /></p>
+
+<p>はい、コンパイルできません。</p>
+
+<p>というわけで、JetBrains様がIntelliJ IDEAを対応させるのを待つしかなさそうです。</p>
+
+<p>IntelliJガチ勢の僕としては、googleに一言もの申したい</p>
+
+<h2>googleさん、JetBrains様にごめんなさいしてください</h2>
+
+<p>つーか、ツールがバージョンアップしてもIDEのバージョンアップが必要ないと言ってた、</p>
+
+<p>あのリリースノート何だったんです？</p>
+
+<p>google 「ツールがバージョンアップしてもIDEのバージョンアップがいらないと言ったな、あれは、嘘だ」</p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -3571,178 +3800,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/18/sourcetreedexi-kakukomitutosuru/">SourceTreeで細かくコミットする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-18T12:58:00+09:00" pubdate data-updated="true">May 18<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>gitのコミットの粒度はなるべく細かいほうがいいですよね</h1>
-
-<p>こんにちわ、みけです。</p>
-
-<p>今日はgitの話です。</p>
-
-<p>表題にあるようにgitは細かくコミットしたほうがよいです。</p>
-
-<p>なぜなら、</p>
-
-<ul>
-<li>mergeが簡単にできる</li>
-<li>やらかした時に細かいレベルで元に戻れる</li>
-<li>細かければpushするときにまとめればいいや的な</li>
-</ul>
-
-
-<p>といったメリットがあるからと思っています。</p>
-
-<p>詳細はこっちの記事読んだほうがいいです。</p>
-
-<ul>
-<li><a href="http://d.hatena.ne.jp/irof/20120905/p1">gitのcommitは軽く考えとく &ndash; 日々常々</a></li>
-<li><a href="http://d.hatena.ne.jp/kyon_mm/20120905/1346829171">「git commit するまえに考えるべき10のこと」がDVCS的じゃない件 &ndash; うさぎ組</a></li>
-<li><a href="http://forza.cocolog-nifty.com/blog/2012/09/post-fdab.html">コミットの粒度 &ndash; プログラマの思索</a></li>
-<li><a href="http://d.hatena.ne.jp/Yamashiro0217/20120903/1346640190">git flow でのチーム開発ワークショップ資料 &ndash; Yamashiro0217の日記</a></li>
-<li><a href="http://hiroki.jp/2012/09/05/5523/">git commit するまえに考えるべき10のこと &ndash; Act as Professional</a></li>
-</ul>
-
-
-<h3>いや、そんなこと言ったってコミット頻繁にしてないっすよ</h3>
-
-<p>これ、僕のことで、そもそもコミットを頻繁にしていないので、Work Treeに変更がたくさん溜まってしまいます。</p>
-
-<p>そうすると、僕のようなdullな人が<code>git add</code>する時は<code>git add -p</code>で小分けにしながらステージに載せていくのですが、Hunkのサイズを変えるのに一々<code>git add -p</code>の後に<code>s</code>をしているとわりと面倒い。(<a href="http://stackoverflow.com/questions/1122210/can-i-modify-git-adds-hunk-size">参考 &ndash; Can I modify git-add&rsquo;s hunk size?</a>)</p>
-
-<p>まあ、かといって、「gitできない奴はVSSでもやってろよ」とか言われると辛い…</p>
-
-<h3>そこでSourceTreeですよ</h3>
-
-<p>Atlassianの回し者ではありませんが、SourceTreeがそんな僕には便利です。</p>
-
-<h4>変更が溜まりに溜まったwork tree</h4>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRZ2hCam1Wa3BLVjA"><img src="https://googledrive.com/host/0B4hhdHWLP7RRZ2hCam1Wa3BLVjA" width="313" height="234"></a></p>
-
-<h4>hunkがでかすぎるので小さくします。</h4>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRdEN5VTRHVE5hNVU"><img src="https://googledrive.com/host/0B4hhdHWLP7RRdEN5VTRHVE5hNVU" width="364" height="304"></a></p>
-
-<h4>hunkが細かくなります。</h4>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRanRRZjA2VVh6eXc"><img src="https://googledrive.com/host/0B4hhdHWLP7RRanRRZjA2VVh6eXc" width="362" height="270"></a></p>
-
-<h4>さらに行単位で変更を選びます</h4>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRdTVodnZ6MDF1c1U"><img src="https://googledrive.com/host/0B4hhdHWLP7RRdTVodnZ6MDF1c1U" width="364" height="68"></a></p>
-
-<h4>意味のある単位にまとまったのでコミットします</h4>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRUEQ3bnkxTTVzQ0E"><img src="https://googledrive.com/host/0B4hhdHWLP7RRUEQ3bnkxTTVzQ0E" width="412" height="234"></a></p>
-
-<p>commitボタンを推します。</p>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRc1ZUQlV3akplUFU"><img src="https://googledrive.com/host/0B4hhdHWLP7RRc1ZUQlV3akplUFU" width="333" height="270"></a></p>
-
-<h4>適度な粒度でコミットしたのでプッシュします。</h4>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRcHI5NGt0aksyZVk"><img src="https://googledrive.com/host/0B4hhdHWLP7RRcHI5NGt0aksyZVk" width="310" height="175"></a></p>
-
-<p>pushボタンのところにプッシュされていないコミットの数が出ています。</p>
-
-<p>pushボタンを押してプッシュします。</p>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRdEJ2aGhZeGM2LVU"><img src="https://googledrive.com/host/0B4hhdHWLP7RRdEJ2aGhZeGM2LVU" width="446" height="180"></a></p>
-
-<p>プッシュ完了すると、ローカルとリモートが一致した状態になります。</p>
-
-<p><a href="https://googledrive.com/host/0B4hhdHWLP7RRd18wb2JRNWxFYkU"><img src="https://googledrive.com/host/0B4hhdHWLP7RRd18wb2JRNWxFYkU" width="471" height="90"></a></p>
-
-<h3>細かい粒度でコミット出来ましたね</h3>
-
-<ul>
-<li>SourceTree、マジ便利、マジ神、ハンパないです。</li>
-<li>いや、そもそもそんなにWork Treeに変更を溜め込むなという話ですね…</li>
-</ul>
-
-
-<table>
-<tr>
-<td style="padding : 2px;"><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4798023809" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td style="padding : 2px;"><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4798035009" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td style="padding : 2px;"><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=477415184X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-</tr>
-<tr>
-<td style="padding : 2px;"><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4274068641" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td style="padding : 2px;"><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4873114403" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-<td style="padding : 2px;"><iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=427406767X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</td>
-</tr>
-</table>
-
-
-
-
-<!-- admax -->
-
-
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-
-
-<!-- admax -->
-
-
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-
-
-<br/>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -3760,6 +3817,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/17/execute-ant-setting-output-to-another-stream/">Groovyでantログの出力先を変更する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/09/trying-gradle-setupbuild-task-of-gradle-1-dot-7-rc1/">GradleのsetupBuildタスクを試してみた</a>
       </li>
     
@@ -3773,10 +3834,6 @@
     
       <li class="post">
         <a href="/blog/2013/07/01/using-javafx-as-headless-browser/">JavaFXをheadless browserとして使うためのJSObjectの扱い方 - 1</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/30/first-shibuya-java/">第一回渋谷javaに行ってきた</a>
       </li>
     
   </ul>

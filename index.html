@@ -8,7 +8,18 @@
   <title>mike、mikeなるままに…</title>
 
   
-  <meta name="description" content="こんにちわ。みけです。 前回の記事、gradle1.7のリリースノート超意訳で、 いくつか気になる機能があったので試してみることにしました。 今回は、setupBuildタスクを試してみます。 リリースノートでは javaプラグインが適用されたシンプルなビルドファイル &hellip;">
+  <meta name="description" content="こんにちわ、みけです。 groovyでantのタスクでいろいろと大量のタスクを実行させている時に、 標準出力に出てくるログがちょっとうざったい時があります。 その場合に、ログの出力先のstreamを変更することができるようです。 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+// &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -91,6 +102,109 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/17/execute-ant-setting-output-to-another-stream/">Groovyでantログの出力先を変更する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-17T14:43:00+09:00" pubdate data-updated="true">Jul 17<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://groovy.codehaus.org/images/groovy-logo-medium.png" style="width : 450px;"></p>
+
+<p>こんにちわ、みけです。</p>
+
+<p>groovyでantのタスクでいろいろと大量のタスクを実行させている時に、</p>
+
+<p>標準出力に出てくるログがちょっとうざったい時があります。</p>
+
+<p>その場合に、ログの出力先のstreamを変更することができるようです。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="c1">// 出力先のstream</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">x</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteArrayOutputStream</span><span class="o">()</span>
+</span><span class='line'><span class="c1">// antの出力先を変更 </span>
+</span><span class='line'><span class="n">ant</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AntBuilder</span><span class="o">()</span>
+</span><span class='line'><span class="n">ant</span><span class="o">.</span><span class="na">project</span><span class="o">.</span><span class="na">buildListeners</span><span class="o">.</span><span class="na">each</span><span class="o">{</span>
+</span><span class='line'>    <span class="n">it</span><span class="o">.</span><span class="na">outputPrintStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintStream</span><span class="o">(</span><span class="n">x</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// 大量のタスクを実行</span>
+</span><span class='line'><span class="o">(</span><span class="mi">1</span><span class="o">..</span><span class="mi">100</span><span class="o">).</span><span class="na">each</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">ant</span><span class="o">.</span><span class="na">echo</span> <span class="s2">&quot;this is $it time log.&quot;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このスクリプトを実行すると次のような標準出力になります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="mi">1</span><span class="o">..</span><span class="mi">100</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実際にはこのstreamを外部のファイルにしておくと後で実行結果だけを参照するなどできます。</p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -6769,302 +6883,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/13/how-to-generate-javadoc-in-english-on-japanese-environment/">Gradleのjavadocタスクでjavadocを英語で出力する方法</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-13T22:39:00+09:00" pubdate data-updated="true">Jun 13<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://www.gradle.org/img/gradle_logo.gif"/></p>
-
-<p>こんにちわ、みけです。</p>
-
-<p>表題の件はこの記事の前半部分に書いています。</p>
-
-<p>なので、必要な人は前半部分だけ読んで下さい。</p>
-
-<hr />
-
-<p>大した話ではありませんが、</p>
-
-<h1>gradleのjavadocタスクで出力されるjavadocが日本語で出力される</h1>
-
-<p>のがちょっと残念な時があります。</p>
-
-<p><code>java</code>プラグインを入れていれば、<code>javadoc</code>タスクが自動で追加されます。</p>
-
-<p>僕のような日本語環境でやっている人だと、</p>
-
-<p>頑張ってjavadocを英語で書いても、</p>
-
-<p>テンプレートが日本語で出力されてしまいます。</p>
-
-<p>会社で日本語を使っていて、</p>
-
-<p>javadocが日本語でないと困る場合は、</p>
-
-<p>全然問題ないとおもいますが…</p>
-
-<p>オープンソースなソフトウェアを開発している場合、</p>
-
-<p>javadocが日本語だとなんか若干困ります。</p>
-
-<p>(まあ、だいたいjavadocのテンプレートなんで、何が出力されているかなんてわかりますけどね…)</p>
-
-<h1><code>javadoc</code>タスクの設定で<code>options.locale</code>に<code>en_US</code>を指定すればいいです</h1>
-
-<p>つまり、以下のとおりになります。</p>
-
-<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="s1">&#39;java&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">javadoc</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">options</span><span class="o">.</span><span class="na">locale</span> <span class="o">=</span> <span class="s1">&#39;en_US&#39;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>本題、終わり</strong></p>
-
-<hr />
-
-<p>ちなみに、僕の得意技はtypoなので、間違えてこんなビルドスクリプト書いてました。</p>
-
-<p><strong>(誤)</strong></p>
-
-<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">apply</span> <span class="n">plugin</span> <span class="o">:</span> <span class="s1">&#39;java&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">javadoc</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">options</span><span class="o">.</span><span class="na">local</span> <span class="o">=</span> <span class="s1">&#39;en_US&#39;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これを実行したら、こんなエラーが出力されました。</p>
-
-<figure class='code'><figcaption><span>build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">gradle</span> <span class="n">javadoc</span>
-</span><span class='line'><span class="n">Picked</span> <span class="n">up</span> <span class="nl">_JAVA_OPTIONS:</span> <span class="o">-</span><span class="n">Dfile</span><span class="o">.</span><span class="na">encoding</span><span class="o">=</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
-</span><span class='line'>
-</span><span class='line'><span class="nl">FAILURE:</span> <span class="n">Build</span> <span class="n">failed</span> <span class="n">with</span> <span class="n">an</span> <span class="n">exception</span><span class="o">.</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">*</span> <span class="nl">Where:</span>
-</span><span class='line'><span class="n">Script</span> <span class="s1">&#39;/Users/mike/myprojects/sample/build.gradle&#39;</span> <span class="nl">line:</span> <span class="mi">4</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">*</span> <span class="n">What</span> <span class="n">went</span> <span class="nl">wrong:</span>
-</span><span class='line'><span class="n">A</span> <span class="n">problem</span> <span class="n">occurred</span> <span class="n">evaluating</span> <span class="n">script</span><span class="o">.</span>
-</span><span class='line'><span class="o">&gt;</span> <span class="n">No</span> <span class="n">such</span> <span class="nl">property:</span> <span class="n">local</span> <span class="k">for</span> <span class="nl">class:</span> <span class="n">org</span><span class="o">.</span><span class="na">gradle</span><span class="o">.</span><span class="na">external</span><span class="o">.</span><span class="na">javadoc</span><span class="o">.</span><span class="na">StandardJavadocDocletOptions</span>
-</span><span class='line'>  <span class="n">Possible</span> <span class="nl">solutions:</span> <span class="n">locale</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">*</span> <span class="nl">Try:</span>
-</span><span class='line'><span class="n">Run</span> <span class="n">with</span> <span class="o">--</span><span class="n">stacktrace</span> <span class="n">option</span> <span class="n">to</span> <span class="n">get</span> <span class="n">the</span> <span class="n">stack</span> <span class="n">trace</span><span class="o">.</span> <span class="n">Run</span> <span class="n">with</span> <span class="o">--</span><span class="n">info</span> <span class="n">or</span> <span class="o">--</span><span class="n">debug</span> <span class="n">option</span> <span class="n">to</span> <span class="n">get</span> <span class="n">more</span> <span class="n">log</span> <span class="n">output</span><span class="o">.</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">BUILD</span> <span class="n">FAILED</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">Total</span> <span class="nl">time:</span> <span class="mf">8.941</span> <span class="n">secs</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>gradle曰く</p>
-
-<blockquote><p><code>local</code>なんてオプションないよ、<code>locale</code>じゃない？</p></blockquote>
-
-<p>というわけで、</p>
-
-<h1>gradleさん正しい答えを教えてくれたりと、親切ですね。</h1>
-
-<p>本当に親切なツールです。</p>
-
-<p>しかし、</p>
-
-<h1>本当に親切なのはgroovyの思想</h1>
-
-<p>です。</p>
-
-<p>例えば次のようなgroovyのスクリプトがあるとします。</p>
-
-<figure class='code'><figcaption><span>error.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">range</span> <span class="o">=</span> <span class="mi">1</span><span class="o">..</span><span class="mi">10</span>
-</span><span class='line'><span class="n">range</span><span class="o">.</span><span class="na">colect</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">println</span> <span class="o">(</span><span class="n">it</span> <span class="o">*</span> <span class="n">it</span><span class="o">)</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これを実行するとこういうエラーが出力されます。</p>
-
-<figure class='code'><figcaption><span>error.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">groovy</span> <span class="n">error</span><span class="o">.</span><span class="na">groovy</span>
-</span><span class='line'><span class="nl">Caught:</span> <span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">MissingMethodException</span><span class="o">:</span> <span class="n">No</span> <span class="n">signature</span> <span class="n">of</span> <span class="nl">method:</span> <span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">IntRange</span><span class="o">.</span><span class="na">colect</span><span class="o">()</span> <span class="n">is</span> <span class="n">applicable</span> <span class="k">for</span> <span class="n">argument</span> <span class="nl">types:</span> <span class="o">(</span><span class="n">error$_run_closure1</span><span class="o">)</span> <span class="nl">values:</span> <span class="o">[</span><span class="n">error$_run_closure1</span><span class="err">@</span><span class="mi">639</span><span class="n">d564</span><span class="o">]</span>
-</span><span class='line'><span class="n">Possible</span> <span class="nl">solutions:</span> <span class="n">collect</span><span class="o">(),</span> <span class="n">collect</span><span class="o">(),</span> <span class="n">collect</span><span class="o">(</span><span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">),</span> <span class="n">collect</span><span class="o">(</span><span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">),</span> <span class="n">collect</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Collection</span><span class="o">,</span> <span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">),</span> <span class="n">collect</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Collection</span><span class="o">,</span> <span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">)</span>
-</span><span class='line'><span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">MissingMethodException</span><span class="o">:</span> <span class="n">No</span> <span class="n">signature</span> <span class="n">of</span> <span class="nl">method:</span> <span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">IntRange</span><span class="o">.</span><span class="na">colect</span><span class="o">()</span> <span class="n">is</span> <span class="n">applicable</span> <span class="k">for</span> <span class="n">argument</span> <span class="nl">types:</span> <span class="o">(</span><span class="n">error$_run_closure1</span><span class="o">)</span> <span class="nl">values:</span> <span class="o">[</span><span class="n">error$_run_closure1</span><span class="err">@</span><span class="mi">639</span><span class="n">d564</span><span class="o">]</span>
-</span><span class='line'><span class="n">Possible</span> <span class="nl">solutions:</span> <span class="n">collect</span><span class="o">(),</span> <span class="n">collect</span><span class="o">(),</span> <span class="n">collect</span><span class="o">(</span><span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">),</span> <span class="n">collect</span><span class="o">(</span><span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">),</span> <span class="n">collect</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Collection</span><span class="o">,</span> <span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">),</span> <span class="n">collect</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Collection</span><span class="o">,</span> <span class="n">groovy</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Closure</span><span class="o">)</span>
-</span><span class='line'>  <span class="n">at</span> <span class="n">error</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">error</span><span class="o">.</span><span class="na">groovy</span><span class="o">:</span><span class="mi">2</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>存在しないメソッドを呼び出した時に、</p>
-
-<p><strong>Possible solutions</strong>ということで、</p>
-
-<p>サジェストしてくれます。</p>
-
-<p>また、有名な例ですが、Power Assertもあります。</p>
-
-<figure class='code'><figcaption><span>error.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">list</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">5</span><span class="o">]</span>
-</span><span class='line'><span class="k">assert</span> <span class="n">list</span> <span class="o">-</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">6</span><span class="o">]</span> <span class="o">==</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">5</span><span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これを実行すると、このように表示されます。</p>
-
-<figure class='code'><figcaption><span>error.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">$</span> <span class="n">groovy</span> <span class="n">error</span><span class="o">.</span><span class="na">groovy</span>
-</span><span class='line'><span class="nl">Caught:</span> <span class="n">Assertion</span> <span class="nl">failed:</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">assert</span> <span class="n">list</span> <span class="o">-</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">6</span><span class="o">]</span> <span class="o">==</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">5</span><span class="o">]</span>
-</span><span class='line'>       <span class="o">|</span>    <span class="o">|</span>         <span class="o">|</span>
-</span><span class='line'>       <span class="o">|</span>    <span class="o">[</span><span class="mi">2</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">]</span> <span class="kc">false</span>
-</span><span class='line'>       <span class="o">[</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">Assertion</span> <span class="nl">failed:</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">assert</span> <span class="n">list</span> <span class="o">-</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">6</span><span class="o">]</span> <span class="o">==</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">5</span><span class="o">]</span>
-</span><span class='line'>       <span class="o">|</span>    <span class="o">|</span>         <span class="o">|</span>
-</span><span class='line'>       <span class="o">|</span>    <span class="o">[</span><span class="mi">2</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">]</span> <span class="kc">false</span>
-</span><span class='line'>       <span class="o">[</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">at</span> <span class="n">error</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">error</span><span class="o">.</span><span class="na">groovy</span><span class="o">:</span><span class="mi">2</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ただ、求めている結果と実際の結果が<strong>違う</strong>という表示だけでなく、</p>
-
-<p>実際の値を示してくれます。</p>
-
-<p>つまり一言で言えば、</p>
-
-<h1>groovyの半分は優しさでできています</h1>
-
-<p>なお、この機能はもともとからgroovyにあったわけではなく、</p>
-
-<p>Spockというテスティングフレームワークから採用された機能です。</p>
-
-<p>groovyの思想では、こういった、(・∀・)ｲｲﾈ!!な機能を</p>
-
-<p>どんどん取り込んでいくというのがあると思っています。</p>
-
-<p>まあ、元々、javaを良い感じで書きたいといった思想から生まれている言語ですし、</p>
-
-<p>実際に、rubyなど他の言語のいいところを借りたりしているので、</p>
-
-<p>後発の優位性を遺憾なく発揮しているわけですが…</p>
-
-<!-- admax -->
-
-
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-
-
-<!-- admax -->
-
-
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -7080,6 +6898,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/17/execute-ant-setting-output-to-another-stream/">Groovyでantログの出力先を変更する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/09/trying-gradle-setupbuild-task-of-gradle-1-dot-7-rc1/">GradleのsetupBuildタスクを試してみた</a>
       </li>
     
@@ -7093,10 +6915,6 @@
     
       <li class="post">
         <a href="/blog/2013/07/01/using-javafx-as-headless-browser/">JavaFXをheadless browserとして使うためのJSObjectの扱い方 - 1</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/30/first-shibuya-java/">第一回渋谷javaに行ってきた</a>
       </li>
     
   </ul>

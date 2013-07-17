@@ -5,10 +5,21 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="ja"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: git - mike、mikeなるままに…</title>
+  <title>Groovyでantログの出力先を変更する - mike、mikeなるままに…</title>
 
   
-  <meta name="description" content="Category: git">
+  <meta name="description" content="こんにちわ、みけです。 groovyでantのタスクでいろいろと大量のタスクを実行させている時に、 標準出力に出てくるログがちょっとうざったい時があります。 その場合に、ログの出力先のstreamを変更することができるようです。 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+// &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -17,7 +28,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://mike-neck.github.ioblog/categories/git">
+  <link rel="canonical" href="http://mike-neck.github.io/blog/2013/07/17/execute-ant-setting-output-to-another-stream">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="mike、mikeなるままに…" type="application/atom+xml">
@@ -30,14 +41,25 @@
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
   
-<meta property="og:title" content="Category: git - mike、mikeなるままに…" />
+<meta property="og:title" content="Groovyでantログの出力先を変更する - mike、mikeなるままに…" />
 <meta property="og:type" content="article" />
-<meta property="og:description" content="Category: git" />
+<meta property="og:description" content="こんにちわ、みけです。 groovyでantのタスクでいろいろと大量のタスクを実行させている時に、 標準出力に出てくるログがちょっとうざったい時があります。 その場合に、ログの出力先のstreamを変更することができるようです。 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+// &hellip;" />
 
 
-<meta property="og:image" content="http://mike-neck.github.io/mike-pow.png"/>
+<meta property="og:image" content="http://groovy.codehaus.org/images/groovy-logo-medium.png"/>
 
-<meta property="og:url" content="http://mike-neck.github.ioblog/categories/git/" />
+<meta property="og:url" content="http://mike-neck.github.io/blog/2013/07/17/execute-ant-setting-output-to-another-stream/" />
 <meta property="og:author" content="mike-neck" />
 <meta property="og:site_name" content="mike、mikeなるままに…" />
 <meta property="og:locale" content="ja_JP" />
@@ -90,49 +112,156 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Git</h1>
+    
+      <h1 class="entry-title">Groovyでantログの出力先を変更する</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-17T14:43:00+09:00" pubdate data-updated="true">Jul 17<span>th</span>, 2013</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
+
+
+<div class="entry-content"><p><img src="http://groovy.codehaus.org/images/groovy-logo-medium.png" style="width : 450px;"></p>
+
+<p>こんにちわ、みけです。</p>
+
+<p>groovyでantのタスクでいろいろと大量のタスクを実行させている時に、</p>
+
+<p>標準出力に出てくるログがちょっとうざったい時があります。</p>
+
+<p>その場合に、ログの出力先のstreamを変更することができるようです。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="c1">// 出力先のstream</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">x</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteArrayOutputStream</span><span class="o">()</span>
+</span><span class='line'><span class="c1">// antの出力先を変更 </span>
+</span><span class='line'><span class="n">ant</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AntBuilder</span><span class="o">()</span>
+</span><span class='line'><span class="n">ant</span><span class="o">.</span><span class="na">project</span><span class="o">.</span><span class="na">buildListeners</span><span class="o">.</span><span class="na">each</span><span class="o">{</span>
+</span><span class='line'>    <span class="n">it</span><span class="o">.</span><span class="na">outputPrintStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintStream</span><span class="o">(</span><span class="n">x</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">// 大量のタスクを実行</span>
+</span><span class='line'><span class="o">(</span><span class="mi">1</span><span class="o">..</span><span class="mi">100</span><span class="o">).</span><span class="na">each</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">ant</span><span class="o">.</span><span class="na">echo</span> <span class="s2">&quot;this is $it time log.&quot;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このスクリプトを実行すると次のような標準出力になります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="mi">1</span><span class="o">..</span><span class="mi">100</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実際にはこのstreamを外部のファイルにしておくと後で実行結果だけを参照するなどできます。</p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
 
 
 
-  
-  <h2>2013</h2>
 
-<article>
-  
-<h1><a href="/blog/2013/06/03/puroguramagagithubdeburoguwogeng-gai-surubekili-you/">プログラマーがGitHubでブログを公開するべき理由</a></h1>
-<time datetime="2013-06-03T00:44:00+09:00" pubdate><span class='month'>Jun</span> <span class='day'>03</span> <span class='year'>2013</span></time>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/git/'>git</a></span>
-</footer>
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
 
-
-</article>
+</script>
 
 
-
-<article>
-  
-<h1><a href="/blog/2013/05/18/sourcetreedexi-kakukomitutosuru/">SourceTreeで細かくコミットする</a></h1>
-<time datetime="2013-05-18T12:58:00+09:00" pubdate><span class='month'>May</span> <span class='day'>18</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/git/'>git</a></span>
-</footer>
-
-
-</article>
 
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">mike-neck</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-17T14:43:00+09:00" pubdate data-updated="true">Jul 17<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/groovy/'>groovy</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mike-neck.github.io/blog/2013/07/17/execute-ant-setting-output-to-another-stream/" data-via="mike_neck" data-counturl="http://mike-neck.github.io/blog/2013/07/17/execute-ant-setting-output-to-another-stream/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+  <br/>
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/07/09/trying-gradle-setupbuild-task-of-gradle-1-dot-7-rc1/" title="Previous Post: GradleのsetupBuildタスクを試してみた">&laquo; GradleのsetupBuildタスクを試してみた</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

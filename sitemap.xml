@@ -203,12 +203,18 @@
         <lastmod>2013-07-09T13:50:22+09:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://mike-neck.github.io/blog/2013/07/17/execute-ant-setting-output-to-another-stream/
+        </loc>
+        <lastmod>2013-07-17T14:59:02+09:00</lastmod>
+    </url>
+    <url>
         <loc>http://mike-neck.github.io/blog/archives/</loc>
-        <lastmod>2013-07-09T13:50:22+09:00</lastmod>
+        <lastmod>2013-07-17T14:59:02+09:00</lastmod>
     </url>
     <url>
         <loc>http://mike-neck.github.io/</loc>
-        <lastmod>2013-07-09T13:50:22+09:00</lastmod>
+        <lastmod>2013-07-17T14:59:02+09:00</lastmod>
     </url>
     <url>
         <loc>http://mike-neck.github.io/privacy-policy/</loc>
