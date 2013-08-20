@@ -4,7 +4,7 @@
   <title><![CDATA[mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-08-09T21:10:56+09:00</updated>
+  <updated>2013-08-20T18:18:23+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -14,11 +14,361 @@
 
   
   <entry>
+    <title type="html"><![CDATA[JJUG LT大会で話した内容の要点]]></title>
+    <link href="http://mike-neck.github.io/blog/2013/08/19/jjug-ltda-hui-dehua-sitanei-rong-falseyao-dian/"/>
+    <updated>2013-08-19T21:27:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2013/08/19/jjug-ltda-hui-dehua-sitanei-rong-falseyao-dian</id>
+    <content type="html"><![CDATA[<p><img src="http://googledrive.com/host/0B4hhdHWLP7RRUDdMU0xjS3NKTG8" style="width : 400px;"/></p>
+
+<p>こんにちわ、みけです。</p>
+
+<p>昨日(2013/08/19)に開催されたJJUGのLT大会でLTをしてきました。</p>
+
+<p>LTの内容ですが、</p>
+
+<p>ネタLTとしては大成功(?)でしたが、</p>
+
+<p>まあJavaのLTとしては疑問符が残るものを発表しました。</p>
+
+<p>とりあえず、JavaFXの部分だけ抽出して書きたいと思います。</p>
+
+<h2>要望・仕様</h2>
+
+<p>ウケ狙いをしたLTの「冒険者の広場』のページについて、次のような要望・仕様になっています。</p>
+
+<ul>
+<li>定期的にWebの情報を取得したい</li>
+<li>Web APIが公開されていない</li>
+<li>リンク先のURLがJavascriptでのクリックにバインドされた関数に記載されている</li>
+</ul>
+
+
+<h2>スクレイピングツールの候補</h2>
+
+<p>Javaで利用できるスクレイピングツールおよびブラウザーは次のものが主に挙げられます</p>
+
+<ul>
+<li>NekoHTML/Jsoup</li>
+<li>HtmlUnit</li>
+<li>Selenium</li>
+<li>JavaFXのWebEngine</li>
+</ul>
+
+
+<h3>NekoHtml</h3>
+
+<p>Java1.3以降から使えるHTMLパーサーです。</p>
+
+<p>古くてかつ最近は更新が遅いようです。</p>
+
+<p>最新のHTMLをパースするのには向いていません。</p>
+
+<p>パースするだけなのでJavascriptの実行はできません。</p>
+
+<p>したがって、採用しませんでした。</p>
+
+<h3>Jsoup</h3>
+
+<p>HTML5のタグにも対応したHTMLパーサーです。</p>
+
+<p>要素の取得などは非常に便利なのですが、</p>
+
+<p>これもHTMLをパースするだけでJavascriptの実行はできません。</p>
+
+<p>したがって、採用しませんでした。</p>
+
+<h3>HtmlUnit</h3>
+
+<p>NekoHtmlをHTMLパーサーとして利用したヘッドレスブラウザーです。</p>
+
+<p>Javascriptの実行にRhinoを使っています。</p>
+
+<p>僕自信の目的にはこれで十分な機能だったのですが、</p>
+
+<p>残念ながら『冒険者の広場』を表示しようとしたら、</p>
+
+<p>Javascriptエラーが発生したので、</p>
+
+<p>採用しませんでした。</p>
+
+<h3>Selenium</h3>
+
+<p>言わずと知れたFireFoxの自動実行ツールです。</p>
+
+<p>ブラウザの操作を覚えさせることも可能なため、</p>
+
+<p>比較的スクリプトを作るのが楽です。</p>
+
+<p>しかし、個人的にはブラウザーがポコポコ立ち上がるのが</p>
+
+<p>好きでないので採用しませんでした。</p>
+
+<h3>JavaFXのWebEngine</h3>
+
+<p>レンダリングエンジンにWebKitを採用したブラウザーです。</p>
+
+<p>Javascriptの実行にRhinoが使われています。</p>
+
+<p>JavaFXのアプリケーション側からJavascriptの実行も指示することができます。</p>
+
+<p>好みであれば画面を立ち上げることなしに実行できます。</p>
+
+<p>特に文句をつけるところもないので採用しました。</p>
+
+<h2>JavaFXをヘッドレスブラウザーとして使う時のやり方</h2>
+
+<h3><code>Application</code>を継承したクラス</h3>
+
+<p>JavaFXのアプリケーションですので、<code>Application</code>クラスを継承したクラスを作成します。</p>
+
+<figure class='code'><figcaption><span>DqxWebDriver.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DqxWebDriver</span> <span class="kd">extends</span> <span class="n">Application</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">WebEngine</span> <span class="n">engine</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">URL</span> <span class="o">=</span> <span class="s">&quot;…&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">(</span><span class="n">Stage</span> <span class="n">stage</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">engine</span> <span class="o">=</span> <span class="k">new</span> <span class="n">WebEngine</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">engine</span><span class="o">.</span><span class="na">load</span><span class="o">(</span><span class="n">URL</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここでのポイントは2つです。</p>
+
+<ul>
+<li><code>start</code>メソッドの中で<code>WebEngine</code>のインスタンスを生成すること</li>
+<li>特に画面を表示する必要がないので、<code>stage.show()</code>を実行しないこと</li>
+</ul>
+
+
+<h3>JavaFXの起動と終了</h3>
+
+<p><code>Application.launch(Class&lt;? extends Application&gt;)</code>を実行すればいいのですが、</p>
+
+<p>これを実行するとJavaFXアプリケーションを実行している間は</p>
+
+<p>何もできなくなるため、別のスレッドで実行する必要があります。</p>
+
+<figure class='code'><figcaption><span>Bazaar.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">ExecutorService</span> <span class="n">service</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newFixedThreadPool</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+</span><span class='line'><span class="n">service</span><span class="o">.</span><span class="na">submit</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">(){</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Application</span><span class="o">.</span><span class="na">launch</span><span class="o">(</span><span class="n">DqxWebDriver</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">});</span>
+</span><span class='line'><span class="c1">// Do some operation</span>
+</span><span class='line'><span class="n">Platform</span><span class="o">.</span><span class="na">exit</span><span class="o">();</span>
+</span><span class='line'><span class="n">service</span><span class="o">.</span><span class="na">shutdown</span><span class="o">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>JavaFXの終了には<code>Platform.exit()</code>を実行します。</p>
+
+<p>これによりJavaアプリケーション自体が起動したままになるのを防ぐことができます。</p>
+
+<h3>Javascriptの実行</h3>
+
+<p><code>WebEngine</code>の<code>executScript(String)</code>を実行します。</p>
+
+<figure class='code'><figcaption><span>DqxWebDriver.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kd">static</span> <span class="n">WebEngine</span> <span class="n">engine</span><span class="o">;</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">executeScript</span><span class="o">(</span>
+</span><span class='line'>        <span class="kd">final</span> <span class="n">String</span> <span class="n">script</span><span class="o">,</span>
+</span><span class='line'>        <span class="kd">final</span> <span class="n">BlockingQueue</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">queue</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Platform</span><span class="o">.</span><span class="na">runLater</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">(){</span>
+</span><span class='line'>        <span class="n">Object</span> <span class="n">result</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="na">executScript</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">queue</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">});</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>WebEngine</code>の操作はJavaFXのApplication Threadから実行しなければなりません。</p>
+
+<p>そのために、<code>Platform.runLater(Runnable)</code>を介して実行する必要があります。</p>
+
+<p>引数は<code>Runnable</code>のために、戻り値を利用することができません。</p>
+
+<p>そのために、<code>BlockingQueue&lt;T&gt;</code>を使っています。</p>
+
+<p><code>WebEngine#executeScript(String)</code>の戻り値をここでは<code>Object</code>として利用していますが、</p>
+
+<p>戻り値は実際には次のようにマッピングされます。</p>
+
+<table style="border-collapse : collapse;">
+<tr><th style="border : solid 1px #039; margin : 2px;">Javascriptでの型</th><th style="border : solid 1px #039; margin : 2px;">Javaでの型</th></tr>
+<tr><td style="border : solid 1px #039; margin : 2px;">boolean</td><td style="border : solid 1px #039; margin : 2px;">Boolean</td></tr>
+<tr><td style="border : solid 1px #039; margin : 2px;">number(整数値)</td><td style="border : solid 1px #039; margin : 2px;">Integer</td></tr>
+<tr><td style="border : solid 1px #039; margin : 2px;">number(少数値)</td><td style="border : solid 1px #039; margin : 2px;">Double</td></tr>
+<tr><td style="border : solid 1px #039; margin : 2px;">string</td><td style="border : solid 1px #039; margin : 2px;">String</td></tr>
+<tr><td style="border : solid 1px #039; margin : 2px;">object</td><td style="border : solid 1px #039; margin : 2px;">netscape.javascript.JSObject</td></tr>
+<tr><td style="border : solid 1px #039; margin : 2px;">function</td><td style="border : solid 1px #039; margin : 2px;">netscape.javascript.JSObject</td></tr>
+<tr><td style="border : solid 1px #039; margin : 2px;">null</td><td style="border : solid 1px #039; margin : 2px;">null</td></tr>
+</table>
+
+
+<p>Javascriptでの配列は<code>object</code>ですので、JSObjectにマッピングされます。</p>
+
+<p><code>JSObject</code>のあ使い方ですが、<code>getMember(String)</code>と<code>getSlot(int)</code>を用いて値にアクセスします。</p>
+
+<h4>getMemberメソッド</h4>
+
+<p><code>{hoge : "hoge", foo : 10}</code>というオブジェクトの場合、</p>
+
+<p>次のように<code>getMember(String)</code>メソッドを使用して値を取り出します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">String</span> <span class="n">hoge</span> <span class="o">=</span> <span class="o">(</span><span class="n">String</span><span class="o">)</span><span class="n">object</span><span class="o">.</span><span class="na">getMember</span><span class="o">(</span><span class="s">&quot;hoge&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">foo</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">object</span><span class="o">.</span><span class="na">getMember</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>getSlotメソッド</h4>
+
+<p><code>[1,2,3,4,5]</code>という配列の場合、</p>
+
+<p>次のように<code>getSlot(int)</code>メソッドを用いて値を取り出します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kt">int</span> <span class="n">one</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">object</span><span class="o">.</span><span class="na">getSlot</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">two</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">object</span><span class="o">.</span><span class="na">getSlot</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">five</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">object</span><span class="o">.</span><span class="na">getSlot</span><span class="o">(</span><span class="mi">4</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>WebEngineの同期</h3>
+
+<p>先ほど書いたように、WebEngineへの操作は別スレッドで実行することになりますが、</p>
+
+<p>さらにJavaFX ApplicationスレッドとWebEngineは異なるスレッドで実行されています。</p>
+
+<p>したがって、WebEngineの動作に合わせてアプリケーションの実行をしたいシーンが発生すると思います。</p>
+
+<p>その場合、<code>getLoadWorker</code>メソッドで<code>Worker</code>を取得して、<code>getState</code>にて</p>
+
+<p>WebEngineの状態を確認する必要があります。</p>
+
+<figure class='code'><figcaption><span>DqxWebDriver.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kd">static</span> <span class="n">WebEngine</span> <span class="n">engine</span><span class="o">;</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="n">Worker</span><span class="o">.</span><span class="na">State</span> <span class="nf">getEngineState</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">final</span> <span class="n">BlockingQueue</span><span class="o">&lt;</span><span class="n">Worker</span><span class="o">.</span><span class="na">State</span><span class="o">&gt;</span> <span class="n">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BlockingQueue</span><span class="o">&lt;&gt;();</span>
+</span><span class='line'>    <span class="n">Platform</span><span class="o">.</span><span class="na">runLater</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">(){</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">queue</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">engine</span><span class="o">.</span><span class="na">getLoadWorker</span><span class="o">().</span><span class="na">getState</span><span class="o">());</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">});</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この結果が<code>Worker.State.RUNNING</code>の間は、</p>
+
+<p>Javascriptの実行などをしているため、</p>
+
+<p>戻り値を利用するなどのアプリケーション操作はできません。</p>
+
+<p>したがって、<code>Thread.sleep(long)</code>等で停止しておくとよいでしょう。</p>
+
+<figure class='code'><figcaption><span>DqxWebDriver.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">waitForEngine</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Worker</span><span class="o">.</span><span class="na">State</span> <span class="n">state</span> <span class="o">=</span> <span class="n">Worker</span><span class="o">.</span><span class="na">State</span><span class="o">.</span><span class="na">RUNNING</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">while</span><span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">Worker</span><span class="o">.</span><span class="na">State</span><span class="o">.</span><span class="na">RUNNING</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">100</span><span class="n">l</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">state</span> <span class="o">=</span> <span class="n">getEngineState</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>おわり</h2>
+
+<p>以上が昨日全くもって話しえなかったことです。</p>
+
+<p>スレッド周りが非常に面倒な感じがしますが、</p>
+
+<p>慣れればあとはJavascriptを好きに実行できるので、</p>
+
+<p>WebアプリでのJavascriptのテストなどで活用できたりします。</p>
+
+<!-- admax -->
+
+
+<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
+
+
+<!-- admax -->
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40855644-1', 'github.io');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[超高速開発ツールに関していろいろと思ったこと]]></title>
     <link href="http://mike-neck.github.io/blog/2013/08/08/chao-gao-su-kai-fa-turuniguan-siteiroirotosi-tutakoto/"/>
     <updated>2013-08-08T11:29:00+09:00</updated>
     <id>http://mike-neck.github.io/blog/2013/08/08/chao-gao-su-kai-fa-turuniguan-siteiroirotosi-tutakoto</id>
-    <content type="html"><![CDATA[<p><img src="http://mike-neck.github.io//www.x-rad.jp/img/f_users/r_131310img1020130805191719.jpg" style="width : 450px;"/></p>
+    <content type="html"><![CDATA[<p><img src="http://googledrive.com/host/0B4hhdHWLP7RRbkJ6SFVwUHM0NDQ" style="width : 450px;"/></p>
 
 <p>こんにちわ、みけです。</p>
 
@@ -8806,86 +9156,6 @@ long sum = integers.reduce(0, Long::sum);
 <p>以上、結論</p>
 
 <h3>JetGradle便利すなー</h3>
-
-<!-- admax -->
-
-
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-
-
-<!-- admax -->
-
-
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-
-
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[プログラマーがGitHubでブログを公開するべき理由]]></title>
-    <link href="http://mike-neck.github.io/blog/2013/06/03/puroguramagagithubdeburoguwogeng-gai-surubekili-you/"/>
-    <updated>2013-06-03T00:44:00+09:00</updated>
-    <id>http://mike-neck.github.io/blog/2013/06/03/puroguramagagithubdeburoguwogeng-gai-surubekili-you</id>
-    <content type="html"><![CDATA[<p>こんにちわ。みけです。</p>
-
-<p>早いもので僕がブログをこちらに移動してから約1ヶ月経ちました。</p>
-
-<p>こちらのブログに移動してよかったと思う理由を挙げてみたいと思います。</p>
-
-<h2>(1)小さく記事を書いていくことができる</h2>
-
-<p>ブログに自分の考えなどをまとめるのには、</p>
-
-<p>それなりに時間が必要であったり、</p>
-
-<p>集中力が必要であったりします。</p>
-
-<p>これまでのブログサービスでも、</p>
-
-<p>一応下書きという形で保存することは出来ましたが、</p>
-
-<p>どうしても大きなものになってしまったりする場合、</p>
-
-<p>こまめに保存できなかったりすると痛いことが多々あります。</p>
-
-<p>GitHubでブログを書いている場合は、</p>
-
-<p>こまめに変更が管理できるので、</p>
-
-<p>ブログのように長いものを書くときに、</p>
-
-<p>非常に便利です。</p>
-
-<p>逆に間違えたなと思うところなどは、</p>
-
-<p>消せますし、</p>
-
-<p>消したところを間違えたという場合は復帰させることもできます。</p>
-
-<p>というわけで、僕のようにダラダラ記事を書く人でも、</p>
-
-<p>最終的に記事としてまとめられるので、</p>
-
-<p>Gitでバージョン管理しながらブログを書くのは非常に便利であると思います。</p>
-
-<h2>結論</h2>
-
-<p>Gitでバージョン管理しながら書くブログは書きやすいです。</p>
-
-<p>え、理由、そんなのこれしかないですお…(´・ω・｀)</p>
 
 <!-- admax -->
 
