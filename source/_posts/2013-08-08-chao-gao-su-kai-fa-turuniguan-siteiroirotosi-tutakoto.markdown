@@ -3,11 +3,11 @@ layout: post
 title: "超高速開発ツールに関していろいろと思ったこと"
 date: 2013-08-08 11:29
 comments: true
-image: http://www.x-rad.jp/img/f_users/r_131310img0320130805191650.jpg
+image: http://googledrive.com/host/0B4hhdHWLP7RRbkJ6SFVwUHM0NDQ
 categories: essay
 ---
 
-<img src="//www.x-rad.jp/img/f_users/r_131310img1020130805191719.jpg" style="width : 450px;"/>
+<img src="http://googledrive.com/host/0B4hhdHWLP7RRbkJ6SFVwUHM0NDQ" style="width : 450px;"/>
 
 
 こんにちわ、みけです。
