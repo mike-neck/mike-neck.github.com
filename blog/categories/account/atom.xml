@@ -4,7 +4,7 @@
   <title><![CDATA[Category: account | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/account/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-08-20T18:18:23+09:00</updated>
+  <updated>2014-06-11T19:14:35+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -20,7 +20,7 @@
     <id>http://mike-neck.github.io/blog/2013/05/18/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-2</id>
     <content type="html"><![CDATA[<h2>普通のエンタープライズ系プログラマーであれば、会計用語はちゃんと英語で覚えているものですよね(白目</h2>
 
-<p><img class="<a" src="href="http://img5.blogs.yahoo.co.jp/ybi/1/9f/9a/fpdxw092/folder/1455483/img_1455483_52010810_1?1205033611">http://img5.blogs.yahoo.co.jp/ybi/1/9f/9a/fpdxw092/folder/1455483/img_1455483_52010810_1?1205033611</a>"></p>
+<p>{% img <a href="http://img5.blogs.yahoo.co.jp/ybi/1/9f/9a/fpdxw092/folder/1455483/img_1455483_52010810_1?1205033611">http://img5.blogs.yahoo.co.jp/ybi/1/9f/9a/fpdxw092/folder/1455483/img_1455483_52010810_1?1205033611</a> %}</p>
 
 <p>僕は<a href="http://mike-neck.github.io/blog/2013/05/13/puroguramafalsetamefalsehui-ji-zhi-shi-yong-yu-1/">前</a>にも言ったとおりに、</p>
 
@@ -232,22 +232,7 @@ AccountChart.EXPENSE</p>
 </ul>
 
 
-<p><!-- admax -->
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-<!-- admax -->
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-</p>
+<p>{% render_partial _includes/post/post_footer.html %}</p>
 ]]></content>
   </entry>
   
@@ -323,22 +308,7 @@ AccountChart.EXPENSE</p>
 <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=kkkjkrt-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=0071779752" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
 
 
-<p><!-- admax -->
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-<!-- admax -->
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-</p>
+<p>{% render_partial _includes/post/post_footer.html %}</p>
 ]]></content>
   </entry>
   

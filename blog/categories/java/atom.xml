@@ -4,7 +4,7 @@
   <title><![CDATA[Category: java | mike、mikeなるままに…]]></title>
   <link href="http://mike-neck.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://mike-neck.github.io/"/>
-  <updated>2013-08-20T18:18:23+09:00</updated>
+  <updated>2014-06-11T19:14:35+09:00</updated>
   <id>http://mike-neck.github.io/</id>
   <author>
     <name><![CDATA[mike-neck]]></name>
@@ -14,309 +14,222 @@
 
   
   <entry>
-    <title type="html"><![CDATA[JJUG LT大会で話した内容の要点]]></title>
-    <link href="http://mike-neck.github.io/blog/2013/08/19/jjug-ltda-hui-dehua-sitanei-rong-falseyao-dian/"/>
-    <updated>2013-08-19T21:27:00+09:00</updated>
-    <id>http://mike-neck.github.io/blog/2013/08/19/jjug-ltda-hui-dehua-sitanei-rong-falseyao-dian</id>
-    <content type="html"><![CDATA[<p><img src="http://googledrive.com/host/0B4hhdHWLP7RRUDdMU0xjS3NKTG8" style="width : 400px;"/></p>
+    <title type="html"><![CDATA[GradleでHerokuのアプリを作ってみる]]></title>
+    <link href="http://mike-neck.github.io/blog/2014/06/11/gradledeherokufalseapuriwozuo-tutemiru/"/>
+    <updated>2014-06-11T17:51:00+09:00</updated>
+    <id>http://mike-neck.github.io/blog/2014/06/11/gradledeherokufalseapuriwozuo-tutemiru</id>
+    <content type="html"><![CDATA[<p><img src="http://mike-neck.github.io//googledrive.com/host/0B4hhdHWLP7RRb2JjNjFTYUhILTQ" style="width : 400px;"/></p>
+
+<p>久々にブログ書いています。</p>
 
 <p>こんにちわ、みけです。</p>
 
-<p>昨日(2013/08/19)に開催されたJJUGのLT大会でLTをしてきました。</p>
+<p>昨年の7月〜8月頃から、家をでるのが困難になり、</p>
 
-<p>LTの内容ですが、</p>
+<p>かつ何の活動をするのも億劫になっていたため、</p>
 
-<p>ネタLTとしては大成功(?)でしたが、</p>
+<p>ブログすらまともに書いていませんでした。</p>
 
-<p>まあJavaのLTとしては疑問符が残るものを発表しました。</p>
+<h2>GradleでHerokuにアプリケーションをデプロイする</h2>
 
-<p>とりあえず、JavaFXの部分だけ抽出して書きたいと思います。</p>
+<p><strong>Gradle Heroku</strong>で検索をするとGradleで作ったアプリケーションを</p>
 
-<h2>要望・仕様</h2>
+<p>Herokuにデプロイする方法が出てきます。</p>
 
-<p>ウケ狙いをしたLTの「冒険者の広場』のページについて、次のような要望・仕様になっています。</p>
+<p>ただ、まあ、なんというか、みんなJetty embbededを使って<code>static void main</code>から</p>
+
+<p>始まるアプリケーションが多かったので、</p>
+
+<p>jetty-runnerでwarファイルを走らせる方法をここではまとめてあります。</p>
+
+<p>…</p>
+
+<p>もう既にJava好きな皆さんにとっては、なんというかもう常識的なことなので、</p>
+
+<p>ここに書いてあることは当たり前なのかもしれませんが…</p>
+
+<p>以下、必要なファイル毎に書いていきます。</p>
 
 <ul>
-<li>定期的にWebの情報を取得したい</li>
-<li>Web APIが公開されていない</li>
-<li>リンク先のURLがJavascriptでのクリックにバインドされた関数に記載されている</li>
+<li>build.gradle</li>
+<li>Procfile</li>
+<li>system.properties</li>
 </ul>
 
 
-<h2>スクレイピングツールの候補</h2>
+<h2>build.gradle</h2>
 
-<p>Javaで利用できるスクレイピングツールおよびブラウザーは次のものが主に挙げられます</p>
+<p>Herokuでjetty-runnerでwebアプリを動かす場合に注意する点は次のとおりです</p>
 
-<ul>
-<li>NekoHTML/Jsoup</li>
-<li>HtmlUnit</li>
-<li>Selenium</li>
-<li>JavaFXのWebEngine</li>
-</ul>
+<h3><code>gradle wrapper</code>を実行しておく</h3>
 
+<p>実行する<code>gradle</code>のバージョンを一致させるために</p>
 
-<h3>NekoHtml</h3>
+<p><code>gradle wrapper</code>を実行しておきます。</p>
 
-<p>Java1.3以降から使えるHTMLパーサーです。</p>
-
-<p>古くてかつ最近は更新が遅いようです。</p>
-
-<p>最新のHTMLをパースするのには向いていません。</p>
-
-<p>パースするだけなのでJavascriptの実行はできません。</p>
-
-<p>したがって、採用しませんでした。</p>
-
-<h3>Jsoup</h3>
-
-<p>HTML5のタグにも対応したHTMLパーサーです。</p>
-
-<p>要素の取得などは非常に便利なのですが、</p>
-
-<p>これもHTMLをパースするだけでJavascriptの実行はできません。</p>
-
-<p>したがって、採用しませんでした。</p>
-
-<h3>HtmlUnit</h3>
-
-<p>NekoHtmlをHTMLパーサーとして利用したヘッドレスブラウザーです。</p>
-
-<p>Javascriptの実行にRhinoを使っています。</p>
-
-<p>僕自信の目的にはこれで十分な機能だったのですが、</p>
-
-<p>残念ながら『冒険者の広場』を表示しようとしたら、</p>
-
-<p>Javascriptエラーが発生したので、</p>
-
-<p>採用しませんでした。</p>
-
-<h3>Selenium</h3>
-
-<p>言わずと知れたFireFoxの自動実行ツールです。</p>
-
-<p>ブラウザの操作を覚えさせることも可能なため、</p>
-
-<p>比較的スクリプトを作るのが楽です。</p>
-
-<p>しかし、個人的にはブラウザーがポコポコ立ち上がるのが</p>
-
-<p>好きでないので採用しませんでした。</p>
-
-<h3>JavaFXのWebEngine</h3>
-
-<p>レンダリングエンジンにWebKitを採用したブラウザーです。</p>
-
-<p>Javascriptの実行にRhinoが使われています。</p>
-
-<p>JavaFXのアプリケーション側からJavascriptの実行も指示することができます。</p>
-
-<p>好みであれば画面を立ち上げることなしに実行できます。</p>
-
-<p>特に文句をつけるところもないので採用しました。</p>
-
-<h2>JavaFXをヘッドレスブラウザーとして使う時のやり方</h2>
-
-<h3><code>Application</code>を継承したクラス</h3>
-
-<p>JavaFXのアプリケーションですので、<code>Application</code>クラスを継承したクラスを作成します。</p>
-
-<p>```java DqxWebDriver.java
-public class DqxWebDriver extends Application {</p>
-
-<pre><code>private static WebEngine engine;
-private static final String URL = "…";
-@Override
-public void start(Stage stage) {
-    engine = new WebEngine();
-    engine.load(URL);
-}
-</code></pre>
-
-<p>}
-```</p>
-
-<p>ここでのポイントは2つです。</p>
-
-<ul>
-<li><code>start</code>メソッドの中で<code>WebEngine</code>のインスタンスを生成すること</li>
-<li>特に画面を表示する必要がないので、<code>stage.show()</code>を実行しないこと</li>
-</ul>
-
-
-<h3>JavaFXの起動と終了</h3>
-
-<p><code>Application.launch(Class&lt;? extends Application&gt;)</code>を実行すればいいのですが、</p>
-
-<p>これを実行するとJavaFXアプリケーションを実行している間は</p>
-
-<p>何もできなくなるため、別のスレッドで実行する必要があります。</p>
-
-<p>```java Bazaar.java
-ExecutorService service = Executors.newFixedThreadPool(1);
-service.submit(new Runnable(){</p>
-
-<pre><code>@Override
-public void run() {
-    Application.launch(DqxWebDriver.class);
-}
-</code></pre>
-
-<p>});
-// Do some operation
-Platform.exit();
-service.shutdown();
-```</p>
-
-<p>JavaFXの終了には<code>Platform.exit()</code>を実行します。</p>
-
-<p>これによりJavaアプリケーション自体が起動したままになるのを防ぐことができます。</p>
-
-<h3>Javascriptの実行</h3>
-
-<p><code>WebEngine</code>の<code>executScript(String)</code>を実行します。</p>
-
-<p>```java DqxWebDriver.java
-private static WebEngine engine;
-public static void executeScript(</p>
-
-<pre><code>    final String script,
-    final BlockingQueue&lt;Object&gt; queue) {
-Platform.runLater(new Runnable(){
-    Object result = engine.executScript();
-    queue.put(result);
-});
-</code></pre>
-
-<p>}
-```</p>
-
-<p><code>WebEngine</code>の操作はJavaFXのApplication Threadから実行しなければなりません。</p>
-
-<p>そのために、<code>Platform.runLater(Runnable)</code>を介して実行する必要があります。</p>
-
-<p>引数は<code>Runnable</code>のために、戻り値を利用することができません。</p>
-
-<p>そのために、<code>BlockingQueue&lt;T&gt;</code>を使っています。</p>
-
-<p><code>WebEngine#executeScript(String)</code>の戻り値をここでは<code>Object</code>として利用していますが、</p>
-
-<p>戻り値は実際には次のようにマッピングされます。</p>
-
-<table style="border-collapse : collapse;">
-<tr><th style="border : solid 1px #039; margin : 2px;">Javascriptでの型</th><th style="border : solid 1px #039; margin : 2px;">Javaでの型</th></tr>
-<tr><td style="border : solid 1px #039; margin : 2px;">boolean</td><td style="border : solid 1px #039; margin : 2px;">Boolean</td></tr>
-<tr><td style="border : solid 1px #039; margin : 2px;">number(整数値)</td><td style="border : solid 1px #039; margin : 2px;">Integer</td></tr>
-<tr><td style="border : solid 1px #039; margin : 2px;">number(少数値)</td><td style="border : solid 1px #039; margin : 2px;">Double</td></tr>
-<tr><td style="border : solid 1px #039; margin : 2px;">string</td><td style="border : solid 1px #039; margin : 2px;">String</td></tr>
-<tr><td style="border : solid 1px #039; margin : 2px;">object</td><td style="border : solid 1px #039; margin : 2px;">netscape.javascript.JSObject</td></tr>
-<tr><td style="border : solid 1px #039; margin : 2px;">function</td><td style="border : solid 1px #039; margin : 2px;">netscape.javascript.JSObject</td></tr>
-<tr><td style="border : solid 1px #039; margin : 2px;">null</td><td style="border : solid 1px #039; margin : 2px;">null</td></tr>
-</table>
-
-
-<p>Javascriptでの配列は<code>object</code>ですので、JSObjectにマッピングされます。</p>
-
-<p><code>JSObject</code>のあ使い方ですが、<code>getMember(String)</code>と<code>getSlot(int)</code>を用いて値にアクセスします。</p>
-
-<h4>getMemberメソッド</h4>
-
-<p><code>{hoge : "hoge", foo : 10}</code>というオブジェクトの場合、</p>
-
-<p>次のように<code>getMember(String)</code>メソッドを使用して値を取り出します。</p>
-
-<p><code>java
-String hoge = (String)object.getMember("hoge");
-int foo = (int)object.getMember("foo");
+<p><code>
+$ gradle wrapper
 </code></p>
 
-<h4>getSlotメソッド</h4>
+<p>これで、プロジェクトのディレクトリーに<code>gradlew</code>が作成されていることを確認しておきます。</p>
 
-<p><code>[1,2,3,4,5]</code>という配列の場合、</p>
+<h3><code>jetty</code>プラグインを使う</h3>
 
-<p>次のように<code>getSlot(int)</code>メソッドを用いて値を取り出します。</p>
+<p>これは別に<code>war</code>プラグインでも構いませんが、</p>
 
-<p><code>java
-int one = (int)object.getSlot(0);
-int two = (int)object.getSlot(1);
-int five = (int)object.getSlot(4);
+<p>ローカルで動かしてテストしたいだろうと思いますので、</p>
+
+<p><code>jetty</code>プラグインを使います。</p>
+
+<p><code>groovy build.gradle
+apply plugin : 'jetty'
 </code></p>
 
-<h3>WebEngineの同期</h3>
+<h3><code>providedCompile</code> configurationで<code>jetty-runner</code>を指定する</h3>
 
-<p>先ほど書いたように、WebEngineへの操作は別スレッドで実行することになりますが、</p>
+<p><code>jetty-runner</code>でHerokuアプリを走らせますので、</p>
 
-<p>さらにJavaFX ApplicationスレッドとWebEngineは異なるスレッドで実行されています。</p>
+<p><code>providedCompile</code> configurationで<code>jetty-runner</code>を指定しておきます。</p>
 
-<p>したがって、WebEngineの動作に合わせてアプリケーションの実行をしたいシーンが発生すると思います。</p>
+<p>```groovy build.gradle
+repositories {</p>
 
-<p>その場合、<code>getLoadWorker</code>メソッドで<code>Worker</code>を取得して、<code>getState</code>にて</p>
-
-<p>WebEngineの状態を確認する必要があります。</p>
-
-<p>```java DqxWebDriver.java
-private static WebEngine engine;
-public static Worker.State getEngineState() {</p>
-
-<pre><code>final BlockingQueue&lt;Worker.State&gt; queue = new BlockingQueue&lt;&gt;();
-Platform.runLater(new Runnable(){
-    @Override
-    public void run() {
-        queue.put(engine.getLoadWorker().getState());
-    }
-});
+<pre><code>mavenCentral()
 </code></pre>
 
 <p>}
-```</p>
+dependencies {</p>
 
-<p>この結果が<code>Worker.State.RUNNING</code>の間は、</p>
-
-<p>Javascriptの実行などをしているため、</p>
-
-<p>戻り値を利用するなどのアプリケーション操作はできません。</p>
-
-<p>したがって、<code>Thread.sleep(long)</code>等で停止しておくとよいでしょう。</p>
-
-<p>```java DqxWebDriver.java
-public static void waitForEngine() {</p>
-
-<pre><code>Worker.State state = Worker.State.RUNNING;
-while(state.equals(Worker.State.RUNNING)) {
-    Thread.sleep(100l);
-    state = getEngineState();
+<pre><code>compile 'javax.servlet:javax.servlet-api:3.1.0'
+providedCompile ('org.eclipse.jetty:jetty-runner:9.2.0.v20140526') {
+    exclude module : 'javax.servlet-api'
 }
+testCompile 'junit:junit:4.11'
 </code></pre>
 
 <p>}
 ```</p>
 
-<h2>おわり</h2>
+<hr />
 
-<p>以上が昨日全くもって話しえなかったことです。</p>
+<p>また、<code>jetty-runner</code>をディレクトリー指定してダウンロードさせるために、</p>
 
-<p>スレッド周りが非常に面倒な感じがしますが、</p>
+<p><code>Copy</code>タイプのタスクを作成します。</p>
 
-<p>慣れればあとはJavascriptを好きに実行できるので、</p>
+<p>```groovy build.gradle
+task copyJetty (type : Copy) {</p>
 
-<p>WebアプリでのJavascriptのテストなどで活用できたりします。</p>
+<pre><code>into "$buildDir/jetty"
+from configurations.providedCompile
+</code></pre>
 
-<p><!-- admax -->
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-<!-- admax -->
+<p>}
+```</p>
+
+<h3><code>stage</code>タスクを用意する</h3>
+
+<p>HerokuでのGradleアプリケーションは<code>stage</code>タスクにてアプリケーションのビルドをします。</p>
+
+<p>そのため、<code>stage</code>タスクに実行させておきたいタスクを記述しておきます。</p>
+
+<p><code>groovy build.gradle
+task stage (dependsOn : ['clean', 'copyJetty'])
+stage.finalizedBy build
+</code></p>
+
+<p>上記で作成した<code>copyJetty</code>タスクは何故かファイルを上書きしてしまったので、</p>
+
+<p>task finalizationで最終的に<code>build</code>タスクを実行させます。</p>
+
+<p>これらをまとめた<code>build.gradle</code>は次のとおり</p>
+
+<p>```groovy build.gradle
+apply plugin : &lsquo;jetty&rsquo;
+repositories {</p>
+
+<pre><code>mavenCentral()
+</code></pre>
+
+<p>}
+dependencies {</p>
+
+<pre><code>compile 'javax.servlet:javax.servlet-api:3.1.0'
+providedCompile ('org.eclipse.jetty:jetty-runner:9.2.0.v20140526') {
+    exclude module : 'javax.servlet-api'
+}
+testCompile 'junit:junit:4.11'
+</code></pre>
+
+<p>}
+task copyJetty (type : Copy) {</p>
+
+<pre><code>into "$buildDir/jetty"
+from configurations.providedCompile
+</code></pre>
+
+<p>}
+task stage (dependsOn : [&lsquo;clean&rsquo;, &lsquo;copyJetty&rsquo;])
+stage.finalizedBy build
+```</p>
+
+<h2>Procfile</h2>
+
+<p><code>Procfile</code>にはアプリケーション実行のコマンドを記述しておきます。(あまりよくわかってない…)</p>
+
+<p>最初、僕はこのファイルでgradleの<code>jettyRunWar</code>を実行させようとしていたのですが、</p>
+
+<p>見事にコケてました。</p>
+
+<p><code>bash Procfile
+web: java $JAVA_OPTS -jar build/jetty/jetty-runner-9.2.0.v20140526.jar --port $PORT build/libs/*.war
+</code></p>
+
+<p>またHerokuのgradlewで作成されるwarファイルも、</p>
+
+<p>なんかランダムな文字列になっているので、</p>
+
+<p>warファイル指定にワイルドカードを使っています。</p>
+
+<h2>system.properties</h2>
+
+<p>ここにはJavaのバージョンを指定します。</p>
+
+<p>僕はJava8を使いたかったのでjava8を指定します。</p>
+
+<p><code>java system.properties
+java.runtime.version=1.7
+</code></p>
+
+<h2>Herokuへのアプリケーションのデプロイ</h2>
+
+<p>Herokuへのデプロイは皆さんが御存知の通りで、</p>
+
+<p>僕が説明するまでのことはないでしょう。</p>
+
+<ul>
+<li>toolbeltをインストールする</li>
+<li>Herokuアカウントを作成する</li>
+<li>Herokuにssh-keyを登録する</li>
+<li>heroku側にアプリケーションを作成する</li>
+<li>herokuにpushする</li>
+</ul>
 
 
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<p>heroku側にアプリケーションを作成するために、次のコマンドを打ちます</p>
 
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
+<p><code>bash command-line
+$ heroku create
+</code></p>
 
-</script>
-</p>
+<p>herokuにpushするために次のコマンドを打ちます</p>
+
+<p><code>bash command-line
+$ git push heroku master
+</code></p>
+
+<p>これでアプリケーションのデプロイが完了します。</p>
+
+<p>{% render_partial _includes/post/post_footer.html %}</p>
 ]]></content>
   </entry>
   
@@ -503,22 +416,7 @@ private class CallJavascript implements Runnable {
 
 <p><a href="https://googledrive.com/host/0B4hhdHWLP7RRQVYweDh2QU1LVk0" target="_blank"><img src="http://mike-neck.github.io//googledrive.com/host/0B4hhdHWLP7RRQVYweDh2QU1LVk0" style="width : 450px;"></a></p>
 
-<p><!-- admax -->
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-<!-- admax -->
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-</p>
+<p>{% render_partial _includes/post/post_footer.html %}</p>
 ]]></content>
   </entry>
   
@@ -594,22 +492,7 @@ for (int i = 0; i &lt; 5; i++) {</p>
 
 <p><code>String</code>の<code>undefined</code>が返ってきます。</p>
 
-<p><!-- admax -->
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-<!-- admax -->
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-</p>
+<p>{% render_partial _includes/post/post_footer.html %}</p>
 ]]></content>
   </entry>
   
@@ -667,22 +550,7 @@ for (int i = 0; i &lt; 5; i++) {</p>
 
 <p>Eclipse強制されるのでなければ、行こうかなと思います。</p>
 
-<p><!-- admax -->
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-<!-- admax -->
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-</p>
+<p>{% render_partial _includes/post/post_footer.html %}</p>
 ]]></content>
   </entry>
   
@@ -790,22 +658,7 @@ items.sort(Item::comparePriceAscNameAsc)
 
 <p>ちなみにMethod and Constructor Referenceは<a href="http://cr.openjdk.java.net/~dlsmith/jsr335-0.6.1/C.html">Lambdaの仕様の一部</a>です。</p>
 
-<p><!-- admax -->
-<script type="text/javascript" src="http://adm.shinobi.jp/s/d0f95faac716337846b3bcf82925c26e"></script>
-<!-- admax -->
-
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-40855644-1', 'github.io');
-  ga('send', 'pageview');
-
-</script>
-</p>
+<p>{% render_partial _includes/post/post_footer.html %}</p>
 ]]></content>
   </entry>
   
